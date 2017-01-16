@@ -53,4 +53,59 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('Palpites', function($scope, $http, $state) {
+    $http.post('http://localhost/penca/public/mobile/cellogin/?', { us: "mdymen", pass: "3345531" })
+.success(function (data) {
+    $scope.time = data;
 });
+
+    $http.get('http://localhost/penca/public/mobile/celproximojogos/?')
+    .success(function (data) {
+        //console.log(data);
+        $scope.palpites = data;
+    });
+
+    $http.get('http://www.bolaocraquedebola.com.br/public/mobile/cellgetcampeonatos/?')
+        .success(function (data) {
+            console.log("campeonatos");
+            console.log(data);
+        });
+
+    $scope.setPalpite = function (p) {
+
+        $state.go('palpite', {
+            t1nome: p.t1nome, t2nome: p.t2nome,
+            ch_id: p.ch_id, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
+            mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round
+        });
+        console.log(p);
+
+    };
+})
+
+.controller('CadastroCtrl', function ($scope, $http) {
+
+    $scope.cadastro = function () { 
+        $http.post('http://localhost/penca/public/mobile/celcadastro/?', { username: $scope.user.usuario, password: $scope.user.senha, email: $scope.user.email })
+            .success(function (data) {
+                alert(data);
+                console.log(data);
+            });
+    }
+})
+
+.controller('LoginCtrl', function ($scope, $http, $state) {
+
+    $scope.login = function () {
+        $http.post('http://localhost/penca/public/mobile/celloginhash/?', { us: $scope.login.usuario, pass: $scope.login.senha })
+            .success(function (data) {
+                 alert(data);
+                 console.log(data);
+                 $state.go('app.list');
+         });
+
+    }
+
+})
