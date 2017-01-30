@@ -50,10 +50,10 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 	 }
 	 
 	 
-	  $rootScope.logout=function(){
-	  $rootScope.activeselect_tab=1;
-	$rootScope.goto('/login')
-	 }
+	//  $rootScope.logout=function(){
+	//  $rootScope.activeselect_tab=1;
+	//$rootScope.goto('/login')
+	// }
   $rootScope.activitytab=1;
   $rootScope.activeselect_tab=1;	 
 	 
@@ -169,7 +169,7 @@ $rootScope.active_icon=function(type){
       }
     })
 	  .state('app.detail', {
-      url: "/detail",
+	      url: "/detail/:t1nome/:t2nome/:ch_id/:ch_nome/:mt_acumulado/:mt_date/:mt_id/:mt_idround:/:mt_idteam1/:mt_idteam2/:mt_round/:tm1_logo/:tm2_logo",
       views: {
         'menuContent': {
           templateUrl: "templates/detail.html"
@@ -216,7 +216,14 @@ $rootScope.active_icon=function(type){
         }
       }
     })
-
+.state('app.meuspalpitesrodadas', {
+    url: "/meuspalpitesrodadas/:ch_nome",
+    views: {
+        'menuContent': {
+            templateUrl: "templates/meuspalpitesrodadas.html"
+        }
+    }
+})
   .state('app.single', {
     url: "/playlists/:playlistId",
     views: {
