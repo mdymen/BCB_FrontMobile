@@ -45,14 +45,16 @@ angular.module('starter.controllers', [])
     }])
 
 .service('usuarioService', function () {
-    var usuario = {};
-    var senha = {};
-    var dinheiro = {};
+    var usuario;
+    var senha;
+    var dinheiro;
+    var id;
 
-    this.guardar = function (us, pass, din) {
+    this.guardar = function (us, pass, din, id) {
         this.usuario = us;
         this.senha = pass;
         this.dinheiro = din;
+        this.id = id;
     }
 
     this.getUsuario = function () {
@@ -65,6 +67,9 @@ angular.module('starter.controllers', [])
 
     this.getDinheiro = function () {
         return dinheiro;
+    }
+    this.getId = function () {
+        return id;
     }
 })
 
@@ -205,24 +210,29 @@ angular.module('starter.controllers', [])
             console.log($scope.campeonatos);
         });
 
-    //$scope.setPalpite = function (p) {
+    $scope.setPalpite = function (p) {
 
-    //    $state.go('app.detail', {
-    //        mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
-    //        ch_id: p.ch_id, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
-    //        mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round
-    //    });
-    //    //console.log(p);
+        console.log(p.mt_date);
 
-    //};
+        $state.go('app.detail', {
+            mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
+            ch_id: p.ch_id, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
+            mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
+            rd_round : p.rd_round
+        });
+        //console.log(p);
+
+    };
 
     $scope.meuspalpitescampeonato = function (opcao) {
-        $http.post('http://localhost/penca/public/mobile/cellmeuspalpites', {champ : opcao, rodada: '', team:''})
+        console.log(usuarioService.id);
+        $http.post('http://www.bolaocraquedebola.com.br/public/mobile/cellmeuspalpites', {champ : opcao, id : usuarioService.id})
             .success(function (data) {
                 //console.log(data);
                 //$scope.rounds = data.rondas;
                 //$scope.teams = data.teams;
                 //console.log($scope.teams.
+                console.log(data);
                 rodadaService.meusPalpites = data;
                 $state.go("app.meuspalpitesrodadas");
             });
@@ -260,6 +270,9 @@ angular.module('starter.controllers', [])
 
 .controller('LoginCtrl', function ($scope, $http, $state, usuarioService) {
     //$state.go('app.list');
+
+    //$state.go('app.list');
+
     $scope.login = function () {
     $http.post('http://www.bolaocraquedebola.com.br/public/mobile/cellogin/?', { us: 'mdymen', pass: '3345531' }/* { us: $scope.login.usuario, pass: $scope.login.senha }*/)
             .success(function (data) {
@@ -267,9 +280,10 @@ angular.module('starter.controllers', [])
                     alert("error");
                 } else {
                     $scope.time = data;
-                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash);
+                    console.log(data);
+                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
                     $scope.cash = data.us_cash;
-                    console.log($scope.cash);
+                    
 
                     $state.go('app.list');
                 }
@@ -282,16 +296,17 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('JogoCtrl', function ($scope, $http, $stateParams, $state) {
+.controller('JogoCtrl', function ($scope, $http, $stateParams, $state, dataService) {
     $scope.t1nome = $stateParams.t1nome;
     $scope.t2nome = $stateParams.t2nome;
     $scope.tm1_logo = $stateParams.tm1_logo;
     $scope.tm2_logo = $stateParams.tm2_logo;
     $scope.ch_nome = $stateParams.ch_nome;
-    $scope.mt_date = $stateParams.mt_date;
+    $scope.mt_date = $stateParams.mt_date; 
     $scope.mt_id = $stateParams.mt_id;
     $scope.mt_idround = $stateParams.mt_idround;
     $scope.ch_id = $stateParams.ch_id;
+    $scope.rd_round = $stateParams.rd_round;
 
     $scope.realizar_palpite = function (palpite, mt_id, mt_idround, ch_id) {
         $http.post('http://www.bolaocraquedebola.com.br/public/mobile/cellsubmeterpalpite/?', { result1: palpite.rs_res1, result2: palpite.rs_res2, match: mt_id, round: mt_idround, champ: ch_id })
