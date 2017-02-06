@@ -135,6 +135,15 @@ $rootScope.active_icon=function(type){
     controller: 'AppCtrl'
   })
 
+  .state('app.ranking', {
+      url: "/ranking",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/ranking.html"
+          }
+      }
+  })
+
   .state('app.profile', {
     url: "/profile",
     views: {

@@ -3,15 +3,15 @@
     <div class="bar bar-subheader sub_head">
         <div class="row">
             <div class="col" ng-click="active_icon('fav')" ng-class="{'animated zoomIn color_btn':coloractive_fav}">
-                <i class="ion-heart"></i>
-            </div>
-            <div class="col" ng-click="active_icon('mark')" ng-class="{'animated zoomIn color_btn':coloractive_mark}">
                 <i class="ion-bookmark"></i>
             </div>
-            <div class="col" ng-click="active_icon('font')" ng-class="{'animated zoomIn color_btn':coloractive_font}">
-                <p>Aa</p>
+            <div class="col" href="#/app/detail/" ng-click="ranking_campeonato(ch_id)">
+                <i class="ion-trophy"></i>
             </div>
-            <div class="col" ng-click="active_icon('share')" ng-class="{'animated zoomIn color_btn':coloractive_share}">
+            <div class="col" ng-click="active_icon('font')" >
+                <i class="ion-ribbon-b"></i>
+            </div>
+            <div class="col" ng-click="active_icon('share')">
                 <i class="ion-android-share-alt"></i>
             </div>
         </div>
@@ -31,14 +31,14 @@
             <div class="row main_row" style="height:70px">
                 <div class="col col-25">
                     <div class="activ_image" style="margin-right:30px;margin-top:5px;float:right;width:55%;
-                     height:40px;background:url(http://localhost/penca{{tm1_logo}})no-repeat;
+                     height:40px;background:url(http://www.bolaocraquedebola.com.br/{{tm1_logo}})no-repeat;
                                     background-size:100% 100%;">
                     </div>
                 </div>
                 <div class="col col-50">
                     <div class="" style="padding-top:10px; margin-left:-10px;font-size:18px">
 
-                        <b>{{t1nome}}</b>
+                        {{t1nome}}
                     </div>
                 </div>
                 <div class="col col-25">
@@ -50,13 +50,13 @@
             <div class="row main_row" style="height:70px">
                 <div class="col col-25">
                     <div class="activ_image" style="margin-right:30px;margin-top:5px;float:right;width:55%;
-                     height:40px;background:url(http://localhost/penca{{tm2_logo}})no-repeat;
+                     height:40px;background:url(http://www.bolaocraquedebola.com.br/{{tm2_logo}})no-repeat;
                                     background-size:100% 100%;">
                     </div>
                 </div>
                 <div class="col col-70">
                     <div class="" style="padding-top:10px; margin-left:-10px;font-size:18px">
-                        <b>{{t2nome}}</b>
+                        {{t2nome}}
                     </div>
                 </div>
                 <div class="col col-25">
@@ -70,7 +70,7 @@
 
         </div>      
 
-            <div style="background-color:rgba(19,92,154,0.78); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
+            <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
 
                 <p><b><i class="icon ion-calendar" style="padding-right:10px;font-size:18px"></i>{{mt_date}}</b></p>
                 <p><b><i class="icon ion-trophy" style="padding-right:10px;font-size:18px"></i>{{ch_nome}}</b></p>

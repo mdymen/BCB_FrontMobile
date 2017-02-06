@@ -4,6 +4,10 @@ angular.module('starter.controllers', [])
     this.meusPalpites;
 })
 
+.service('rankingService', function () {
+    this.rankings;
+})
+
 .factory('dataService', ['$filter', 
     function ($filter) {
         return {
@@ -256,6 +260,8 @@ angular.module('starter.controllers', [])
         $scope.ch_nome = $stateParams.ch_nome;
         $scope.rodadas = rodadaService.meusPalpites.rondas;
         $scope.n_rodada = rodadaService.meusPalpites.n_rodada;
+        $scope.palpites = rodadaService.meusPalpites.palpites;
+        $scope.champ = rodadaService.meusPalpites.champ;
 
         for (var i = 0; i < $scope.rodadaService.meusPalpites.palpites.length; i = i + 1) {
             var date = new Date($scope.rodadaService.meusPalpites.palpites[i].mt_date);
@@ -264,6 +270,42 @@ angular.module('starter.controllers', [])
 
             $scope.rodadaService.meusPalpites.palpites[i].mt_date = $filter('date')(date, 'dd/MM/yy')
             //console.log($scope.palpites[i].mt_date);
+        }
+
+        var nombreDeLaRodada = "";
+        for (var i = 0; i < $scope.rodadaService.meusPalpites.rondas.length; i = i + 1) {
+            var rodadaActual = $scope.n_rodada;
+            var rodadaActualIt = $scope.rodadaService.meusPalpites.rondas[i].rd_id;
+            if (angular.equals(rodadaActualIt, rodadaActual)) {                
+                nombreDeLaRodada = $scope.rodadaService.meusPalpites.rondas[i].rd_round;
+            }
+
+        }
+
+        var nombreDelCampeonato = "";
+        for (var i = 0; i < $scope.rodadaService.meusPalpites.championships.length; i = i + 1) {
+            var campeonato = $scope.champ;
+            var campeonatoIt = $scope.rodadaService.meusPalpites.championships[i].ch_id;
+
+            console.log(campeonato + " " + campeonatoIt);
+            if (angular.equals(campeonato, campeonatoIt)) {
+                nombreDelCampeonato = $scope.rodadaService.meusPalpites.championships[i].ch_nome;
+                console.log("nomebre " + nombreDelCampeonato);
+            }
+        }
+
+        $scope.n_rodada_nome = nombreDeLaRodada;
+        $scope.champ_nome = nombreDelCampeonato;
+        console.log($scope.palpites);
+
+        $scope.items = [
+   { id: 1, name: 'foo' },
+   { id: 2, name: 'bar' },
+   { id: 3, name: 'blah' }
+        ];
+
+        $scope.selecionarRodada = function () {
+            alert($scope.selectedItem.name);
         }
 
     }])
@@ -296,7 +338,7 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('JogoCtrl', function ($scope, $http, $stateParams, $state, dataService) {
+.controller('JogoCtrl', function ($scope, $http, $stateParams, $state, dataService, rankingService) {
     $scope.t1nome = $stateParams.t1nome;
     $scope.t2nome = $stateParams.t2nome;
     $scope.tm1_logo = $stateParams.tm1_logo;
@@ -314,4 +356,27 @@ angular.module('starter.controllers', [])
                 $state.go('app.list');
        });
     }
+
+    $scope.ranking_campeonato = function (ch_id) {
+        $http.post('http://www.bolaocraquedebola.com.br/public/mobile/cellrankingcampeonato?', { champ: ch_id })
+            .success(function (data) {
+                rankingService.rankings = data;
+                $state.go('app.ranking');
+            });
+    };
+})
+
+.controller('RankingCtrl', function ($scope, $http, $stateParams, $state, dataService, rankingService) {
+
+    var nome_champ = "";
+    for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
+        rankingService.rankings[i].i = i + 1;
+        nome_champ = rankingService.rankings[i].ch_nome;
+    }
+
+    $scope.rankings = rankingService.rankings;
+    $scope.ch_nome = nome_champ;
+
+    console.log(rankingService.rankings);
+
 })

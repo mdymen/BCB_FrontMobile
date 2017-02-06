@@ -1,0 +1,29 @@
+﻿<ion-view view-title="Palpites" cache-view="false" ng-controller="RankingCtrl">
+
+    <div class="bar bar-subheader sub_head">
+        <center>{{ch_nome}}</center>
+    </div>
+
+    <ion-content class="has-subheader activity_page">
+        <div ng-switch on="activitytab">
+            <div style="height:40px" ng-repeat="ranking in rankings">
+                <a class="activity_list">
+                    <div class="row main_row" style="height:50px !important">
+                        <div style="font-size:18px;color:blue" class="col col-10"><b>{{ranking.i}}</b></div>
+                        <div class="col col-20">
+                            <div style="width:30px;height:30px">
+                                <img width="30" height="30" src="http://www.bolaocraquedebola.com.br/assets/img/usuarios/user2.png" />
+                            </div>
+                        </div>
+                        <div class="col col-60" style="text-align:left;">{{ranking.us_username}}</div>
+                        <div class="col col-10">{{ranking.points}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </ion-content>
+
+
+</ion-view>
