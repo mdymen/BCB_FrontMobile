@@ -243,13 +243,51 @@ angular.module('starter.controllers', [])
     }
 }])
 
-.controller('CadastroCtrl', function ($scope, $http) {
+.controller('CadastroCtrl', function ($scope, $http, $state) {
 
-    $scope.cadastro = function () { 
-        $http.post('http://localhost/penca/public/mobile/celcadastro/?', { username: $scope.user.usuario, password: $scope.user.senha, email: $scope.user.email })
-            .success(function (data) {
-                //console.log(data);
-            });
+    $scope.cadastro = function (user) {
+
+        var certo = true;
+        var mensaje = "";
+
+        if (typeof user.usuario == "undefined") {
+            certo = false;
+            mensaje = "Nome do usuario nao pode ser vazio.";
+        }
+        if (typeof user.senha == "undefined") {
+            certo = false;
+            mensaje = "Senha incorrecta.";
+        }
+        if (typeof user.email == "undefined") {
+            certo = false;
+            mensaje = "Email nao pode ser vazio.";
+        }
+        if (user.niver == null) {
+            certo = false;
+            mensaje = "Aniversario nao pode ser vazio.";
+        }
+
+        if (certo) {
+            mensaje = "";
+            $http.post('http://www.bolaocraquedebola.com.br/public/mobile/celcadastro/?', { username: user.usuario, password: user.senha, email: user.email, niver : user.niver })
+                .success(function (data) {
+                    if (data == 200) {
+                        alert("cadastro_certo");
+                    } else {
+                        alert("cadastro_errado");
+                    }
+                });
+        } else {
+            $scope.error = mensaje;
+        }
+
+        console.log($scope.error);
+        console.log(user);
+        
+    }
+
+    $scope.voltarinicio = function () {
+        $state.go("login");
     }
 })
 
