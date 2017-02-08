@@ -298,6 +298,9 @@ angular.module('starter.controllers', [])
         $scope.champ_nome = nombreDelCampeonato;
         console.log($scope.palpites);
 
+        //for (var i = 0; i < $scope.)
+
+
         $scope.items = [
    { id: 1, name: 'foo' },
    { id: 2, name: 'bar' },
@@ -305,7 +308,19 @@ angular.module('starter.controllers', [])
         ];
 
         $scope.selecionarRodada = function () {
-            alert($scope.selectedItem.name);
+            alert($scope.selectedItem.id);
+        }
+
+        $scope.apagar = function (rs_id) {
+            alert(rs_id);
+        }
+
+        $scope.rankingrodada = function(mt_round) {
+            alert(mt_round);
+        }
+
+        $scope.palpitesjogo = function (mt_id) {
+            alert(mt_id);
         }
 
     }])
@@ -372,6 +387,7 @@ angular.module('starter.controllers', [])
     for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
         rankingService.rankings[i].i = i + 1;
         nome_champ = rankingService.rankings[i].ch_nome;
+        rankingService.rankings[i].mt_date = dataService.data_format(rankingService.rankings[i].mt_date);
     }
 
     $scope.rankings = rankingService.rankings;
