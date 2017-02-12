@@ -1,14 +1,31 @@
-﻿<ion-view view-title="Palpites" cache-view="false" ng-controller="RankingCtrl">
+﻿<ion-view view-title="Palpites" cache-view="false" ng-controller="RankingRodadaCtrl">
 
     <div class="bar bar-subheader sub_head">
         <center>{{ch_nome}}</center>
     </div>
 
+
     <ion-content class="has-subheader activity_page">
-        <div ng-switch on="activitytab">
-            <div style="height:40px" ng-repeat="ranking in rankings">
-                <a class="activity_list">
-                    <div class="row main_row" style="height:50px !important">
+        <div class="people_follow">
+            <ion-list>
+                <ion-item ng-repeat="ranking in rankings" style="border-style:none !important">
+                    <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
+                        <div class="col">
+                            <div class="col-demo"><b>{{ranking.i}}</b></div>
+                        </div>
+                        <div class="col">
+                            <div style="width:30px;height:30px">
+                                <div class="col-demo"><img width="30" height="30" src="http://www.bolaocraquedebola.com.br/assets/img/usuarios/user2.png" /></div>
+                            </div>
+                        </div>
+                        <div class="col col-75">
+                            <div class="col-demo">{{ranking.us_username}}</div>
+                        </div>
+                        <div class="col">
+                            <div class="col-demo">{{ranking.points}}</div>
+                        </div>
+                    </div>
+                    <!--<div class="row main_row" style="height:50px !important">
                         <div style="font-size:18px;color:blue" class="col col-10"><b>{{ranking.i}}</b></div>
                         <div class="col col-20">
                             <div style="width:30px;height:30px">
@@ -16,12 +33,12 @@
                             </div>
                         </div>
                         <div class="col col-60" style="text-align:left;">{{ranking.us_username}}</div>
-                        <div class="col col-10">{{ranking.points}}
+                        <div class="col col-10">
+                            {{ranking.points}}
                         </div>
-                    </div>
-                </a>
-            </div>
-
+                    </div>-->
+                </ion-item>
+            </ion-list>
         </div>
     </ion-content>
 

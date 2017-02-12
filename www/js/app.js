@@ -144,6 +144,15 @@ $rootScope.active_icon=function(type){
       }
   })
 
+          .state('app.rankingrodada', {
+              url: "/rankingrodada",
+              views: {
+                  'menuContent': {
+                      templateUrl: "templates/rankingRodada.html"
+                  }
+              }
+          })
+
   .state('app.profile', {
     url: "/profile",
     views: {
@@ -178,7 +187,7 @@ $rootScope.active_icon=function(type){
       }
     })
 	  .state('app.detail', {
-	      url: "/detail/:t1nome/:t2nome/:ch_id/:ch_nome/:mt_acumulado/:mt_date/:mt_id/:mt_idround:/:mt_idteam1/:mt_idteam2/:mt_round/:tm1_logo/:tm2_logo/:rd_round",
+	      url: "/detail/:t1nome/:t2nome/:ch_id/:ch_nome/:mt_acumulado/:mt_date/:mt_id/:mt_idround:/:mt_idteam1/:mt_idteam2/:mt_round/:tm1_logo/:tm2_logo/:rd_round/:no_encerrado",
       views: {
         'menuContent': {
           templateUrl: "templates/detail.html"
