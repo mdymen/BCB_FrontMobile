@@ -201,7 +201,15 @@ $rootScope.active_icon=function(type){
           templateUrl: "templates/contact.html"
         }
       }
-    })
+	})
+	.state('app.listjogosrodada', {
+	    url: "/listjogosrodada",
+	    views: {
+	        'menuContent': {
+	            templateUrl: "templates/listjogosrodada.html"
+	        }
+	    }
+	})
 	.state('app.setting', {
       url: "/setting",
       views: {

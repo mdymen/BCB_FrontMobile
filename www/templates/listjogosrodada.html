@@ -1,16 +1,14 @@
-﻿<ion-view view-title="Meus Palpites" ng-controller="MeusPalpitesCtrl">
-
-    <div class="bar bar-subheader sub_head" style="text-align:center !important;height:51px">
+<ion-view view-title="Palpites" cache-view="false" ng-controller="ListaJogosRodadaCtrl">
+  
+    <div class="bar bar-subheader sub_head">
         <div style="text-align:center;width:100%">
-            <div style="text-align:center;width:100%">{{champ_nome}}</div>
-            <div style="text-align:center;width:100%">Rodada: <select ng-model="rodada_sel" ng-options="rodada.rd_round for rodada in rodadas" ng-change="trocarrodada(rodada_sel)"></select></div>
+            <div style="text-align:center;width:100%">{{dados.championship.ch_nome}}</div>
+            <!--<div style="text-align:center;width:100%">{{ch_nome}}</div>-->
         </div>
     </div>
-    
-
-
-        <ion-content class="detail_page padding has-subheader" style="padding: 0px 0px 0px 0px">
-            <div style="height:113px" ng-repeat="palpite in palpites" href="#/app/detail/" ng-click="setPalpite(palpite)">
+  <ion-content class="has-subheader activity_page">
+        <div>
+            <div style="height:125px"  ng-repeat="palpite in dados.rodada" href="#/app/detail/" ng-click="setPalpite(palpite)">
                 <a class="activity_list">
                     <div class="row main_row" style="height:30px !important">
                         <div class="col col-20">
@@ -33,20 +31,13 @@
                     <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
                         <div class="col col-20" style="text-align:center" ng-click="apagar(palpite.rs_id)"><i class="ion-trash-b" style="color:#fff"></i></div>
                         <div class="col col-20" style="text-align:center" ng-click="rankingrodada(palpite.mt_round)"><i class="ion-ribbon-b" style="color:#fff"></i></div>
-                        <div class="col col-20" style="text-align:center" ng-click="palpitesjogo(palpite.mt_id)"><i class="ion-ios-football" style="color:#fff"></i></div>                        
+                        <div class="col col-20" style="text-align:center" ng-click="palpitesjogo(palpite.mt_id)"><i class="ion-ios-football" style="color:#fff"></i></div>
                         <div class="col col-30" style="font-size:15px;color:#fff;text-align:center">0.00</div>
                     </div>
-
-
-                    
                 </a>
             </div>
-
-
-
-
-
-         
-
-        </ion-content>
+            
+        </div>
+           
+  </ion-content>
 </ion-view>
