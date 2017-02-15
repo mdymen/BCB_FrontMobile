@@ -506,7 +506,6 @@ angular.module('starter.controllers', [])
     for (var i = 0; i < $scope.dados.rodada.length; i = i + 1) {
 
         var dateDoJogo = dataService.data_format($scope.dados.rodada[i].mt_date);
-        console.log(date);
 
         var dataJogo = new Date($scope.dados.rodada[i].mt_date);
         var dataAgora = new Date();
@@ -519,6 +518,12 @@ angular.module('starter.controllers', [])
         var date1 = new Date();
         var numDiaHoje = $filter('date')(date1, 'dd');
         var mesHoje = $filter('date')(date1, 'MMM');
+
+        var resultado_marcado = false;
+        if ($scope.dados.rodada[i].rs_res1 != null) {
+            resultado_marcado = true;
+        }
+
 
 
         var estado = "";
@@ -534,12 +539,12 @@ angular.module('starter.controllers', [])
             badget = "assertive";
             no_encerrado = false;
         }
-
+        $scope.dados.rodada[i].ch_nome = $scope.dados.championship.ch_nome;
         $scope.dados.rodada[i].mt_date = dateDoJogo;
         $scope.dados.rodada[i].estado = estado;
         $scope.dados.rodada[i].badget = badget;
         $scope.dados.rodada[i].no_encerrado = no_encerrado;
-        console.log($scope.dados.rodada[i]);
+        $scope.dados.rodada[i].resultado_marcado = resultado_marcado;
     }
 
     $scope.setPalpite = function (p) {
