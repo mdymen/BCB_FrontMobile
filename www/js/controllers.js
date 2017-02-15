@@ -117,8 +117,6 @@ angular.module('starter.controllers', [])
 
     // Perform the login action when the user submits the login form
     $scope.doLogin = function() {
-        console.log('Doing login', $scope.loginData);
-
         // Simulate a login delay. Remove this and replace with your login
         // code if using a login system
         $timeout(function() {
@@ -143,16 +141,7 @@ angular.module('starter.controllers', [])
 
 .controller("MenuCtrl", ['$scope', '$http', '$state', 'usuarioService', 
     function ($scope, $http, $state, usuarioService) {
-        //console.log(usuarioService.dinheiro);
         $scope.cash = usuarioService.dinheiro;
-
-    //    $http.post('http://localhost/penca/public/mobile/cellogin/?', { us: "mdymen", pass: "3345531" })
-    //.success(function (data) {
-    //    $scope.time = data;
-    //    usuarioService.guardar(data.us_username, data.us_password, data.us_cash);
-    //    $scope.cash = data.us_cash;
-    //    console.log(data);
-    //});
         
 
         $scope.logout = function () {
@@ -167,13 +156,11 @@ angular.module('starter.controllers', [])
     $http.get(urlService + 'mobile/celproximojogos/?')
     .success(function (data) {
 
-        console.log(data);
         $scope.palpites = data;
 
         for (var i = 0; i < $scope.palpites.length; i = i + 1) {
 
             var dateDoJogo = dataService.data_format($scope.palpites[i].mt_date);
-            console.log(date);
 
             var dataJogo = new Date($scope.palpites[i].mt_date);
             var dataAgora = new Date();
@@ -206,16 +193,12 @@ angular.module('starter.controllers', [])
             $scope.palpites[i].estado = estado;
             $scope.palpites[i].badget = badget;
             $scope.palpites[i].no_encerrado = no_encerrado;
-            console.log($scope.palpites[i]);
         }
     });
 
         $http.get(urlService + 'mobile/cellgetcampeonatos/?')
         .success(function (data) {
-            //console.log("campeonatos");
-            //console.log(data);
             $scope.campeonatos = data;
-            console.log($scope.campeonatos);
         });
 
 
@@ -234,34 +217,24 @@ angular.module('starter.controllers', [])
 
     $scope.setPalpite = function (p) {
 
-        console.log(p.mt_date);
-
         $state.go('app.detail', {
             mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
             ch_id: p.ch_id, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
             mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
             rd_round : p.rd_round, no_encerrado : p.no_encerrado
         });
-        //console.log(p);
 
     };
 
     $scope.meuspalpitescampeonato = function (opcao) {
-        console.log(usuarioService.id);
         $http.post(urlService + 'mobile/cellmeuspalpites', { champ: opcao, id: usuarioService.id })
             .success(function (data) {
-                //console.log(data);
-                //$scope.rounds = data.rondas;
-                //$scope.teams = data.teams;
-                //console.log($scope.teams.
-                console.log(data);
                 rodadaService.meusPalpites = data;
                 $state.go("app.meuspalpitesrodadas");
             });
     }
 
     $scope.palpitarcampeonato = function (campeonato) {
-        console.log(campeonato);
         $http.post(urlService + '/mobile/cellbolao', { champ: campeonato.ch_id, id: usuarioService.id })
             .success(function (data) {
                 bolaoService.bolao = data;
@@ -307,10 +280,6 @@ angular.module('starter.controllers', [])
         } else {
             $scope.error = mensaje;
         }
-
-        console.log($scope.error);
-        console.log(user);
-        
     }
 
     $scope.voltarinicio = function () {
@@ -318,23 +287,21 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('MeusPalpitesCtrl', ['$scope', '$http', '$state', '$stateParams', '$filter', 'rodadaService','dataService', 'usuarioService','urlService',
-    function ($scope, $http, $state, $stateParams, $filter, rodadaService, dataService, usuarioService, urlService) {
+.controller('MeusPalpitesCtrl', ['$scope', '$http', '$state', '$stateParams', '$filter', '$ionicPopup', 'rodadaService','dataService', 'usuarioService','urlService',
+    function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaService, dataService, usuarioService, urlService) {
         $scope.rodadaService = rodadaService;
-        console.log($scope.rodadaService);
         $scope.ch_nome = $stateParams.ch_nome;
         $scope.rodadas = rodadaService.meusPalpites.rondas;
         $scope.n_rodada = rodadaService.meusPalpites.n_rodada;
         $scope.palpites = rodadaService.meusPalpites.palpites;
         $scope.champ = rodadaService.meusPalpites.champ;
 
+        console.log($scope.palpites);
+
         for (var i = 0; i < $scope.rodadaService.meusPalpites.palpites.length; i = i + 1) {
             var date = new Date($scope.rodadaService.meusPalpites.palpites[i].mt_date);
-
-            //console.log($scope.rodadaService.meusPalpites.palpites[i]);
-
             $scope.rodadaService.meusPalpites.palpites[i].mt_date = dataService.data_format(date);
-            //console.log($scope.palpites[i].mt_date);
+            $scope.rodadaService.meusPalpites.palpites[i].vivo = true;
         }
 
         var nombreDeLaRodada = "";
@@ -352,31 +319,17 @@ angular.module('starter.controllers', [])
             var campeonato = $scope.champ;
             var campeonatoIt = $scope.rodadaService.meusPalpites.championships[i].ch_id;
 
-            console.log(campeonato + " " + campeonatoIt);
             if (angular.equals(campeonato, campeonatoIt)) {
                 nombreDelCampeonato = $scope.rodadaService.meusPalpites.championships[i].ch_nome;
-                console.log("nomebre " + nombreDelCampeonato);
             }
         }
 
         $scope.n_rodada_nome = nombreDeLaRodada;
         $scope.champ_nome = nombreDelCampeonato;
-        console.log($scope.palpites);
-
-   //     $scope.items = [
-   //{ id: 1, name: 'foo' },
-   //{ id: 2, name: 'bar' },
-   //{ id: 3, name: 'blah' }
-   //     ];
-
         $scope.rodada_sel = $scope.rodadas[2];
 
         $scope.selecionarRodada = function () {
             alert($scope.selectedItem.id);
-        }
-
-        $scope.apagar = function (rs_id) {
-            alert(rs_id);
         }
 
         $scope.rankingrodada = function(mt_round) {
@@ -394,33 +347,89 @@ angular.module('starter.controllers', [])
                 mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
                 rd_round: p.rd_round, encerrado: p.encerrado
             });
-            console.log(p);
         }
 
         $scope.trocarrodada = function (rodada) {
-                console.log(usuarioService.id);
-               $http.post(urlService + 'mobile/cellmeuspalpites', { champ: rodada.rd_idchampionship, id: usuarioService.id, rodada : rodada.rd_id })
-                    .success(function (data) {
-                        console.log(data);
-                        rodadaService.meusPalpites = data;
-                        $state.transitionTo($state.current, $stateParams, {
-                            reload: true,
-                            inherit: false,
-                            notify: true
-                        });
-                    });
-                console.log(rodada);
+            $http.post(urlService + 'mobile/cellmeuspalpites', { champ: rodada.rd_idchampionship, id: usuarioService.id, rodada : rodada.rd_id })
+                .success(function (data) {
+                    rodadaService.meusPalpites = data;
+                    $state.go("app.blanco");
+            });
         }
+
+        // Triggered on a button click, or some other target
+        $scope.apagar = function (rs_id, ch_id, rd_id, mt_id) {
+            $scope.data = {};
+
+            // An elaborate, custom popup
+            var myPopup = $ionicPopup.show({
+                template:'Deseja apagar o palpite?',
+                title: 'Apagar palpite',
+                scope: $scope,
+                buttons: [                  
+                  {
+                      text: '<b>Sim</b>',
+                      type: 'button-positive',
+                      onTap: function (e) {
+                            $http.post(urlService + 'mobile/cellexcluirpalpite', { result: rs_id, champ: ch_id, round: rd_id, match: mt_id, user_id : usuarioService.id })
+                                .success(function (data) {
+                                    console.log(data);
+                                    for (var i = 0; i < $scope.rodadaService.meusPalpites.palpites.length; i = i + 1) {
+                                        if ($scope.rodadaService.meusPalpites.palpites[i].rs_id == rs_id) {
+                                            $scope.rodadaService.meusPalpites.palpites[i].vivo = false;
+
+                                        }
+                                    }
+                            });
+                      }
+                  },
+                  { text: 'No' }
+                ]
+            });
+
+            //myPopup.then(function (res) {
+            //    $http.post(urlService + 'mobile/cellexcluirpalpite', { result : rs_id, champ: ch_id, round: rd_id, match: mt_id })
+            //        .success(function (data) {
+            //            console.log(retorno);
+            //        });
+            //    console.log('Tapped!', res);
+            //});
+
+        };
+
+        // A confirm dialog
+        $scope.showConfirm = function () {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Consume Ice Cream',
+                template: 'Are you sure you want to eat this ice cream?'
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    console.log('You are sure');
+                } else {
+                    console.log('You are not sure');
+                }
+            });
+        };
+
+        // An alert dialog
+        $scope.showAlert = function () {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Don\'t eat that!',
+                template: 'It might taste good'
+            });
+
+            alertPopup.then(function (res) {
+                console.log('Thank you for not eating my delicious ice cream cone');
+            });
+        };
 
     }])
 
 
 
 .controller('LoginCtrl', function ($scope, $http, $state, usuarioService, urlService) {
-    //$state.go('app.list');
-
-    //$state.go('app.list');
-
     $scope.login = function () {
         $http.post(urlService + 'mobile/cellogin/?', { us: 'mdymen', pass: '3345531' }/* { us: $scope.login.usuario, pass: $scope.login.senha }*/)
             .success(function (data) {
@@ -428,7 +437,6 @@ angular.module('starter.controllers', [])
                     alert("error");
                 } else {
                     $scope.time = data;
-                    console.log(data);
                     usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
                     $scope.cash = data.us_cash;
                     
@@ -456,8 +464,6 @@ angular.module('starter.controllers', [])
     $scope.ch_id = $stateParams.ch_id;
     $scope.rd_round = $stateParams.rd_round;
     $scope.no_encerrado = $stateParams.no_encerrado;   
-
-    console.log($scope);
 
     $scope.realizar_palpite = function (palpite, mt_id, mt_idround, ch_id) {
         $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: palpite.rs_res1, result2: palpite.rs_res2, match: mt_id, round: mt_idround, champ: ch_id })
@@ -495,17 +501,21 @@ angular.module('starter.controllers', [])
     $scope.rankings = rankingService.rankings;
     $scope.ch_nome = nome_champ;
 
-    console.log(rankingService.rankings);
+})
 
+.controller('BlancoCtrl', function ($scope, $state, rodadaService) {
+    console.log("ENTROU");
+    console.log(rodadaService);
+    $state.go('app.meuspalpitesrodadas');
 })
 
 .controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, bolaoService, dataService) {
     $scope.dados = bolaoService.bolao;
-    console.log($scope.dados);
 
     for (var i = 0; i < $scope.dados.rodada.length; i = i + 1) {
 
         var dateDoJogo = dataService.data_format($scope.dados.rodada[i].mt_date);
+
 
         var dataJogo = new Date($scope.dados.rodada[i].mt_date);
         var dataAgora = new Date();
@@ -548,7 +558,6 @@ angular.module('starter.controllers', [])
     }
 
     $scope.setPalpite = function (p) {
-        console.log(p);
         $state.go('app.detail', {
             mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
             ch_id: p.ch_id, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,

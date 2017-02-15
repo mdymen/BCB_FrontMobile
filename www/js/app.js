@@ -250,6 +250,16 @@ $rootScope.active_icon=function(type){
         }
     }
 })
+
+.state('app.blanco', {
+    url: "/blanco",
+    views: {
+        'menuContent': {
+            templateUrl: "templates/blanco.html"
+        }
+    }
+})
+
   .state('app.single', {
     url: "/playlists/:playlistId",
     views: {

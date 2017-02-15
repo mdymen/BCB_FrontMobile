@@ -10,7 +10,7 @@
 
 
         <ion-content class="detail_page padding has-subheader" style="padding: 0px 0px 0px 0px">
-            <div style="height:113px" ng-repeat="palpite in palpites" href="#/app/detail/" ng-click="setPalpite(palpite)">
+            <div style="height:113px" ng-show="palpite.vivo" ng-repeat="palpite in palpites" href="#/app/detail/" ng-click="setPalpite(palpite)">
                 <a class="activity_list">
                     <div class="row main_row" style="height:30px !important">
                         <div class="col col-20">
@@ -31,7 +31,7 @@
 
                     </div>
                     <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
-                        <div class="col col-20" style="text-align:center" ng-click="apagar(palpite.rs_id)"><i class="ion-trash-b" style="color:#fff"></i></div>
+                        <div class="col col-20" style="text-align:center" ng-click="apagar(palpite.rs_id, palpite.ch_id, palpite.rd_id, palpite.mt_id)"><i class="ion-trash-b" style="color:#fff"></i></div>
                         <div class="col col-20" style="text-align:center" ng-click="rankingrodada(palpite.mt_round)"><i class="ion-ribbon-b" style="color:#fff"></i></div>
                         <div class="col col-20" style="text-align:center" ng-click="palpitesjogo(palpite.mt_id)"><i class="ion-ios-football" style="color:#fff"></i></div>                        
                         <div class="col col-30" style="font-size:15px;color:#fff;text-align:center">0.00</div>
