@@ -2,7 +2,7 @@
 
     <div class="bar bar-subheader sub_head" style="text-align:center !important;height:51px">
         <div style="text-align:center;width:100%">
-            <div style="text-align:center;width:100%">{{champ_nome}}</div>
+            <div style="text-align:center;width:100%">{{ch_nome}}</div>
             <div style="text-align:center;width:100%">Rodada: <select ng-model="rodada_sel" ng-options="rodada.rd_round for rodada in rodadas" ng-change="trocarrodada(rodada_sel)"></select></div>
         </div>
     </div>
@@ -31,7 +31,15 @@
 
                     </div>
                     <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
-                        <div class="col col-20" style="text-align:center" ng-click="apagar(palpite.rs_id, palpite.ch_id, palpite.rd_id, palpite.mt_id)"><i class="ion-trash-b" style="color:#fff"></i></div>
+                        
+                        <div class="col col-20" style="text-align:center">
+                            <ng:switch on="{{palpite.no_encerrado}}">
+                                <div ng:switch-when="true">
+                                    <i ng-click="apagar(palpite.rs_id, palpite.ch_id, palpite.rd_id, palpite.mt_id)" class="ion-trash-b" style="color:#fff"></i>
+                                </div>
+                            </ng:switch>
+                        </div>
+
                         <div class="col col-20" style="text-align:center" ng-click="rankingrodada(palpite.mt_round)"><i class="ion-ribbon-b" style="color:#fff"></i></div>
                         <div class="col col-20" style="text-align:center" ng-click="palpitesjogo(palpite.mt_id)"><i class="ion-ios-football" style="color:#fff"></i></div>                        
                         <div class="col col-30" style="font-size:15px;color:#fff;text-align:center">0.00</div>

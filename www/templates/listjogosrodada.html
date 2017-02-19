@@ -1,8 +1,11 @@
 <ion-view view-title="Palpites" cache-view="false" ng-controller="ListaJogosRodadaCtrl">
   
-    <div class="bar bar-subheader sub_head" style="height:60px">
+    <div class="bar bar-subheader sub_head" style="height:85px">
         <div style="text-align:center;width:100%">
-            <div style="text-align:center;width:100%">{{dados.championship.ch_nome}}</div>
+            <div style="text-align:center;width:100%">{{bolao.championship.ch_nome}}</div>
+            <div style="text-align:center;width:100%">
+                Rodada: <select ng-model="bolao.rodada_sel" ng-options="rodada.rd_round for rodada in bolao.rondas" ng-change="trocarrodada(bolao.rodada_sel)"></select>
+            </div>
             <div class="row">
                 <div class="col" ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
                     <p>Palpites</p>
@@ -15,9 +18,9 @@
 
     </div>
   <ion-content class="has-subheader activity_page">
-      <div ng-switch on="activitytab">
+      <div ng-switch on="activitytab" style="margin-top:28px">
           <div>
-              <div style="height:125px" ng-switch-when="1" ng-repeat="palpite in dados.rodada" href="#/app/detail/" ng-click="setPalpite(palpite)">
+              <div style="height:125px" ng-switch-when="1" ng-repeat="palpite in bolao.rodada" href="#/app/detail/" ng-click="setPalpite(palpite)">
                   <a class="activity_list">
                       <div class="row main_row" style="height:30px !important">
                           <div class="col col-20">
@@ -38,11 +41,13 @@
 
                       </div>
                       <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
-                          <ng:switch on="{{palpite.resultado_marcado}}">
-                              <div ng:switch-when="true">
-                                  <div class="col col-20" style="text-align:center" ng-click="apagar(palpite.rs_id)"><i class="ion-trash-b" style="color:#fff"></i></div>
-                              </div>
-                          </ng:switch>
+                          <div class="col col-20" style="text-align:center">
+                              <ng:switch on="{{palpite.pode_apagar}}">
+                                  <div ng:switch-when="true">
+                                      <i ng-click="apagar(palpite.rs_id)" class="ion-trash-b" style="color:#fff"></i>
+                                  </div>
+                              </ng:switch>
+                          </div>
 
                           <div class="col col-20" style="text-align:center" ng-click="rankingrodada(palpite.mt_round)"><i class="ion-ribbon-b" style="color:#fff"></i></div>
                           <div class="col col-20" style="text-align:center" ng-click="palpitesjogo(palpite.mt_id)"><i class="ion-ios-football" style="color:#fff"></i></div>
@@ -51,7 +56,7 @@
                   </a>
               </div>
               <div ng-switch-when="2">
-                  <div style="height:32px" ng-repeat="team in dados.teams" href="#/app/detail/" ng-click="setPalpite(palpite)">
+                  <div style="height:32px" ng-repeat="team in bolao.teams" href="#/app/detail/" ng-click="setPalpite(palpite)">
                       <a class="activity_list">
                           <div class="row main_row" style="height:30px !important">
                               <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{team.tm_logo}}" /></div>

@@ -187,7 +187,7 @@ $rootScope.active_icon=function(type){
       }
     })
 	  .state('app.detail', {
-	      url: "/detail/:t1nome/:t2nome/:ch_id/:ch_nome/:mt_acumulado/:mt_date/:mt_id/:mt_idround:/:mt_idteam1/:mt_idteam2/:mt_round/:tm1_logo/:tm2_logo/:rd_round/:no_encerrado",
+	      url: "/detail/:t1nome/:t2nome/:ch_id/:ch_nome/:mt_acumulado/:mt_date/:mt_id/:mt_idround:/:mt_idteam1/:mt_idteam2/:mt_round/:tm1_logo/:tm2_logo/:rd_round/:no_encerrado/:rs_res1/:rs_res2",
       views: {
         'menuContent': {
           templateUrl: "templates/detail.html"
@@ -250,6 +250,16 @@ $rootScope.active_icon=function(type){
         }
     }
 })
+
+.state('app.palpitados', {
+    url: "/palpitados",
+    views: {
+        'menuContent': {
+            templateUrl: "templates/palpitados.html"
+        }
+    }
+})
+
 
 .state('app.blanco', {
     url: "/blanco",
