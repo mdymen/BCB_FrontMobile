@@ -1,140 +1,54 @@
-<ion-view view-title="Palpites" cache-view="false" ng-controller="Palpites">
+<ion-view view-title="Jogos" cache-view="false" ng-controller="JogosTimeCtrl">
   
-    <div class="bar bar-subheader sub_head">
-        <div class="row">
-          <div class="col"  ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
-            <p>Palpites</p>
-          </div>
-          <div class="col"  ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
-            <p>Meus Palpites</p>
-          </div>
-          <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
-             <p>Campeonatos</p>
-           </div>
-          <!--<div class="col" ng-click="goto('/app/profile')">
-            <p>Campeonatos</p>
-          </div>-->
-          <!--<div class="col col-10"  ng-click="goto('/app/add_post')">
-             <i class="ion-plus"></i>
-          </div>-->
+
+    <!--<div class="bar bar-subheader sub_head" style="text-align:center !important;height:51px">
+        <div style="text-align:center;width:100%">
+            <div style="text-align:center;width:100%">{{ch_nome}}</div>
+            <div style="text-align:center;width:100%">Rodada: <select ng-model="rodada_sel" ng-options="rodada.rd_round for rodada in rodadas" ng-change="trocarrodada(rodada_sel)"></select></div>
         </div>
-    </div>
-  <ion-content class="has-subheader activity_page">
-        <div ng-switch on="activitytab">
-            <div style="height:125px" ng-switch-when="1" ng-repeat="palpite in palpites" href="#/app/detail/" ng-click="setPalpite(palpite)">
-                <a class="activity_list">
-                    <div class="row main_row" style="height:30px !important">
-                        <div class="col col-20">
-                        </div>
-                        <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date}}</b></div>
-                        <div class="col col-20">
-                        </div>
+    </div>-->
+
+
+
+    <ion-content class="detail_page padding has-subheader" style="padding: 0px 0px 0px 0px">
+        <div style="height:113px" ng-repeat="palpite in jogos" href="#/app/detail/" ng-click="setPalpite(palpite)">
+            <a class="activity_list">
+                <div class="row main_row" style="height:30px !important">
+                    <div class="col col-20">
                     </div>
-                    <div class="row main_row" style="height:30px !important">
-                        <div class="col col-20">
-                        </div>
-                        <div class="col col-60" style="text-align:center;">{{palpite.ch_nome}}</div>
-                        <div class="col col-20">
-                        </div>
+                    <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date}}</b></div>
+                    <div class="col col-20">
                     </div>
-                    <div class="row main_row" style="height:30px !important">
-                        <div class="col col-50">
-                            <span class="badge badge-{{palpite.badget}}" style="font-weight:normal !important">{{palpite.estado}}</span>
-                            <div class="activ_image" style="float:right;width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
-                                    background-size:100% 100%;">
+                </div>
+
+
+                <div class="row" ng-click="editarpalpite(palpite)">
+                    <div class="col col-30" style="text-align:right">{{palpite.t1nome}}</div>
+                    <div class="col col-10"><img width="30" height="30" src="http://www.bolaocraquedebola.com.br{{palpite.tm1_logo}}" /></div>
+                    <div class="col col-10" style="text-align:center;font-size:20px"><b>{{palpite.rs_res1}}</b></div>
+                    <div class="col col-10" style="text-align:center;font-size:20px"><b>{{palpite.rs_res2}}</b></div>
+                    <div class="col col-10"><img width="30" height="30" src="http://www.bolaocraquedebola.com.br{{palpite.tm2_logo}}" /></div>
+                    <div class="col col-30">{{palpite.t2nome}}</div>
+
+                </div>
+                <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
+
+                    <div class="col col-20" style="text-align:center">
+                        <ng:switch on="{{palpite.no_encerrado}}">
+                            <div ng:switch-when="true">
+                                <i ng-click="apagar(palpite.rs_id, palpite.ch_id, palpite.rd_id, palpite.mt_id)" class="ion-trash-b" style="color:#fff"></i>
                             </div>
-                        </div>
-                        <div class="col col-50">
-                            <div class="activ_image" style="width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
-                                    background-size:100% 100%;">
-                            </div>
-                        </div>
+                        </ng:switch>
                     </div>
 
-                    <div class="row main_row" style="height:30px !important">
-                        <div class="col col-10">
-                        </div>
-                        <div class="col col-80" style="text-align:center;"><b>{{palpite.t1nome}} vs {{palpite.t2nome}}</b></div>
-                        <div class="col col-10">
-                        </div>
-                    </div>
-                    <!--<div class="row main_row" style="height:30px !important; margin-top:-12px">
-                        <div class="col col-20">
-                        </div>
-                        <div class="col col-60" style="text-align:center;">
-                            <p>{{palpite.ch_nome}}</p>
-                            <p style="margin-top:-10px">{{palpite.rd_round}}</p>
-                        </div>
-                        <div class="col col-20">
-                        </div>
-                    </div>-->
-                </a>
-            </div>
-                <!--<div class="col col-33">
-            <div class="activ_image" style="background:url(http://localhost/penca{{palpite.tm1_logo}})no-repeat;
-        background-size:100% 100%;"></div>
-        </div>
-        <div class="col col-67">
-            <h3>{{palpite.ch_nome}}</h3>
-            <P>{{palpite.mt_date}}</P>
-            <p class="parag">
-                {{palpite.t1nome}} vs {{palpite.t2nome}}
-            </p>
-        </div>-->
-                <!--<a href="#/a
-                pp/detail" class="activity_list"
-                collection-repeat="item in activity"
-                collection-item-width="'100%'"
-                collection-item-height="170"
-                >
-                <div class="row main_row">
-                    <div class="col col-33">
-                        <div class="activ_image" style="background:url({{item.img}})no-repeat;
-                        background-size:100% 100%;"></div>
-                    </div>
-                    <div class="col col-67">
-                        <h3>{{item.title}}</h3>
-                        <P>acteur de génie</P>
-                        <p class="parag">
-                            is a creative studio based in Kuwait, specializing in advertising,
-                            marketing, design, and content creation.
-                        </p>
-                    </div>
+                    <div class="col col-20" style="text-align:center" ng-click="rankingrodada(palpite.mt_round)"><i class="ion-ribbon-b" style="color:#fff"></i></div>
+                    <div class="col col-20" style="text-align:center" ng-click="palpitesjogo(palpite.mt_id)"><i class="ion-ios-football" style="color:#fff"></i></div>
+                    <div class="col col-30" style="font-size:15px;color:#fff;text-align:center">0.00</div>
                 </div>
-                <div class="row sec_row">
-                  <div class="col col-33">
-                     <img src="img/l4.png"/>
-                     <span>Firas Said</span>
-                  </div>
-                  <div class="col col-25">
-                     <p><i class="ion-eye"></i>1235</p>
-                  </div>
-                   <div class="col col-20">
-                     <p><i class="ion-thumbsup"></i>2455</p>
-                  </div>
-                   <div class="col col-20">
-                     <p><i class="ion-chatbubble"></i>865</p>
-                  </div>
-                </div>
-                </a>-->
-        </
-                div>
 
-            <div  class="people_follow"  ng-switch-when="2" >
-                <ion-list>
-                    <ion-item ng-repeat="campeonato in campeonatos" ng-click="meuspalpitescampeonato(campeonato.ch_id)">
-                        {{campeonato.ch_nome}}
-                        <p>Acumulado: R${{campeonato.ch_acumulado}}  Palpite: R${{campeonato.ch_dpalpite}}</p>
-                    </ion-item>
-                </ion-list>
-                </div>
-            <div ng-switch-when="3">
-                <ion-list>
-                    <ion-item ng-repeat="campeonato in campeonatos">
-                        {{campeonato.ch_nome}}
-                    </ion-item>
-                </ion-list>
-             </div>
-        </div>    
-  </ion-content>
+
+
+            </a>
+        </div>
+
 </ion-view>

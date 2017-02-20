@@ -210,6 +210,14 @@ $rootScope.active_icon=function(type){
 	        }
 	    }
 	})
+	.state('app.jogostime', {
+	    url: "/jogostime",
+	    views: {
+	        'menuContent': {
+	            templateUrl: "templates/jogostime.html"
+	        }
+	    }
+	})
 	.state('app.setting', {
       url: "/setting",
       views: {

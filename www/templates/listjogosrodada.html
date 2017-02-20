@@ -56,11 +56,11 @@
                   </a>
               </div>
               <div ng-switch-when="2">
-                  <div style="height:32px" ng-repeat="team in bolao.teams" href="#/app/detail/" ng-click="setPalpite(palpite)">
+                  <div style="height:32px" ng-repeat="team in bolao.teams" href="#/app/detail/" ng-click="jogos_do_time(team,bolao.championship.ch_id)">
                       <a class="activity_list">
                           <div class="row main_row" style="height:30px !important">
                               <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{team.tm_logo}}" /></div>
-                              <div class="col col-40">{{team.tm_name}}</div>
+                              <div class="col col-40" >{{team.tm_name}}</div>
                               <div class="col col-20">{{team.tm_played}}</div>
                               <div class="col col-20">{{team.tm_points}}</div>
                           </div>
