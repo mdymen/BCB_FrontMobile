@@ -32,8 +32,12 @@ angular.module('starter.controllers', [])
                 }
                 bolao.rodada[i].pode_apagar = no_encerrado && resultado_marcado;
 
-                bolao.rodada[i].mt_date = dataService.data_format(date);
+                if (angular.isUndefined(bolao.rodada[i].data_ya_paso)) {
+                    bolao.rodada[i].mt_date = dataService.data_format(date);
+                }
+                bolao.rodada[i].no_encerrado = no_encerrado;
                 bolao.rodada[i].vivo = true;
+                bolao.rodada[i].data_ya_paso = true;
             }
 
             for (var i = 0; i < bolao.rondas.length; i = i + 1) {
@@ -604,9 +608,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
 })
 
 .controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService) {
-
+    console.log(bolaoService.bolao);
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
-    console.log($scope.bolao);
 
 
     //$scope.dados = bolaoService.bolao;
