@@ -16,6 +16,10 @@ angular.module('starter.controllers', [])
     this.jogostime;
 })
 
+.service('palpitadosService', function () {
+    this.palpitados;
+})
+
 .factory('urlService', function () {
     //return "http://localhost/penca/public/";
     return "http://www.bolaocraquedebola.com.br/public/";
@@ -361,6 +365,10 @@ palpites = function () {
                 $state.go("app.listjogosrodada");
             });
     }
+
+    //$scope.loadMore = function () {
+    //    alert("HOLA");
+    //}
 }])
 
 .controller('CadastroCtrl', function ($scope, $http, $state, urlService) {
@@ -407,8 +415,8 @@ palpites = function () {
     }
 })
 
-.controller('MeusPalpitesCtrl', ['$scope', '$http', '$state', '$stateParams', '$filter', '$ionicPopup', 'rodadaService', 'dataService', 'usuarioService', 'urlService', 'rodadaServiceConstructor', 'jogostimeService',
-function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaService, dataService, usuarioService, urlService, rodadaServiceConstructor, jogostimeService) {
+.controller('MeusPalpitesCtrl', ['$scope', '$http', '$state', '$stateParams', '$filter', '$ionicPopup', 'rodadaService', 'dataService', 'usuarioService', 'urlService', 'rodadaServiceConstructor', 'jogostimeService', 'rankingService', 'palpitadosService',
+function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaService, dataService, usuarioService, urlService, rodadaServiceConstructor, jogostimeService, rankingService, palpitadosService) {
 
         $scope.r = rodadaServiceConstructor.rodada(rodadaService);
         $scope.rodadas = $scope.r.rondas;
@@ -428,8 +436,12 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
             alert(mt_round);
         }
 
-        $scope.palpitesjogo = function (mt_id) {
-            alert(mt_id);
+        $scope.palpitesjogo = function (mt_id, ch_id) {
+            $http.post(urlService + 'mobile/cellpalpites', { match : mt_id , champ: ch_id })
+                .success(function (data) {
+                    palpitadosService.palpitados = data;
+                    $state.go("app.palpitados");
+                });
         }
 
         $scope.editarpalpite = function (p) {
@@ -516,6 +528,18 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
             });
         };
 
+
+        $scope.ranking_rodada = function (ch_id, rd_id) {
+            console.log("passou");
+            $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
+                .success(function (data) {
+                    rankingService.rankings = data;
+                    rankingService.rankings.ch_nome = $scope.ch_nome;
+                    console.log(data);
+                    $state.go('app.rankingrodada');
+                });
+        }
+
     }])
 
 .controller('LoginCtrl', function ($scope, $http, $state, usuarioService, urlService) {
@@ -599,14 +623,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
 
 })
 
-.controller('BlancoCtrl', function ($scope, $state, rodadaService) {
-    console.log("ENTROU");
-    console.log(rodadaService);
-    $state.go('app.meuspalpitesrodadas');
-})
-
-.controller('PalpitadosCtrl', function ($scope, $state, usuarioService) {
-    
+.controller('PalpitadosCtrl', function ($scope, $state, usuarioService, palpitadosService) {
+    $scope.results = palpitadosService.palpitados.results;
+    console.log(palpitadosService);
 })
 
 .controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService) {
@@ -650,4 +669,17 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     //$scope.ch_nome = $scope.bolao.ch_nome;
 
     console.log($scope.jogos);
+})
+
+.controller("RankingRodadaCtrl", function ($scope, $http, $stateParams, $state, dataService, rankingService) {
+    var rd_round = "";
+    for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
+        rankingService.rankings[i].i = i + 1;
+        rd_round = rankingService.rankings[i].rd_round;
+        rankingService.rankings[i].mt_date = dataService.data_format(rankingService.rankings[i].mt_date);
+    }
+
+    $scope.rankings = rankingService.rankings;
+    $scope.ch_nome = rankingService.rankings.ch_nome;
+    $scope.rd_round = rd_round;
 })
