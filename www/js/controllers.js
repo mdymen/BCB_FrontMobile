@@ -25,6 +25,12 @@ angular.module('starter.controllers', [])
     return "http://www.bolaocraquedebola.com.br/public/";
 })
 
+//.service.('palpitadosContructor', function(rankingService, dataService) {
+//    this.palpitados = function() {
+
+//    }
+//}
+
 .service('bolaoServiceConstructor', function (dataService, dataEncerrado) {
     this.bolao = function (bolao) {
 
@@ -623,8 +629,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
 
 })
 
-.controller('PalpitadosCtrl', function ($scope, $state, usuarioService, palpitadosService) {
+.controller('PalpitadosCtrl', function ($scope, $state, usuarioService, palpitadosService, dataService) {
     $scope.results = palpitadosService.palpitados.results;
+    for (var i = 0; i < $scope.results.length; i = i + 1) {
+        var date = new Date(palpitadosService.palpitados.results[i].mt_date);
+        $scope.results[i].mt_date = dataService.data_format(date);
+        $scope.rd_round = palpitadosService.palpitados.results[i].rd_round;
+        $scope.mt_date = $scope.results[i].mt_date;
+    }
+    $scope.ch_nome = palpitadosService.palpitados.championship.ch_nome;
     console.log(palpitadosService);
 })
 
@@ -652,23 +665,34 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     }
 
     $scope.jogos_do_time = function (time, ch_id) {
-        $http.post(urlService + "/mobile/cellteam", { team: time.tm_id, champ : ch_id })
+        $http.post(urlService + "/mobile/cellteam", { team: time.tm_id, champ : ch_id, us_id : usuarioService.id })
             .success(function (data) {
                 jogostimeService.jogostime = data;
+                //console.log(data);
                 $state.go("app.jogostime");
-                console.log(data);
+                //console.log(data);
             });
     }
 
 })
 
-.controller('JogosTimeCtrl', function ($scope, $http, $state, jogostimeService, bolaoServiceConstructor, urlService, usuarioService) {
+.controller('JogosTimeCtrl', function ($scope, $http, $state, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado) {
 
-    console.log(jogostimeService.jogostime);
-    $scope.jogos = jogostimeService.jogostime; //bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
-    //$scope.ch_nome = $scope.bolao.ch_nome;
+    
+    $scope.jogosTime = jogostimeService.jogostime;
+    for (var i = 0; i < $scope.jogosTime.jogos.length; i = i + 1) {
+        $scope.jogosTime.jogos[i].no_encerrado = dataEncerrado.no_encerrado($scope.jogosTime.jogos[i]);
+        $scope.jogosTime.jogos[i].mt_date = dataService.data_format($scope.jogosTime.jogos[i].mt_date);        
+        $scope.jogosTime.ch_nome = $scope.jogosTime.jogos[i].ch_nome;
 
-    console.log($scope.jogos);
+        var resultado_marcado = false;
+        if ($scope.jogosTime.jogos[i].rs_res1 != null) {
+            resultado_marcado = true;
+        }
+        $scope.jogosTime.jogos[i].resultado_marcado = resultado_marcado;
+    }
+
+    console.log($scope.jogosTime);
 })
 
 .controller("RankingRodadaCtrl", function ($scope, $http, $stateParams, $state, dataService, rankingService) {
