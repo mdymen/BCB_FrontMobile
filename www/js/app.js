@@ -241,7 +241,23 @@ $rootScope.active_icon=function(type){
           templateUrl: "templates/message.html"
         }
       }
-    })
+	 })
+	 .state('app.transacoescampeonato', {
+	     url: "/transacoescampeonato",
+	     views: {
+	         'menuContent': {
+	             templateUrl: "templates/transacoescampeonato.html"
+	         }
+	     }
+	 })
+	 .state('app.transacoes', {
+	     url: "/transacoes",
+	     views: {
+	         'menuContent': {
+	             templateUrl: "templates/transacoes.html"
+	         }
+	     }
+	 })
 	 .state('app.msg_detail', {
       url: "/msg_detail",
       views: {

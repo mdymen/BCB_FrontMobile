@@ -1,0 +1,24 @@
+<ion-view view-title="Transacoes" cache-view="false" ng-controller="TransacoesCampeonatoCtrl">
+  
+        <div class="bar bar-subheader sub_head" style="text-align:center !important;height:51px">
+        <div style="text-align:center;width:100%">
+            <div style="text-align:center;width:100%">{{ch_nome}}</div>
+            <div style="text-align:center;width:100%">Rodada: <select ng-model="rodada_sel" ng-options="rodada.rd_round for rodada in rodadas" ng-change="trocarrodada(rodada_sel)"></select></div>
+        </div>
+    </div>
+
+  <ion-content class="has-subheader activity_page">
+        <div ng-switch on="activitytab">            
+            <div  class="people_follow" >
+                <ion-list>
+                    <ion-item ng-repeat="transaction in trs">
+                        {{transaction.t1nome}} vs {{transaction.t2nome}}
+                        <span class="item-note">{{transaction.tr_valortransaccion}}</span>
+                        <p>{{transaction.tr_date}}</p>
+                        
+                    </ion-item>
+                </ion-list>
+                </div>
+            </div> 
+  </ion-content>
+</ion-view>

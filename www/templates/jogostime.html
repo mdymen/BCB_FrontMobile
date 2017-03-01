@@ -33,16 +33,15 @@
                         </div>
                         <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
                             <div class="col col-20" style="text-align:center">
-                                <ng:switch on="{{palpite.no_encerrado}}">
-                                    <ng:switch on="{{palpite.resultado_marcado == false}}">
+                                <ng:switch on="{{palpite.resultado_marcado}} && {{palpite.no_encerrado}}">
                                         <div ng:switch-when="true">
                                             <i ng-click="apagar(palpite.rs_id)" class="ion-trash-b" style="color:#fff"></i>
                                         </div>
                                     </ng:switch>
-                                </ng:switch>
-                                <ng:switch on="{{palpite.no_encerrado == false}}">
+                                <ng:switch on="{{palpite.no_encerrado}} == false">
                                     <div ng:switch-when="true">
-                                        <span class="badge badge-assertive" style="font-weight:normal !important">Encerrado</span>
+                                        <span class="badge badge-assertive" style="{{palpite.color}};margin-left:-10px;position:absolute;padding: 1px 5px;font-size:10px">{{palpite.mt_goal1}}</span>
+                                        <span class="badge badge-assertive" style="{{palpite.color}};margin-left:10px;position:absolute;padding: 1px 5px;font-size:10px">{{palpite.mt_goal2}}</span>
                                     </div>
                                 </ng:switch>
                             </div>
