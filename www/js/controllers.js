@@ -50,6 +50,11 @@ angular.module('starter.controllers', [])
                 resultado_marcado = true;
             }
             jogostime.jogos[i].resultado_marcado = resultado_marcado;
+
+            var acertou = resultadoFinalService.resultado_final(jogostime.jogos[i]);
+            if (acertou) {
+                jogostime.jogos[i].color = "background-color:green !important";
+            }
         }
         return jogostime;
     }
@@ -278,9 +283,10 @@ angular.module('starter.controllers', [])
 .controller("MenuCtrl", ['$scope', '$http', '$state', '$rootScope', 'usuarioService', 
     function ($scope, $http, $state, $rootScope, usuarioService) {
         $scope.cash = usuarioService.dinheiro;
+        $scope.usuario = usuarioService.usuario;
 
-        $rootScope.$on('childEmit', function (event, data) {
-            console.log(data + ' Inside Sibling one');
+        $rootScope.$on('atualizar_cash', function (event, data) {
+            $scope.cash = data;
         });
 
         $scope.logout = function () {
@@ -378,6 +384,8 @@ angular.module('starter.controllers', [])
         $http.post(urlService + '/mobile/cellbolao', { champ: campeonato.ch_id, id: usuarioService.id })
             .success(function (data) {
                 bolaoService.bolao = data;
+                console.log(bolaoService.bolao);
+
                 $state.go("app.listjogosrodada");
             });
     }
@@ -593,7 +601,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     $scope.rs_res1 = $stateParams.rs_res1;
     $scope.rs_res2 = $stateParams.rs_res2;
 
-    $rootScope.$emit('childEmit', 'Child calling parent');
+    
 
     //$rootScope.notifyIonicGoingBack = function () {
     //    alert("test ionic going back");
@@ -613,6 +621,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
         $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
             .success(function (data) {
                 console.log(data);
+                $rootScope.$emit('atualizar_cash', data.total_usuario);
                 $ionicHistory.goBack();
                 //$state.go('app.list');
        });

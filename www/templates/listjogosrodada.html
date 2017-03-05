@@ -63,17 +63,41 @@
                   </a>
               </div>
               <div ng-switch-when="2">
-                  <div style="height:32px" ng-repeat="team in bolao.teams" href="#/app/detail/" ng-click="jogos_do_time(team,bolao.championship.ch_id)">
-                      <a class="activity_list">
-                          <div class="row main_row" style="height:30px !important">
-                              <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{team.tm_logo}}" /></div>
-                              <div class="col col-40" >{{team.tm_name}}</div>
-                              <div class="col col-20">{{team.tm_played}}</div>
-                              <div class="col col-20">{{team.tm_points}}</div>
+                  <ng:switch on="{{bolao.tem_grupo}} == false">
+                      <div ng:switch-when="true">
+                          <div style="height:32px" ng-repeat="team in bolao.teams" href="#/app/detail/" ng-click="jogos_do_time(team,bolao.championship.ch_id)">
+                              <a class="activity_list">
+
+                                  <div class="row main_row" style="height:30px !important">
+                                      <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{team.tm_logo}}" /></div>
+                                      <div class="col col-40">{{team.tm_name}}</div>
+                                      <div class="col col-20">{{team.tm_played}}</div>
+                                      <div class="col col-20">{{team.tm_points}}</div>
+                                  </div>
+                              </a>
                           </div>
-                      </a>
-                  </div>
-              </div>
+                      </div>
+                  </ng:switch>
+
+                  <ng:switch on="{{bolao.tem_grupo}}">
+                      <div ng:switch-when="true" style="padding-top:15px">
+                          <div ng-repeat="team in bolao.teams">
+                              <div class="row main_row" style="height:30px !important">
+                                  <div class="col">Grupo: {{team.tm_grupo}}</div>
+                              </div>
+                              <div ng-repeat="t in team.grupo" href="#/app/detail/" ng-click="jogos_do_time(t,bolao.championship.ch_id)">
+                                  <div class="row main_row" style="height:30px !important">
+                                      <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{t.tm_logo}}" /></div>
+                                      <div class="col col-40">{{t.tm_name}}</div>
+                                      <div class="col col-20">{{t.tm_played}}</div>
+                                      <div class="col col-20">{{t.tm_points}}</div>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+                 </ng:switch>
+                </div>
           </div>
           </div>
 </ion-content>
