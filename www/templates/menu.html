@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="false" ng-controller="MenuCtrl">
+﻿<ion-side-menus enable-menu-with-back-views="false" ng-controller="MenuCtrl">
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable" align-title="left">
       <ion-nav-back-button class="button button-icon button-clear bak_arr"> 
@@ -29,6 +29,7 @@
   <ion-side-menu side="left" width="240">
     <ion-header-bar class="bar-stable menu_head">
        <!-- <img src="img/prof2.png"/>-->
+        <img width="70px" src="http://www.bolaocraquedebola.com.br/assets/img/iconelogo.png" />
         <p>{{usuario}}</p>
         <!--<p>http://www.bolaocraquedebola.com.br</p>-->
         <span class="cir"  ng-click="logout();"  menu-close>
@@ -37,17 +38,8 @@
     </ion-header-bar>
     <ion-content class="menu_app">
       <ion-list>
-        <ion-item menu-close href="#" ng-click="gotolistPage(1)">
+        <ion-item menu-close href="#/app/list">
           Home
-        </ion-item>
-        <ion-item menu-close href="#" ng-click="gotolistPage(1)">
-          Palpites
-        </ion-item>
-        <ion-item menu-close href="#" ng-click="gotolistPage(2)">
-          Meus Palpites
-        </ion-item>
-        <ion-item menu-close href="#/app/profile">
-          Campeonatos
         </ion-item>
           <ion-item menu-close href="#/app/setting">
               Ranking
@@ -56,7 +48,7 @@
          Caixa
         </ion-item>
         <ion-item menu-close href="#/app/transacoes">
-         Transacoes
+         Transações
         <!-- <span class="badge">3</span>-->
         </ion-item>
        
