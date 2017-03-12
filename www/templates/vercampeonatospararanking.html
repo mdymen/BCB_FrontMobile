@@ -1,0 +1,17 @@
+﻿<ion-view view-title="Ranking campeonatos" cache-view="false" ng-controller="VerCampeonatosParaRankingCtrl">
+
+    <div class="bar bar-subheader sub_head">
+
+    </div>
+    <ion-content class="has-subheader activity_page">
+        <div ng-switch on="activitytab">
+            <div>
+                <ion-list>
+                    <ion-item ng-repeat="campeonato in campeonatos" ng-click="selecionarcampeonato(campeonato)">
+                        {{campeonato.ch_nome}}
+                    </ion-item>
+                </ion-list>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

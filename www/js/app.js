@@ -134,15 +134,13 @@ $rootScope.active_icon=function(type){
     templateUrl: "templates/menu.html",
     controller: 'AppCtrl'
   })
+    .state('app.rankinglistacampeonato', {
+        url: "/rankinglistacampeonato",
+        abstract: true,
+        templateUrl: "templates/rankinglistacampeonato.html",
+        controller: 'AppCtrl'
+    })
 
-  .state('app.ranking', {
-      url: "/ranking",
-      views: {
-          'menuContent': {
-              templateUrl: "templates/ranking.html"
-          }
-      }
-  })
 
           .state('app.rankingrodada', {
               url: "/rankingrodada",
@@ -241,6 +239,30 @@ $rootScope.active_icon=function(type){
           templateUrl: "templates/message.html"
         }
       }
+	 })
+	 .state('app.caixa', {
+	     url: "/caixa",
+	     views: {
+	         'menuContent': {
+	             templateUrl: "templates/caixa.html"
+	         }
+	     }
+	 })
+	 .state('app.vercampeonatospararanking', {
+	     url: "/vercampeonatospararanking",
+	     views: {
+	         'menuContent': {
+	             templateUrl: "templates/vercampeonatospararanking.html"
+	         }
+	     }
+	 })
+	 .state('app.ranking', {
+	     url: "/ranking",
+	     views: {
+	         'menuContent': {
+	             templateUrl: "templates/ranking.html"
+	         }
+	     }
 	 })
 	 .state('app.transacoescampeonato', {
 	     url: "/transacoescampeonato",

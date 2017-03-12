@@ -516,10 +516,11 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
                                 .success(function (data) {
                                     //console.log(data);
                                     console.log($scope);
-                                    for (var i = 0; i < $scope.rodadaService.meusPalpites.palpites.length; i = i + 1) {
-                                        if ($scope.rodadaService.meusPalpites.palpites[i].rs_id == rs_id) {
-                                            $scope.rodadaService.meusPalpites.palpites[i].vivo = false;
-
+                                    for (var i = 0; i < $scope.palpites.length; i = i + 1) {
+                                        if ($scope.palpites[i].rs_id == rs_id) {
+                                            $scope.palpites[i].vivo = false;
+                                            $scope.palpites[i].rs_res1 = null;
+                                            $scope.palpites[i].rs_res2 = null;
                                         }
                                     }
                             });
@@ -677,7 +678,6 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
 })
 
 .controller('RankingCtrl', function ($scope, $http, $stateParams, $state, dataService, rankingService) {
-
     var nome_champ = "";
     for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
         rankingService.rankings[i].i = i + 1;
@@ -688,6 +688,23 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     $scope.rankings = rankingService.rankings;
     $scope.ch_nome = nome_champ;
 
+})
+
+.controller('VerCampeonatosParaRankingCtrl', function ($scope, $state, $http, urlService, rankingService) {
+    $http.get(urlService + 'mobile/cellgetcampeonatos/?')
+        .success(function (data) {
+            console.log(data);
+            $scope.campeonatos = data;
+        });
+
+    $scope.selecionarcampeonato = function (campeonato) {
+        $http.post(urlService + 'mobile/cellrankingcampeonato/?', {champ : campeonato.ch_id})
+            .success(function (data) {
+                console.log(data);
+                rankingService.rankings = data;
+                $state.go("app.ranking");
+            });
+    };
 })
 
 .controller('PalpitadosCtrl', function ($scope, $state, usuarioService, palpitadosService, dataService) {
@@ -809,5 +826,39 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
                 $scope.trs.push($scope.transacoes.transactions[i]);
             }
         }
+    }
+})
+
+.controller("CaixaCtrl", function($scope, $http, $window, urlService) {
+    $scope.opcion = function (op) {
+
+        $http.post(urlService + '/mobile/cellplano', { p : op })
+            .success(function (data) {
+                console.log(data);
+                $window.location.href = data.url;
+        });
+
+        //var serializedData = { token: '6363C4111D064931A0CC0F0330849143', email: 'martin@dymenstein.com', currency: 'BRL', itemId1: '0001', itemDescription1: 'Plano 1', itemAmount1: '10.80', itemQuantity1: '1', itemWeight1: '1000' };
+
+        //$http({
+        //    method: 'POST',
+        //    url: 'https://ws.pagseguro.uol.com.br/v2/checkout',
+        //    data: {
+        //        token: '6363C4111D064931A0CC0F0330849143',
+        //        email: 'martin@dymenstein.com',
+        //        currency: 'BRL',
+        //        itemId1: '0001',
+        //        itemDescription1: 'Plano 1',
+        //        itemAmount1: '10.80',
+        //        itemQuantity1: '1',
+        //        itemWeight1: '1000'
+        //    },
+        //    headers: {
+        //        'Content-Type': 'application/x-www-form-urlencoded'
+        //    }}).then(function(result) {
+        //        console.log(result);
+        //    }, function(error) {
+        //        console.log(error);
+        //    });
     }
 })
