@@ -442,8 +442,8 @@
     }
 })
 
-.controller('MeusPalpitesCtrl', ['$scope', '$http', '$state', '$stateParams', '$filter', '$ionicPopup', 'rodadaService', 'dataService', 'usuarioService', 'urlService', 'rodadaServiceConstructor', 'jogostimeService', 'rankingService', 'palpitadosService',
-function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaService, dataService, usuarioService, urlService, rodadaServiceConstructor, jogostimeService, rankingService, palpitadosService) {
+.controller('MeusPalpitesCtrl', ['$scope', '$http', '$state', '$stateParams', '$filter', '$ionicPopup', '$ionicLoading', 'rodadaService', 'dataService', 'usuarioService', 'urlService', 'rodadaServiceConstructor', 'jogostimeService', 'rankingService', 'palpitadosService',
+function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoading, rodadaService, dataService, usuarioService, urlService, rodadaServiceConstructor, jogostimeService, rankingService, palpitadosService) {
 
         $scope.r = rodadaServiceConstructor.rodada(rodadaService);
         $scope.rodadas = $scope.r.rondas;
@@ -453,7 +453,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
         $scope.champ = $scope.r.champ;
         $scope.rodada_sel = $scope.r.rodada_sel;
         $scope.ch_nome = $scope.r.ch_nome;
-        console.log($scope.r);
+        console.log($scope);
 
         $scope.selecionarRodada = function () {
             alert($scope.selectedItem.id);
@@ -495,6 +495,12 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
                     $scope.rodada_sel = $scope.r.rodada_sel;
                     $scope.ch_nome = $scope.r.ch_nome;
                     console.log($scope);
+                    if ($scope.palpites.length == 0) {
+                        var alertpopup = $ionicPopup.alert({
+                            title: 'Aviso!',
+                            template: 'Nao existem palpites para esta rodada.'
+                        });
+                    }
             });
         }
 
@@ -516,13 +522,17 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
                                 .success(function (data) {
                                     //console.log(data);
                                     console.log($scope);
+                                    var j = 0;
                                     for (var i = 0; i < $scope.palpites.length; i = i + 1) {
                                         if ($scope.palpites[i].rs_id == rs_id) {
-                                            $scope.palpites[i].vivo = false;
-                                            $scope.palpites[i].rs_res1 = null;
-                                            $scope.palpites[i].rs_res2 = null;
+                                            j = mt_id;
+                                            //$scope.palpites[i].vivo = false;
+                                            //$scope.palpites[i].rs_res1 = null;
+                                            //$scope.palpites[i].rs_res2 = null;
+                                            //$scope.palpites[i].pode_apagar = false;
                                         }
                                     }
+                                    $scope.palpites = $filter('filter')($scope.palpites, { mt_id: j })
                             });
                       }
                   },
@@ -608,8 +618,10 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     $scope.ch_id = $stateParams.ch_id;
     $scope.rd_round = $stateParams.rd_round;
     $scope.no_encerrado = $stateParams.no_encerrado;
-    $scope.rs_res1 = $stateParams.rs_res1;
-    $scope.rs_res2 = $stateParams.rs_res2;
+    $scope.rs_res1 = parseInt($stateParams.rs_res1);
+    $scope.rs_res2 = parseInt($stateParams.rs_res2);
+
+    console.log($scope);
 
     $scope.realizar_palpite = function (rs_res1, rs_res2, mt_id, mt_idround, ch_id) {
         $ionicLoading.show();
@@ -671,8 +683,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     $scope.ranking_rodada = function (ch_id, rd_id) {
         $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
             .success(function (data) {
-                rankingService.rankings = data;
-                $state.go('app.rankingrodada');
+                if (angular.isNumber(data) && data.length > 0) {
+                    rankingService.rankings = data;
+                    $state.go('app.rankingrodada');
+                } else {
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'Aviso!',
+                        template: 'O Ranking desta rodada está vazio.'
+                    });
+                }
         });
     }
 })
@@ -719,10 +738,49 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
     console.log(palpitadosService);
 })
 
-.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite) {
+.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite) {
     console.log(bolaoService.bolao);
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
+
+    $scope.apagar = function (rs_id, ch_id, rd_id, mt_id) {
+        $scope.data = {};
+
+        console.log(rs_id);
+        console.log(ch_id);
+        console.log(rd_id);
+        console.log(mt_id);
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.show({
+            template: 'Deseja apagar o palpite?',
+            title: 'Apagar palpite',
+            scope: $scope,
+            buttons: [
+              {
+                  text: '<b>Sim</b>',
+                  type: 'button-positive',
+                  onTap: function (e) {
+                      $http.post(urlService + 'mobile/cellexcluirpalpite', { result: rs_id, champ: ch_id, round: rd_id, match: mt_id, user_id: usuarioService.id })
+                          .success(function (data) {
+
+
+                              $ionicLoading.show();
+                              $http.post(urlService + '/mobile/cellbolao', { champ: ch_id, id: usuarioService.id, rodada: rd_id })
+                                  .success(function (data) {
+                                      bolaoService.bolao = data;
+                                      $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
+                                      $scope.ch_nome = $scope.bolao.ch_nome;
+                                      console.log($scope);
+                                      $ionicLoading.hide();
+                                  });
+                          });
+                  }
+              },
+              { text: 'No' }
+            ]
+        });
+    };
 
     $scope.trocarrodada = function (rodada) {
         $ionicLoading.show();
@@ -760,23 +818,57 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, rodadaServi
 
 })
 
-.controller('JogosTimeCtrl', function ($scope, $http, $state, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
+.controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, rankingService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
 
     $scope.jogosTime = jogosTimeConstructor.jogosTime(jogostimeService.jogostime);
     console.log($scope.jogosTime);
+
+    $scope.setPalpite = function (p) {
+        if (p.no_encerrado) {
+            $state.go('app.detail', {
+                mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
+                ch_id: p.mt_idchampionship, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
+                mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
+                rd_round: p.rd_round, no_encerrado: p.no_encerrado, rs_res1 : p.rs_res1, rs_res2 : p.rs_res2
+            });
+        }
+    }
+
+    $scope.ranking_rodada = function (ch_id, rd_id) {
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
+            .success(function (data) {
+                rankingService.rankings = data;
+                console.log(data);
+                //$state.go('app.rankingrodada', {ch_nome : data.});
+
+                //$state.go('app.detail', {
+                //    mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
+                //    ch_id: p.mt_idchampionship, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
+                //    mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
+                //    rd_round: p.rd_round, no_encerrado: p.no_encerrado, rs_res1: p.rs_res1, rs_res2: p.rs_res2
+                //});
+
+                $ionicLoading.hide();
+            });
+    }
 })
 
 .controller("RankingRodadaCtrl", function ($scope, $http, $stateParams, $state, dataService, rankingService) {
-    var rd_round = "";
-    for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
-        rankingService.rankings[i].i = i + 1;
-        rd_round = rankingService.rankings[i].rd_round;
-        rankingService.rankings[i].mt_date = dataService.data_format(rankingService.rankings[i].mt_date);
+
+    if (!angular.isUndefined(rankingService.ranking)) {
+        var rd_round = "";
+        for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
+            rankingService.rankings[i].i = i + 1;
+            rd_round = rankingService.rankings[i].rd_round;
+            rankingService.rankings[i].mt_date = dataService.data_format(rankingService.rankings[i].mt_date);
+        }
+
+        $scope.rankings = rankingService.rankings;
+        $scope.ch_nome = rankingService.rankings.ch_nome;
+        $scope.rd_round = rd_round;
     }
 
-    $scope.rankings = rankingService.rankings;
-    $scope.ch_nome = rankingService.rankings.ch_nome;
-    $scope.rd_round = rd_round;
 })
 
 .controller("TransacoesCtrl", function ($scope, $state, $http, $ionicLoading, campeonatosService, usuarioService, urlService, transacoesService) {
