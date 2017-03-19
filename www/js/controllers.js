@@ -41,9 +41,17 @@
 .service('jogosTimeConstructor', function(dataService, dataEncerrado, resultadoFinalService) {
     this.jogosTime = function(jogostime) {
         for (var i = 0; i < jogostime.jogos.length; i = i + 1) {
+            
+
             jogostime.jogos[i].no_encerrado = dataEncerrado.no_encerrado(jogostime.jogos[i]);
-            jogostime.jogos[i].mt_date = dataService.data_format(jogostime.jogos[i].mt_date);
+
+            if (angular.isUndefined(jogostime.jogos[i].data_ya_paso)) {
+                jogostime.jogos[i].mt_date_new = dataService.data_format(jogostime.jogos[i].mt_date);
+            }
+
             jogostime.ch_nome = jogostime.jogos[i].ch_nome;
+
+            jogostime.jogos[i].data_ya_paso = true;
 
             var resultado_marcado = false;
             if (jogostime.jogos[i].rs_res1 != null) {
@@ -585,13 +593,18 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     }])
 
-.controller('LoginCtrl', function ($scope, $http, $state, $ionicLoading, usuarioService, urlService) {
+.controller('LoginCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, usuarioService, urlService) {
     $scope.login = function () {
         $ionicLoading.show();
-        $http.post(urlService + 'mobile/cellogin/?', { us: 'mdymen', pass: '3345531' }/* { us: $scope.login.usuario, pass: $scope.login.senha }*/)
+        $http.post(urlService + 'mobile/cellogin/?', { us: $scope.login.usuario, pass: $scope.login.senha })
             .success(function (data) {
+                console.log(data);
                 if (!data) {
-                    alert("error");
+                    $ionicLoading.hide();
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'Erro!',
+                        template: 'Nome de usuario e/ou senha incorretos.'
+                    });
                 } else {
                     $scope.time = data;
                     usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
@@ -627,12 +640,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $ionicLoading.show();
         $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
             .success(function (data) {
-                console.log(data.sucesso);
+                //console.log("x");
+                //console.log(data);
                 if (angular.equals(data.sucesso, 200)) {
-                    console.log("este");
-                    console.log(data);
-                    console.log(bolaoService.bolao);
-
                     if (!angular.isUndefined(bolaoService) 
                         && !angular.isUndefined(bolaoService.bolao)
                         && !angular.isUndefined(bolaoService.bolao.rodada)) {
@@ -821,13 +831,14 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 .controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, rankingService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
 
     $scope.jogosTime = jogosTimeConstructor.jogosTime(jogostimeService.jogostime);
+    console.log("jogos time");
     console.log($scope.jogosTime);
 
     $scope.setPalpite = function (p) {
         if (p.no_encerrado) {
             $state.go('app.detail', {
                 mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
-                ch_id: p.mt_idchampionship, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
+                ch_id: p.mt_idchampionship, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date_new,
                 mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
                 rd_round: p.rd_round, no_encerrado: p.no_encerrado, rs_res1 : p.rs_res1, rs_res2 : p.rs_res2
             });
