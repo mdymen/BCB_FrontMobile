@@ -719,7 +719,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-.controller('VerCampeonatosParaRankingCtrl', function ($scope, $state, $http, urlService, rankingService) {
+.controller('VerCampeonatosParaRankingCtrl', function ($scope, $state, $http, $ionicPopup, urlService, rankingService) {
     $http.get(urlService + 'mobile/cellgetcampeonatos/?')
         .success(function (data) {
             console.log(data);
@@ -736,19 +736,31 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     };
 })
 
-.controller('PalpitadosCtrl', function ($scope, $state, usuarioService, palpitadosService, dataService) {
+.controller('PalpitadosCtrl', function ($scope, $state, $ionicPopup, usuarioService, palpitadosService, dataService) {
     $scope.results = palpitadosService.palpitados.results;
-    for (var i = 0; i < $scope.results.length; i = i + 1) {
-        var date = new Date(palpitadosService.palpitados.results[i].mt_date);
-        $scope.results[i].mt_date = dataService.data_format(date);
-        $scope.rd_round = palpitadosService.palpitados.results[i].rd_round;
-        $scope.mt_date = $scope.results[i].mt_date;
+
+    if (!angular.isUndefined($scope.results)) {
+
+        for (var i = 0; i < $scope.results.length; i = i + 1) {
+            var date = new Date(palpitadosService.palpitados.results[i].mt_date);
+            $scope.results[i].mt_date = dataService.data_format(date);
+            $scope.rd_round = palpitadosService.palpitados.results[i].rd_round;
+            $scope.mt_date = $scope.results[i].mt_date;
+        }
+        $scope.ch_nome = palpitadosService.palpitados.championship.ch_nome;
+        console.log(palpitadosService);
+
+    } else {
+
+        var alertpopup = $ionicPopup.alert({
+            title: 'Aviso!',
+            template: 'O jogo não teve palpites.'
+        });
+
     }
-    $scope.ch_nome = palpitadosService.palpitados.championship.ch_nome;
-    console.log(palpitadosService);
 })
 
-.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite) {
+.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, palpitadosService, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite) {
     console.log(bolaoService.bolao);
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
@@ -826,9 +838,23 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             });
     }
 
+
+    $scope.palpitesjogo = function (mt_id, ch_id) {
+        console.log("match " + mt_id);
+        console.log("champ " + ch_id);
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/cellpalpites', { match: mt_id, champ: ch_id })
+            .success(function (data) {
+                console.log(data);
+                palpitadosService.palpitados = data;
+                $ionicLoading.hide();
+                $state.go("app.palpitados");
+            });
+    }
+
 })
 
-.controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, rankingService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
+.controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, rankingService, palpitadosService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
 
     $scope.jogosTime = jogosTimeConstructor.jogosTime(jogostimeService.jogostime);
     console.log("jogos time");
@@ -861,6 +887,16 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                 //});
 
                 $ionicLoading.hide();
+            });
+    }
+
+    $scope.palpitesjogo = function (mt_id, ch_id) {
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/cellpalpites', { match : mt_id , champ: ch_id })
+            .success(function (data) {
+                palpitadosService.palpitados = data;
+                $ionicLoading.hide();
+                $state.go("app.palpitados");
             });
     }
 })
