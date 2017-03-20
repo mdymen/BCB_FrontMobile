@@ -365,6 +365,7 @@
         .success(function (data) {
             $scope.campeonatos = data;
             campeonatosService.campeonatos = data;
+            console.log($scope.campeonatos);
         });
 
 

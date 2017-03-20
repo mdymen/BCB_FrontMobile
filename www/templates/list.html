@@ -124,6 +124,11 @@
                     <ion-item ng-repeat="campeonato in campeonatos" ng-click="meuspalpitescampeonato(campeonato.ch_id)">
                         {{campeonato.ch_nome}}
                         <p>Acumulado: R${{campeonato.ch_acumulado}}  Palpite: R${{campeonato.ch_dpalpite}}</p>
+                        <ng:switch on="{{campeonato.ch_ativo}} == 0">
+                            <div ng:switch-when="true">
+                                <span class="badge badge-assertive" style="{{palpite.color}};margin-left:-10px;position:absolute;padding: 1px 5px;font-size:10px">Encerrado</span>
+                            </div>
+                        </ng:switch>
                     </ion-item>
                 </ion-list>
                 </div>
@@ -131,6 +136,11 @@
                 <ion-list>
                     <ion-item ng-repeat="campeonato in campeonatos" ng-click="palpitarcampeonato(campeonato)">
                         {{campeonato.ch_nome}}
+                        <ng:switch on="{{campeonato.ch_ativo}} == 0">
+                            <div ng:switch-when="true">
+                                <span class="badge badge-assertive" style="{{palpite.color}};margin-left:-10px;position:absolute;padding: 1px 5px;font-size:10px">Encerrado</span>
+                            </div>
+                        </ng:switch>
                     </ion-item>
                 </ion-list>
              </div>
