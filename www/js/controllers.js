@@ -642,7 +642,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
             .success(function (data) {
                 //console.log("x");
-                //console.log(data);
+                console.log(data);
                 if (angular.equals(data.sucesso, 200)) {
                     if (!angular.isUndefined(bolaoService) 
                         && !angular.isUndefined(bolaoService.bolao)
@@ -665,9 +665,11 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                 if (angular.equals(data.sucesso, 402)) {
                     $ionicLoading.hide();
                     var alertpopup = $ionicPopup.alert({
-                        title: 'Erro!',
-                        template: 'Palpite já realizado.'
+                        title: 'Sucesso!',
+                        template: 'Palpite alterado.'
                     });
+                    $ionicLoading.hide();
+                    $ionicHistory.goBack();
                 }
 
                 if (angular.equals(data.sucesso, 401)) {
