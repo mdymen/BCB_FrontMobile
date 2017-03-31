@@ -534,14 +534,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                                     var j = 0;
                                     for (var i = 0; i < $scope.palpites.length; i = i + 1) {
                                         if ($scope.palpites[i].rs_id == rs_id) {
-                                            j = mt_id;
+                                            j = i;
                                             //$scope.palpites[i].vivo = false;
                                             //$scope.palpites[i].rs_res1 = null;
                                             //$scope.palpites[i].rs_res2 = null;
                                             //$scope.palpites[i].pode_apagar = false;
                                         }
                                     }
-                                    $scope.palpites = $filter('filter')($scope.palpites, { mt_id: j })
+                                    $scope.palpites.splice(j, 1);
+                                    //$scope.palpites = $filter('filter')($scope.palpites, { mt_id: j })
                             });
                       }
                   },
@@ -663,6 +664,18 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     $rootScope.$emit('atualizar_cash', data.total_usuario);
                 }
                 if (angular.equals(data.sucesso, 402)) {
+                    if (!angular.isUndefined(bolaoService) 
+                        && !angular.isUndefined(bolaoService.bolao)
+                        && !angular.isUndefined(bolaoService.bolao.rodada)) {
+
+                        for (var i = 0; i < bolaoService.bolao.rodada.length; i = i + 1) {
+                            if (angular.equals(bolaoService.bolao.rodada[i].mt_id, data.rs_idmatch)) {
+                                bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
+                                bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
+                                bolaoService.bolao.rodada[i].vivo = false;
+                            }
+                        }
+                    }
                     $ionicLoading.hide();
                     var alertpopup = $ionicPopup.alert({
                         title: 'Sucesso!',
