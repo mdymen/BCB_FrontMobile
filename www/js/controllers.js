@@ -436,9 +436,9 @@
             $http.post(urlService + 'mobile/celcadastro/?', { username: user.usuario, password: user.senha, email: user.email, niver: user.niver })
                 .success(function (data) {
                     if (data == 200) {
-                        alert("cadastro_certo");
+                        $state.go("login");
                     } else {
-                        alert("cadastro_errado");
+                        alert("Cadastro errado");
                     }
                 });
         } else {
@@ -579,17 +579,20 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             });
         };
 
-
         $scope.ranking_rodada = function (ch_id, rd_id) {
-            console.log("passou");
-            $ionicLoading.show();
+            console.log(ch_id + " - " + rd_id);
             $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
                 .success(function (data) {
-                    rankingService.rankings = data;
-                    rankingService.rankings.ch_nome = $scope.ch_nome;
                     console.log(data);
-                    $ionicLoading.hide();
-                    $state.go('app.rankingrodada');
+                    if (angular.isNumber(data) && data.length > 0) {
+                        rankingService.rankings = data;
+                        $state.go('app.rankingrodada');
+                    } else {
+                        var alertpopup = $ionicPopup.alert({
+                            title: 'Aviso!',
+                            template: 'O Ranking desta rodada está vazio.'
+                        });
+                    }
                 });
         }
 
@@ -621,7 +624,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-.controller('JogoCtrl', function ($scope, $http, $stateParams, $state, $rootScope, $ionicHistory, $ionicLoading, $ionicPopup, dataService, rankingService, urlService, usuarioService, bolaoService) {
+.controller('JogoCtrl', function ($scope, $http, $stateParams, $state, $rootScope, $ionicHistory, $ionicLoading, $ionicPopup, dataService, rankingService, urlService, usuarioService, bolaoService, rodadaService, jogostimeService) {
     $scope.t1nome = $stateParams.t1nome;
     $scope.t2nome = $stateParams.t2nome;
     $scope.tm1_logo = $stateParams.tm1_logo;
@@ -642,9 +645,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $ionicLoading.show();
         $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
             .success(function (data) {
-                //console.log("x");
                 console.log(data);
                 if (angular.equals(data.sucesso, 200)) {
+                    console.log(bolaoService);
                     if (!angular.isUndefined(bolaoService) 
                         && !angular.isUndefined(bolaoService.bolao)
                         && !angular.isUndefined(bolaoService.bolao.rodada)) {
@@ -654,6 +657,18 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                                 bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
                                 bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
                                 bolaoService.bolao.rodada[i].vivo = false;
+                            }
+                        }
+                    }
+
+                    if (!angular.isUndefined(jogostimeService)
+                        && !angular.isUndefined(jogostimeService.jogostime)
+                        && !angular.isUndefined(jogostimeService.jogostime.jogos)) {
+                        for (var i = 0; i < jogostimeService.jogostime.jogos.length; i = i + 1) {
+                            if (angular.equals(jogostimeService.jogostime.jogos[i].mt_id, data.rs_idmatch)) {
+                                jogostimeService.jogostime.jogos[i].rs_res1 = data.rs_res1;
+                                jogostimeService.jogostime.jogos[i].rs_res2 = data.rs_res2;
+                                jogostimeService.jogostime.jogos[i].vivo = true;
                             }
                         }
                     }
@@ -664,7 +679,21 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     $rootScope.$emit('atualizar_cash', data.total_usuario);
                 }
                 if (angular.equals(data.sucesso, 402)) {
-                    if (!angular.isUndefined(bolaoService) 
+
+                    if (!angular.isUndefined(rodadaService)
+                        && !angular.isUndefined(rodadaService.meusPalpites)
+                        && !angular.isUndefined(rodadaService.meusPalpites.palpites)) {
+                        for (var i = 0; i < rodadaService.meusPalpites.palpites.length; i = i + 1) {
+
+                            if (angular.equals(rodadaService.meusPalpites.palpites[i].mt_id, data.rs_idmatch)) {
+                                rodadaService.meusPalpites.palpites[i].rs_res1 = data.rs_res1;
+                                rodadaService.meusPalpites.palpites[i].rs_res2 = data.rs_res2;
+                                rodadaService.meusPalpites.palpites[i].vivo = true;
+                            }
+                        }
+                    }
+
+                    if (!angular.isUndefined(bolaoService)
                         && !angular.isUndefined(bolaoService.bolao)
                         && !angular.isUndefined(bolaoService.bolao.rodada)) {
 
@@ -672,17 +701,30 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                             if (angular.equals(bolaoService.bolao.rodada[i].mt_id, data.rs_idmatch)) {
                                 bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
                                 bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
-                                bolaoService.bolao.rodada[i].vivo = false;
+                                bolaoService.bolao.rodada[i].vivo = true;
                             }
                         }
                     }
+                    if (!angular.isUndefined(jogostimeService)
+                        && !angular.isUndefined(jogostimeService.jogostime)
+                        && !angular.isUndefined(jogostimeService.jogostime.jogos)) {
+                        for (var i = 0; i < jogostimeService.jogostime.jogos.length; i = i + 1) {
+                            if (angular.equals(jogostimeService.jogostime.jogos[i].mt_id, data.rs_idmatch)) {
+                                jogostimeService.jogostime.jogos[i].rs_res1 = data.rs_res1;
+                                jogostimeService.jogostime.jogos[i].rs_res2 = data.rs_res2;
+                                jogostimeService.jogostime.jogos[i].vivo = true;
+                            }
+                        }
+                    }
+
                     $ionicLoading.hide();
                     var alertpopup = $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Palpite alterado.'
                     });
-                    $ionicLoading.hide();
                     $ionicHistory.goBack();
+
+
                 }
 
                 if (angular.equals(data.sucesso, 401)) {
@@ -706,19 +748,24 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             });
     };
 
-    $scope.ranking_rodada = function (ch_id, rd_id) {
+    $scope.ranking_rodada = function (ch_id, rd_id, ch_name) {
+        $ionicLoading.show();
         $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
             .success(function (data) {
-                if (angular.isNumber(data) && data.length > 0) {
+                console.log(data);
+                if (data.length > 0) {
                     rankingService.rankings = data;
+                    rankingService.rankings.ch_name = ch_name;
                     $state.go('app.rankingrodada');
+                    $ionicLoading.hide();
                 } else {
+                    $ionicLoading.hide();
                     var alertpopup = $ionicPopup.alert({
                         title: 'Aviso!',
                         template: 'O Ranking desta rodada está vazio.'
                     });
                 }
-        });
+            });
     }
 })
 
@@ -776,7 +823,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 })
 
-.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, palpitadosService, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite) {
+.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, palpitadosService, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite, rankingService) {
     console.log(bolaoService.bolao);
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
@@ -868,9 +915,27 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             });
     }
 
+    $scope.ranking_rodada = function (ch_id, rd_id, ch_name) {
+        console.log(ch_id + " - " + ch_name);
+        $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
+            .success(function (data) {
+                console.log(data);
+                if (data.length > 0) {
+                    rankingService.rankings = data;
+                    rankingService.rankings.ch_name = ch_name;
+                    $state.go('app.rankingrodada');
+                } else {
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'Aviso!',
+                        template: 'O Ranking desta rodada está vazio.'
+                    });
+                }
+            });
+    }
+
 })
 
-.controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, rankingService, palpitadosService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
+.controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, rankingService, palpitadosService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
 
     $scope.jogosTime = jogosTimeConstructor.jogosTime(jogostimeService.jogostime);
     console.log("jogos time");
@@ -887,22 +952,21 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         }
     }
 
-    $scope.ranking_rodada = function (ch_id, rd_id) {
-        $ionicLoading.show();
+    $scope.ranking_rodada = function (ch_id, rd_id, ch_name) {
+        console.log(ch_id + " - " + ch_name);
         $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
             .success(function (data) {
-                rankingService.rankings = data;
                 console.log(data);
-                //$state.go('app.rankingrodada', {ch_nome : data.});
-
-                //$state.go('app.detail', {
-                //    mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
-                //    ch_id: p.mt_idchampionship, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
-                //    mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
-                //    rd_round: p.rd_round, no_encerrado: p.no_encerrado, rs_res1: p.rs_res1, rs_res2: p.rs_res2
-                //});
-
-                $ionicLoading.hide();
+                if (data.length > 0) {
+                    rankingService.rankings = data;
+                    rankingService.rankings.ch_name = ch_name;
+                    $state.go('app.rankingrodada');
+                } else {
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'Aviso!',
+                        template: 'O Ranking desta rodada está vazio.'
+                    });
+                }
             });
     }
 
@@ -918,8 +982,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 })
 
 .controller("RankingRodadaCtrl", function ($scope, $http, $stateParams, $state, dataService, rankingService) {
-
-    if (!angular.isUndefined(rankingService.ranking)) {
+    console.log(rankingService);
+    if (!angular.isUndefined(rankingService.rankings)) {
         var rd_round = "";
         for (var i = 0; i < rankingService.rankings.length; i = i + 1) {
             rankingService.rankings[i].i = i + 1;
@@ -928,7 +992,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         }
 
         $scope.rankings = rankingService.rankings;
-        $scope.ch_nome = rankingService.rankings.ch_nome;
+        $scope.ch_nome = rankingService.rankings.ch_name;
         $scope.rd_round = rd_round;
     }
 
@@ -984,14 +1048,16 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 })
 
-.controller("CaixaCtrl", function($scope, $http, $window, urlService) {
+.controller("CaixaCtrl", function($scope, $http, $window, $location, urlService) {
     $scope.opcion = function (op) {
 
-        $http.post(urlService + '/mobile/cellplano', { p : op })
-            .success(function (data) {
-                console.log(data);
-                $window.location.href = data.url;
-        });
+        $location.path('http://www.bolaocraquedebola.com.br');
+
+        //$http.post(urlService + '/mobile/cellplano', { p : op })
+        //    .success(function (data) {
+        //        console.log(data);
+        //        $window.location.href = data.url;
+        //});
 
         //var serializedData = { token: '6363C4111D064931A0CC0F0330849143', email: 'martin@dymenstein.com', currency: 'BRL', itemId1: '0001', itemDescription1: 'Plano 1', itemAmount1: '10.80', itemQuantity1: '1', itemWeight1: '1000' };
 

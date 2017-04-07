@@ -1,10 +1,11 @@
 {
-  "name": "io.cordova.myappcb424c",
+  "name": "io.cordova.myappdf9fd6",
   "app_id": "",
   "gulpDependantTasks" : [
     "sass"
-  ],  
-   "gulpStartupTasks": [        
+  ],
+  "gulpStartupTasks": [
     "watch"
-  ]
+  ],
+  "defaultBrowser": "chrome"
 }

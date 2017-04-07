@@ -1,9 +1,9 @@
 {
  "android": {
      "release": {
-         "keystore":"C:\\xampp\\htdocs\\penca\\my-release-key.keystore",
+         "keystore":"C:\\xampp\\htdocs\\penca\\m5.keystore",
          "storePassword":"3345531",
-         "alias":"Martin",
+         "alias":"mdymen",
          "password":"3345531",
          "keystoreType":""
        }
