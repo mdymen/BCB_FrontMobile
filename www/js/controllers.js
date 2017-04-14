@@ -407,7 +407,7 @@
     }
 }])
 
-.controller('CadastroCtrl', function ($scope, $http, $state, urlService) {
+.controller('CadastroCtrl', function ($scope, $http, $state, $ionicLoading, urlService, usuarioService) {
 
     $scope.cadastro = function (user) {
 
@@ -435,8 +435,27 @@
             mensaje = "";
             $http.post(urlService + 'mobile/celcadastro/?', { username: user.usuario, password: user.senha, email: user.email, niver: user.niver })
                 .success(function (data) {
+                    console.log(data);
                     if (data == 200) {
-                        $state.go("login");
+                        $ionicLoading.show();
+                        $http.post(urlService + 'mobile/cellogin/?', { us: user.usuario, pass: user.senha })
+                            .success(function (data) {
+                                console.log(data);
+                                if (!data) {
+                                    $ionicLoading.hide();
+                                    var alertpopup = $ionicPopup.alert({
+                                        title: 'Erro!',
+                                        template: 'Nome de usuario e/ou senha incorretos.'
+                                    });
+                                } else {
+                                    $scope.time = data;
+                                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
+                                    $scope.cash = data.us_cash;
+
+                                    $ionicLoading.hide();
+                                    $state.go('app.list');
+                                }
+                            });
                     } else {
                         alert("Cadastro errado");
                     }
@@ -642,100 +661,110 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     console.log($scope);
 
     $scope.realizar_palpite = function (rs_res1, rs_res2, mt_id, mt_idround, ch_id) {
-        $ionicLoading.show();
-        $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
-            .success(function (data) {
-                console.log(data);
-                if (angular.equals(data.sucesso, 200)) {
-                    console.log(bolaoService);
-                    if (!angular.isUndefined(bolaoService) 
-                        && !angular.isUndefined(bolaoService.bolao)
-                        && !angular.isUndefined(bolaoService.bolao.rodada)) {
+        if (isFinite(rs_res1) && rs_res1 != null
+            && isFinite(rs_res2) && rs_res2 != null) {
 
-                        for (var i = 0; i < bolaoService.bolao.rodada.length; i = i + 1) {
-                            if (angular.equals(bolaoService.bolao.rodada[i].mt_id, data.rs_idmatch)) {
-                                bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
-                                bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
-                                bolaoService.bolao.rodada[i].vivo = false;
+            $ionicLoading.show();
+            $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
+                .success(function (data) {
+                    console.log(data);
+                    if (angular.equals(data.sucesso, 200)) {
+                        console.log(bolaoService);
+                        if (!angular.isUndefined(bolaoService)
+                            && !angular.isUndefined(bolaoService.bolao)
+                            && !angular.isUndefined(bolaoService.bolao.rodada)) {
+
+                            for (var i = 0; i < bolaoService.bolao.rodada.length; i = i + 1) {
+                                if (angular.equals(bolaoService.bolao.rodada[i].mt_id, data.rs_idmatch)) {
+                                    bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
+                                    bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
+                                    bolaoService.bolao.rodada[i].vivo = false;
+                                }
                             }
                         }
-                    }
 
-                    if (!angular.isUndefined(jogostimeService)
-                        && !angular.isUndefined(jogostimeService.jogostime)
-                        && !angular.isUndefined(jogostimeService.jogostime.jogos)) {
-                        for (var i = 0; i < jogostimeService.jogostime.jogos.length; i = i + 1) {
-                            if (angular.equals(jogostimeService.jogostime.jogos[i].mt_id, data.rs_idmatch)) {
-                                jogostimeService.jogostime.jogos[i].rs_res1 = data.rs_res1;
-                                jogostimeService.jogostime.jogos[i].rs_res2 = data.rs_res2;
-                                jogostimeService.jogostime.jogos[i].vivo = true;
+                        if (!angular.isUndefined(jogostimeService)
+                            && !angular.isUndefined(jogostimeService.jogostime)
+                            && !angular.isUndefined(jogostimeService.jogostime.jogos)) {
+                            for (var i = 0; i < jogostimeService.jogostime.jogos.length; i = i + 1) {
+                                if (angular.equals(jogostimeService.jogostime.jogos[i].mt_id, data.rs_idmatch)) {
+                                    jogostimeService.jogostime.jogos[i].rs_res1 = data.rs_res1;
+                                    jogostimeService.jogostime.jogos[i].rs_res2 = data.rs_res2;
+                                    jogostimeService.jogostime.jogos[i].vivo = true;
+                                }
                             }
                         }
+
+
+                        $ionicLoading.hide();
+                        $ionicHistory.goBack();
+                        $rootScope.$emit('atualizar_cash', data.total_usuario);
                     }
+                    if (angular.equals(data.sucesso, 402)) {
 
-
-                    $ionicLoading.hide();
-                    $ionicHistory.goBack();
-                    $rootScope.$emit('atualizar_cash', data.total_usuario);
-                }
-                if (angular.equals(data.sucesso, 402)) {
-
-                    if (!angular.isUndefined(rodadaService)
+                        if (!angular.isUndefined(rodadaService)
                         && !angular.isUndefined(rodadaService.meusPalpites)
                         && !angular.isUndefined(rodadaService.meusPalpites.palpites)) {
-                        for (var i = 0; i < rodadaService.meusPalpites.palpites.length; i = i + 1) {
+                            for (var i = 0; i < rodadaService.meusPalpites.palpites.length; i = i + 1) {
 
-                            if (angular.equals(rodadaService.meusPalpites.palpites[i].mt_id, data.rs_idmatch)) {
-                                rodadaService.meusPalpites.palpites[i].rs_res1 = data.rs_res1;
-                                rodadaService.meusPalpites.palpites[i].rs_res2 = data.rs_res2;
-                                rodadaService.meusPalpites.palpites[i].vivo = true;
+                                if (angular.equals(rodadaService.meusPalpites.palpites[i].mt_id, data.rs_idmatch)) {
+                                    rodadaService.meusPalpites.palpites[i].rs_res1 = data.rs_res1;
+                                    rodadaService.meusPalpites.palpites[i].rs_res2 = data.rs_res2;
+                                    rodadaService.meusPalpites.palpites[i].vivo = true;
+                                }
                             }
                         }
-                    }
 
-                    if (!angular.isUndefined(bolaoService)
-                        && !angular.isUndefined(bolaoService.bolao)
-                        && !angular.isUndefined(bolaoService.bolao.rodada)) {
+                        if (!angular.isUndefined(bolaoService)
+                            && !angular.isUndefined(bolaoService.bolao)
+                            && !angular.isUndefined(bolaoService.bolao.rodada)) {
 
-                        for (var i = 0; i < bolaoService.bolao.rodada.length; i = i + 1) {
-                            if (angular.equals(bolaoService.bolao.rodada[i].mt_id, data.rs_idmatch)) {
-                                bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
-                                bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
-                                bolaoService.bolao.rodada[i].vivo = true;
+                            for (var i = 0; i < bolaoService.bolao.rodada.length; i = i + 1) {
+                                if (angular.equals(bolaoService.bolao.rodada[i].mt_id, data.rs_idmatch)) {
+                                    bolaoService.bolao.rodada[i].rs_res1 = data.rs_res1;
+                                    bolaoService.bolao.rodada[i].rs_res2 = data.rs_res2;
+                                    bolaoService.bolao.rodada[i].vivo = true;
+                                }
                             }
                         }
-                    }
-                    if (!angular.isUndefined(jogostimeService)
-                        && !angular.isUndefined(jogostimeService.jogostime)
-                        && !angular.isUndefined(jogostimeService.jogostime.jogos)) {
-                        for (var i = 0; i < jogostimeService.jogostime.jogos.length; i = i + 1) {
-                            if (angular.equals(jogostimeService.jogostime.jogos[i].mt_id, data.rs_idmatch)) {
-                                jogostimeService.jogostime.jogos[i].rs_res1 = data.rs_res1;
-                                jogostimeService.jogostime.jogos[i].rs_res2 = data.rs_res2;
-                                jogostimeService.jogostime.jogos[i].vivo = true;
+                        if (!angular.isUndefined(jogostimeService)
+                            && !angular.isUndefined(jogostimeService.jogostime)
+                            && !angular.isUndefined(jogostimeService.jogostime.jogos)) {
+                            for (var i = 0; i < jogostimeService.jogostime.jogos.length; i = i + 1) {
+                                if (angular.equals(jogostimeService.jogostime.jogos[i].mt_id, data.rs_idmatch)) {
+                                    jogostimeService.jogostime.jogos[i].rs_res1 = data.rs_res1;
+                                    jogostimeService.jogostime.jogos[i].rs_res2 = data.rs_res2;
+                                    jogostimeService.jogostime.jogos[i].vivo = true;
+                                }
                             }
                         }
+
+                        $ionicLoading.hide();
+                        var alertpopup = $ionicPopup.alert({
+                            title: 'Sucesso!',
+                            template: 'Palpite alterado.'
+                        });
+                        $ionicHistory.goBack();
+
+
                     }
 
-                    $ionicLoading.hide();
-                    var alertpopup = $ionicPopup.alert({
-                        title: 'Sucesso!',
-                        template: 'Palpite alterado.'
-                    });
-                    $ionicHistory.goBack();
+                    if (angular.equals(data.sucesso, 401)) {
+                        $ionicloading.hide();
+                        var alertpopup = $ionicpopup.alert({
+                            title: 'erro!',
+                            template: 'dinheiro insuficente.'
+                        });
+                    }
 
-
-                }
-
-                if (angular.equals(data.sucesso, 401)) {
-                    $ionicLoading.hide();
-                    var alertpopup = $ionicPopup.alert({
-                        title: 'Erro!',
-                        template: 'Dinheiro insuficente.'
-                    });
-                }
-
-       });
+            });
+        } else {
+            $ionicLoading.hide();
+            var alertpopup = $ionicPopup.alert({
+                title: 'erro!',
+                template: 'palpite incorrecto.'
+            });
+        }
     }
 
     $scope.ranking_campeonato = function (ch_id) {
