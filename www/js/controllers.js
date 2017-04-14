@@ -644,6 +644,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 })
 
 .controller('JogoCtrl', function ($scope, $http, $stateParams, $state, $rootScope, $ionicHistory, $ionicLoading, $ionicPopup, dataService, rankingService, urlService, usuarioService, bolaoService, rodadaService, jogostimeService) {
+    $ionicLoading.show();
+
     $scope.t1nome = $stateParams.t1nome;
     $scope.t2nome = $stateParams.t2nome;
     $scope.tm1_logo = $stateParams.tm1_logo;
@@ -658,7 +660,12 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.rs_res1 = parseInt($stateParams.rs_res1);
     $scope.rs_res2 = parseInt($stateParams.rs_res2);
 
-    console.log($scope);
+    $http.post(urlService + 'mobile/cellgetcampeonato/?', { rd_id: $scope.mt_idround })
+        .success(function (data) {
+            $scope.campeonato = data;
+            console.log($scope);
+            $ionicLoading.hide();
+    });
 
     $scope.realizar_palpite = function (rs_res1, rs_res2, mt_id, mt_idround, ch_id) {
         if (isFinite(rs_res1) && rs_res1 != null

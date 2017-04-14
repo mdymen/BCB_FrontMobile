@@ -16,8 +16,8 @@
             </div>-->
         </div>
     </div>
-
-    <ion-content class="detail_page padding has-subheader" style="background: url('../img/soccer.jpg') no-repeat center;">  
+    <!--style="background: url('../img/soccer.jpg') no-repeat center;"-->
+    <ion-content class="detail_page padding has-subheader" >  
         <div class="det_cont" style="background-color:rgba(250,250,250,0.58);">
             <div ng-model="mt_id" style="display:none">
                 {{mt_id}}
@@ -27,6 +27,10 @@
             </div>
             <div ng-model="ch_id" style="display:none">
                 {{ch_id}}
+            </div>
+
+            <div class="row main_row" style="height:50px">
+                <p><b><i class="icon ion-calendar" style="padding-right:10px;font-size:18px"></i>{{mt_date}}</b></p>
             </div>
             <div class="row main_row" style="height:70px">
                 <div class="col col-20">
@@ -74,14 +78,22 @@
             </div>
         </div>      
 
-            <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
+        <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
+            <ion-item>
+                <i class="icon ion-ios-football"> Palpite jogo: R$ {{campeonato.ch_djogo}}</i>
+                <p>Acumulado: R$ {{campeonato.ch_acumulado}}</p>
+            </ion-item>
 
-                <p><b><i class="icon ion-calendar" style="padding-right:10px;font-size:18px"></i>{{mt_date}}</b></p>
-                <p><b><i class="icon ion-trophy" style="padding-right:10px;font-size:18px"></i>{{ch_nome}}</b></p>
-                <p><b><i class="icon ion-ribbon-b" style="padding-right:10px;font-size:18px"></i>Rodada: {{rd_round}}</b></p>
-            </div>
+            <ion-item>
+                <i class="icon ion-trophy"> {{ch_nome}}</i>
+                <p>Acumulado: R$ {{campeonato.ch_acumulado}}</p>
+            </ion-item>
 
-
+            <ion-item>
+                <i class="icon ion-ribbon-b"> Rodada: {{rd_round}}</i>
+                <p>Acumulado: R$ {{campeonato.rd_acumulado}}</p>
+            </ion-item>
+        </div>
 
     </ion-content>
 </ion-view>
