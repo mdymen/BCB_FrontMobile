@@ -28,7 +28,7 @@
                       <div class="row main_row" style="height:30px !important">
                           <div class="col col-20">
                           </div>
-                          <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date}}</b></div>
+                          <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date_show}}</b></div>
                           <div class="col col-20">
                           </div>
                       </div>
@@ -61,7 +61,7 @@
 
                           <div class="col col-20" style="text-align:center" ng-click="ranking_rodada(palpite.mt_idchampionship, palpite.mt_idround, palpite.ch_nome)"><i class="ion-ribbon-b" style="color:#fff"></i></div>
                           <div class="col col-20" style="text-align:center" ng-click="setPalpite(palpite)"><i class="ion-social-usd" style="color:#fff"></i></div>
-                          <div class="col col-30" style="font-size:15px;color:#fff;text-align:center">0.00</div>
+                          <div class="col col-30" style="font-size:15px;color:#fff;text-align:center">{{palpite.mt_acumulado}}</div>
                       </div>
                   </a>
               </div>

@@ -248,6 +248,14 @@ $rootScope.active_icon=function(type){
 	         }
 	     }
 	 })
+	 .state('app.campeonatos', {
+	     url: "/campeonatos",
+	     views: {
+	         'menuContent': {
+	             templateUrl: "templates/contact.html"
+	         }
+	     }
+	 })
 	 .state('app.vercampeonatospararanking', {
 	     url: "/vercampeonatospararanking",
 	     views: {

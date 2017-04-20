@@ -30,7 +30,7 @@
             </div>
 
             <div class="row main_row" style="height:50px">
-                <p><b><i class="icon ion-calendar" style="padding-right:10px;font-size:18px"></i>{{mt_date}}</b></p>
+                <p><b><i class="icon ion-calendar" style="text-align:center;padding-right:10px;font-size:18px"></i>{{mt_date}}</b></p>
             </div>
             <div class="row main_row" style="height:70px">
                 <div class="col col-20">
@@ -80,8 +80,8 @@
 
         <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
             <ion-item>
-                <i class="icon ion-ios-football"> Palpite jogo: R$ {{campeonato.ch_djogo}}</i>
-                <p>Acumulado: R$ {{campeonato.ch_acumulado}}</p>
+                <i class="icon ion-ios-football"> Palpite jogo: R$ {{campeonato.ch_dpalpite}}</i>
+                <p>Acumulado: R$ {{mt_acumulado}}</p>
             </ion-item>
 
             <ion-item>
@@ -95,7 +95,13 @@
             </ion-item>
         </div>
 
-    </ion-content>
+        <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
+            <ion-item  ng-click="palpitesjogo(mt_id, ch_id)">
+                <i class="icon ion-ios-body"> {{palpites.cantidad}} palpites</i>
+            </ion-item>
+        </div>
+
+</ion-content>
 </ion-view>
 
 
