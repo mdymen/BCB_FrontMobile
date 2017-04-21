@@ -657,11 +657,29 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 
     $scope.forget = function() {
-        $http.post(urlService + 'mobile/cellesqueceusenha/?', { email: "msn@dymenstein.com" })
-                    .success(function (data) {
-                        
-                        console.log(data);
-                    });
+        $ionicPopup.prompt({
+            title: 'Resetar senha',
+            inputType: 'email',
+            inputPlaceholder: 'Qual é seu email?'
+        }).then(function (res) {
+            $ionicLoading.show();
+            $http.post(urlService + 'mobile/cellesqueceusenha/?', { email : res })
+                .success(function (data) {
+                    $ionicLoading.hide();
+                    console.log(data);
+                    if (data == 200) {
+                        var alertpopup = $ionicPopup.alert({
+                            title: 'Exito!',
+                            template: 'Email enviado com éxito.'
+                        });
+                    } else {
+                        var alertpopup = $ionicPopup.alert({
+                            title: 'Erro!',
+                            template: 'O email não existe.'
+                        });
+                    }
+                });
+        });
     }
 
 })
@@ -1154,3 +1172,36 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         //    });
     }
 })
+
+
+
+.controller('CampeonatosCtrl', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService',
+        function($scope, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService) {
+            $ionicLoading.show();
+            $http.post(urlService + 'mobile/cellgetcampeonatos?')
+                .success(function (data) {
+                    $scope.emandamento = [];
+                    $scope.encerrados = [];
+                    for (var i = 0; i < data.length; i = i + 1) {
+                        if (data[i].ch_ativo == 1) {
+                            $scope.emandamento.push(data[i]);
+                        } else {
+                            $scope.encerrados.push(data[i]);
+                        }
+                    }
+                    $ionicLoading.hide();
+                    console.log($scope);
+                });
+
+            $scope.palpitarcampeonato = function (ch_id) {
+                $ionicLoading.show();
+                $http.post(urlService + '/mobile/cellbolao', { champ: ch_id, id: usuarioService.id })
+                    .success(function (data) {
+                        bolaoService.bolao = data;
+                        console.log(bolaoService.bolao);
+                        $ionicLoading.hide();
+                        $state.go("app.listjogosrodada");
+                    });
+            }
+
+}])

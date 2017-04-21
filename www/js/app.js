@@ -252,7 +252,7 @@ $rootScope.active_icon=function(type){
 	     url: "/campeonatos",
 	     views: {
 	         'menuContent': {
-	             templateUrl: "templates/contact.html"
+	             templateUrl: "templates/campeonatos.html"
 	         }
 	     }
 	 })
