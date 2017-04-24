@@ -303,63 +303,68 @@
         }
 }])
 
-.controller('Palpites', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService',
+.controller('PalpitesCtrl', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService',
         function($scope, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService) {
 
-            $ionicLoading.show();
+            //$ionicLoading.show();
 
-            $http.post(urlService + 'mobile/celproximojogos/?', {us_id : usuarioService.id})
-             .success(function (data) {
+    //        $http.post(urlService + 'mobile/celproximojogos/?', {us_id : usuarioService.id})
+    //         .success(function (data) {
 
-        $scope.palpites = data;
+    //    $scope.palpites = data;
+    //    $scope.limit = 0;
 
-        console.log(data);
+    //    console.log(data);
 
-        for (var i = 0; i < $scope.palpites.length; i = i + 1) {
+    //    $scope.alert = function (palpite) {
+    //        console.log(palpite);
+    //    }
 
-            var dateDoJogo = dataService.data_format($scope.palpites[i].mt_date);
+    //    for (var i = 0; i < $scope.palpites.length; i = i + 1) {
 
-            var dataJogo = new Date($scope.palpites[i].mt_date);
-            var dataAgora = new Date();
+    //        var dateDoJogo = dataService.data_format($scope.palpites[i].mt_date);
 
-            var dataFinal = "";
-            var date = new Date($scope.palpites[i].mt_date);
-            var numDia = $filter('date')(date, 'dd');
-            var mes = $filter('date')(date, 'MMM');
+    //        var dataJogo = new Date($scope.palpites[i].mt_date);
+    //        var dataAgora = new Date();
 
-            var date1 = new Date();
-            var numDiaHoje = $filter('date')(date1, 'dd');
-            var mesHoje = $filter('date')(date1, 'MMM');
+    //        var dataFinal = "";
+    //        var date = new Date($scope.palpites[i].mt_date);
+    //        var numDia = $filter('date')(date, 'dd');
+    //        var mes = $filter('date')(date, 'MMM');
+
+    //        var date1 = new Date();
+    //        var numDiaHoje = $filter('date')(date1, 'dd');
+    //        var mesHoje = $filter('date')(date1, 'MMM');
 
 
-            var estado = "";
-            var badget = "";
-            var no_encerrado = true;
-            if (numDia == numDiaHoje && mes == mesHoje) {
-                estado = "Hoje";
-                badget = "balanced";
-            }
+    //        var estado = "";
+    //        var badget = "";
+    //        var no_encerrado = true;
+    //        if (numDia == numDiaHoje && mes == mesHoje) {
+    //            estado = "Hoje";
+    //            badget = "balanced";
+    //        }
 
-            if (dataJogo < dataAgora) {
-                estado = "Encerrado";
-                badget = "assertive";
-                no_encerrado = false;
-            }
+    //        if (dataJogo < dataAgora) {
+    //            estado = "Encerrado";
+    //            badget = "assertive";
+    //            no_encerrado = false;
+    //        }
 
-            var palpitado = "";
-            if ($scope.palpites[i].rs_res1 != null
-                && $scope.palpites[i].rs_res2 != null) {
-                palpitado = "Palpitado";
-            }
+    //        var palpitado = "";
+    //        if ($scope.palpites[i].rs_res1 != null
+    //            && $scope.palpites[i].rs_res2 != null) {
+    //            palpitado = "Palpitado";
+    //        }
 
-            $scope.palpites[i].mt_date = dateDoJogo;
-            $scope.palpites[i].estado = estado;
-            $scope.palpites[i].badget = badget;
-            $scope.palpites[i].no_encerrado = no_encerrado;
-            $scope.palpites[i].palpitado = palpitado;
-        }
-        $ionicLoading.hide();
-    });
+    //        $scope.palpites[i].mt_date = dateDoJogo;
+    //        $scope.palpites[i].estado = estado;
+    //        $scope.palpites[i].badget = badget;
+    //        $scope.palpites[i].no_encerrado = no_encerrado;
+    //        $scope.palpites[i].palpitado = palpitado;
+    //    }
+    //    $ionicLoading.hide();
+    //});
 
             $http.get(urlService + 'mobile/cellgetcampeonatosabertos/?')
         .success(function (data) {
@@ -404,6 +409,79 @@
                 $ionicLoading.hide();
                 $state.go("app.listjogosrodada");
             });
+    }
+
+    $scope.loadMore = function () {
+
+        if (angular.isUndefined($scope.limit)) {
+            $scope.limit = 0;
+        } else {
+            $scope.limit = $scope.limit + 12;
+        }
+
+        console.log($scope.limit);
+
+        $http.post(urlService + 'mobile/celproximojogoslimit/?', { us_id: usuarioService.id, limit: $scope.limit })
+           .success(function (data) {
+
+               console.log("limit " + $scope.limit);
+               console.log(data);
+               
+
+               for (var i = 0; i < data.length; i = i + 1) {
+
+                   var dateDoJogo = dataService.data_format(data[i].mt_date);
+
+                   var dataJogo = new Date(data[i].mt_date);
+                   var dataAgora = new Date();
+
+                   var dataFinal = "";
+                   var date = new Date(data[i].mt_date);
+                   var numDia = $filter('date')(date, 'dd');
+                   var mes = $filter('date')(date, 'MMM');
+
+                   var date1 = new Date();
+                   var numDiaHoje = $filter('date')(date1, 'dd');
+                   var mesHoje = $filter('date')(date1, 'MMM');
+
+
+                   var estado = "";
+                   var badget = "";
+                   var no_encerrado = true;
+                   if (numDia == numDiaHoje && mes == mesHoje) {
+                       estado = "Hoje";
+                       badget = "balanced";
+                   }
+
+                   if (dataJogo < dataAgora) {
+                       estado = "Encerrado";
+                       badget = "assertive";
+                       no_encerrado = false;
+                   }
+
+                   var palpitado = "";
+                   if (data[i].rs_res1 != null
+                       && data[i].rs_res2 != null) {
+                       palpitado = "Palpitado";
+                   }
+
+                   data[i].mt_date = dateDoJogo;
+                   data[i].estado = estado;
+                   data[i].badget = badget;
+                   data[i].no_encerrado = no_encerrado;
+                   data[i].palpitado = palpitado;
+
+                   
+               }
+               if (angular.isUndefined($scope.palpites)) {
+                   $scope.palpites = data;
+               } else {
+                   $scope.palpites = $scope.palpites.concat(data);
+                   //$scope.palpites.push(data[i]);
+               }
+
+               $scope.$broadcast('scroll.infiniteScrollComplete');
+           });
     }
 }])
 
@@ -1203,5 +1281,18 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                         $state.go("app.listjogosrodada");
                     });
             }
+
+}])
+
+.controller('shareCtrl',['$scope',function($scope) {
+   $scope.whatsappShare=function(){
+       window.plugins.socialsharing.shareViaWhatsAppToReceiver(receiver, 'Message via WhatsApp', null /* img */, null /* url */, function () { console.log('share ok') });
+  }
+   $scope.twitterShare=function(){
+    window.plugins.socialsharing.shareViaTwitter('Digital Signature Maker', null /* img */, 'https://play.google.com/store/apps/details?id=com.prantikv.digitalsignaturemaker', null, function(errormsg){alert("Error: Cannot Share")});
+  }
+   $scope.OtherShare=function(){
+     window.plugins.socialsharing.share('Digital Signature Maker', null, null, 'https://play.google.com/store/apps/details?id=com.prantikv.digitalsignaturemaker');
+  }
 
 }])

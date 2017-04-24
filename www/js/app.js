@@ -324,6 +324,16 @@ $rootScope.active_icon=function(type){
     }
 })
 
+    .state('app.share', {
+        url: "/share",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/share.html",
+                controller: 'shareCtrl'
+            }
+        }
+    })
+
   .state('app.single', {
     url: "/playlists/:playlistId",
     views: {
