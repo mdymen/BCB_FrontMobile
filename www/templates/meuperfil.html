@@ -1,12 +1,12 @@
-<ion-view view-title="Campeonatos" cache-view="false" ng-controller="CampeonatosCtrl">
+<ion-view view-title="Meu Perfil" cache-view="false" ng-controller="MeuPerfilCtrl">
   
     <div class="bar bar-subheader sub_head">
         <div class="row">
           <div class="col"  ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
-            <p>Em Andamento</p>
+            <p>Dados pessoais</p>
           </div>
           <div class="col"  ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
-            <p>Encerrados</p>
+            <p>Palpites</p>
           </div>
           <!--<div class="col" ng-click="goto('/app/profile')">
             <p>Campeonatos</p>
@@ -33,14 +33,22 @@
           </div>
           <div ng-switch-when="2">
               <ion-list>
-                  <ion-item ng-repeat="campeonato in encerrados" ng-click="palpitarcampeonato(campeonato.ch_id)">
-                      {{campeonato.ch_nome}}
-                      <ng:switch on="{{campeonato.ch_ativo}} == 0">
-                          <div ng:switch-when="true">
-                              <span class="badge badge-assertive" style="{{palpite.color}};margin-left:-10px;position:absolute;padding: 1px 5px;font-size:10px">Encerrado</span>
-                          </div>
-                      </ng:switch>
+                  <ion-item>
+                      <i class="ion-ribbon-a" item-left></i>
+                      Pontos: {{resultados.pontos}}
+                </ion-item>                  
+                  <ion-item>
+                      <i class="ion-ios-football" item-left></i>
+                      Palpitados: {{resultados.palpitados}}
                   </ion-item>
+                  <ion-item>
+                      <i class="ion-cash" item-left></i>
+                      Palpites acertados: {{resultados.acertos}}
+                  </ion-item>
+                  <ion-item>
+                      <i class="ion-sad-outline" item-left></i>                      
+                      Palpites errados: {{resultados.erros}}
+                  </ion-item>                  
               </ion-list>
           </div>
       </div>

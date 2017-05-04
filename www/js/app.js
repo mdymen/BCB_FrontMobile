@@ -305,6 +305,15 @@ $rootScope.active_icon=function(type){
     }
 })
 
+.state('app.meuperfil', {
+    url: "/meuperfil",
+    views: {
+        'menuContent': {
+            templateUrl: "templates/meuperfil.html"
+        }
+    }
+})
+
 .state('app.palpitados', {
     url: "/palpitados",
     views: {

@@ -1282,7 +1282,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     });
             }
 
-}])
+        }])
+
 
 .controller('shareCtrl',['$scope',function($scope) {
    $scope.whatsappShare=function(){
@@ -1296,3 +1297,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
   }
 
 }])
+
+
+
+.controller("MeuPerfilCtrl", function ($scope, $http, $ionicLoading, $location, urlService, usuarioService) {
+
+    $ionicLoading.show();
+    $http.post(urlService + 'mobile/cellpalpitesusuario?', {user : usuarioService.id})
+                .success(function (data) {
+                    $scope.resultados = data;
+                    $ionicLoading.hide();
+                });
+})
