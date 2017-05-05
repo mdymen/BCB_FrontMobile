@@ -1303,9 +1303,27 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 .controller("MeuPerfilCtrl", function ($scope, $http, $ionicLoading, $location, urlService, usuarioService) {
 
     $ionicLoading.show();
+    $scope.user = usuarioService.usuario;
+    $scope.cash = usuarioService.dinheiro;
     $http.post(urlService + 'mobile/cellpalpitesusuario?', {user : usuarioService.id})
-                .success(function (data) {
-                    $scope.resultados = data;
-                    $ionicLoading.hide();
-                });
+        .success(function (data) {
+            $scope.resultados = data;
+            $ionicLoading.hide();
+        });
+
+    $scope.trocarsenha = function (u) {
+        console.log(u.newpass);
+        if (!angular.equals(u.atualsenha, usuarioService.senha)) {
+            $scope.error = "Senha incorreta"
+        }
+        else if (angular.isUndefined(u.newpass, "")) {
+            $scope.error = "Nova senha incorreta"
+        }
+        else if (!angular.equals(u.newpass, u.confirmpass)) {
+            $scope.error = "Nova senha e confirmação são diferentes"
+        } else {
+            $scope.error = "Certo"
+        }
+
+    }
 })

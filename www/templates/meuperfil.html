@@ -8,28 +8,43 @@
           <div class="col"  ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
             <p>Palpites</p>
           </div>
-          <!--<div class="col" ng-click="goto('/app/profile')">
-            <p>Campeonatos</p>
-          </div>-->
-          <!--<div class="col col-10"  ng-click="goto('/app/add_post')">
-             <i class="ion-plus"></i>
-          </div>-->
         </div>
     </div>
-  <ion-content class="has-subheader activity_page">
+  <ion-content class="register_page">
       <div ng-switch on="activitytab">
           <div class="people_follow" ng-switch-when="1">
-              <ion-list>
-                  <ion-item ng-repeat="campeonato in emandamento" ng-click="palpitarcampeonato(campeonato.ch_id)">
-                      {{campeonato.ch_nome}}
-                      <p>Acumulado: R${{campeonato.ch_acumulado}}  Palpite: R${{campeonato.ch_dpalpite}}</p>
-                      <ng:switch on="{{campeonato.ch_ativo}} == 0">
-                          <div ng:switch-when="true">
-                              <span class="badge badge-assertive" style="{{palpite.color}};margin-left:-10px;position:absolute;padding: 1px 5px;font-size:10px">Encerrado</span>
-                          </div>
-                      </ng:switch>
-                  </ion-item>
-              </ion-list>
+              <div>
+                  <div class="row">
+                      <div class="col col-100">
+                          <div class="col-demo" style="text-align:center;color:red;padding-top:30px">{{error}}</div>
+                      </div>
+                  </div>
+
+                  <form class="reg_form log_form" ng-submit="trocarsenha(u)">
+                      <div class="list">
+                          <label class="item item-input">
+                              <i class="icon ion-person" style="width:30px"></i>
+                              <input type="text" ng-model="user" disabled>
+                          </label>
+                          <label class="item item-input">
+                              <i class="icon ion-social-usd" style="width:30px"></i>
+                              <input type="text" ng-model="cash" disabled>
+                          </label>
+                          <label class="item item-input">
+                              <input type="password" ng-model="u.atualsenha" placeholder="Senha">
+                          </label>
+                          <label class="item item-input">
+                              <input type="password" ng-model="u.newpass" placeholder="Nova senha">
+                          </label>
+                          <label class="item item-input">
+                              <input type="password" ng-model="u.confirmpass" placeholder="Confirmação senha">
+                          </label>
+
+                          <input type="submit" name="submit" class="button button-block" id="submit" value="Aceitar" />
+
+                      </div>
+                  </form>
+              </div>
           </div>
           <div ng-switch-when="2">
               <ion-list>
