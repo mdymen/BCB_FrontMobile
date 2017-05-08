@@ -171,7 +171,11 @@ $rootScope.active_icon=function(type){
  .state('login', {
     url: "/login",
         templateUrl: "templates/login.html"
-  })
+ })
+         .state('blanco', {
+             url: "/blanco",
+             templateUrl: "templates/blanco.html"
+         })
   .state('register', {
     url: "/register",
         templateUrl: "templates/register.html"
@@ -353,5 +357,5 @@ $rootScope.active_icon=function(type){
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/blanco');
 });

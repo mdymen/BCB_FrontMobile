@@ -37,7 +37,7 @@
                               <input type="password" ng-model="u.newpass" placeholder="Nova senha">
                           </label>
                           <label class="item item-input">
-                              <input type="password" ng-model="u.confirmpass" placeholder="Confirmação senha">
+                              <input type="password" ng-model="u.confirmpass" placeholder="Repetir senha">
                           </label>
 
                           <input type="submit" name="submit" class="button button-block" id="submit" value="Aceitar" />
@@ -48,22 +48,24 @@
           </div>
           <div ng-switch-when="2">
               <ion-list>
-                  <ion-item>
-                      <i class="ion-ribbon-a" item-left></i>
-                      Pontos: {{resultados.pontos}}
-                </ion-item>                  
-                  <ion-item>
-                      <i class="ion-ios-football" item-left></i>
-                      Palpitados: {{resultados.palpitados}}
-                  </ion-item>
-                  <ion-item>
-                      <i class="ion-cash" item-left></i>
-                      Palpites acertados: {{resultados.acertos}}
-                  </ion-item>
-                  <ion-item>
-                      <i class="ion-sad-outline" item-left></i>                      
-                      Palpites errados: {{resultados.erros}}
-                  </ion-item>                  
+                  <div style="padding-top:40px">
+                      <ion-item>
+                          <i class="ion-ribbon-a" item-left></i>
+                          Pontos: {{resultados.pontos}}
+                      </ion-item>
+                      <ion-item>
+                          <i class="ion-ios-football" item-left></i>
+                          Palpitados: {{resultados.palpitados}}
+                      </ion-item>
+                      <ion-item>
+                          <i class="ion-cash" item-left></i>
+                          Palpites acertados: {{resultados.acertos}} - {{((resultados.acertos * 100)/resultados.palpitados) | number: 2}}%
+                      </ion-item>
+                      <ion-item>
+                          <i class="ion-sad-outline" item-left></i>
+                          Palpites errados: {{resultados.erros}} - {{((resultados.erros * 100)/resultados.palpitados) | number: 2}}%
+                      </ion-item>
+                  </div>
               </ion-list>
           </div>
       </div>

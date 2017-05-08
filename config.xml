@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="io.cordova.myappeabb85" version="0.0.12" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" defaultLocale="es-ES" android-versionCode="24">
-  <name>Bolão Craque de Bola</name>
-  <description>Bolão Craque de Bola</description>
+<widget id="bolao.craque.bola3" version="0.0.18" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" defaultLocale="es-ES" android-versionCode="27">
+  <name>Bolão Palpites de Futebol</name>
+  <description>
+  </description>
   <author email="vscordovatools@microsoft.com" href="http://taco.visualstudio.com">Martin Dymenstein</author>
   <content src="index.html" />
   <access origin="*" />
@@ -81,8 +82,4 @@
     <icon src="resources/windows/icon/logo71x71.scale-100.png" width="71" height="71" />
     <icon src="resources/windows/icon/wide310x150.scale-100.png" width="310" height="150" />
   </platform>
-  <preference name="WindowsStoreDisplayName" value="Bolão Craque de Bola" />
-  <vs:platformSpecificValues xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps">
-    <vs:platformSpecificWidget platformName="windows" id="bolao.craque.debola" />
-  </vs:platformSpecificValues>
 </widget>

@@ -111,6 +111,9 @@
           <div class="people_follow" ng-switch-when="2">
               <ion-list>
                   <ion-item ng-repeat="campeonato in campeonatos" ng-click="meuspalpitescampeonato(campeonato.ch_id)">
+                      <ion-avatar item-left>
+                          <img style="width:20px;height:20px" src="http://www.bolaocraquedebola.com.br/{{campeonato.ch_logocampeonato}}">
+                      </ion-avatar>
                       {{campeonato.ch_nome}}
                       <p>Acumulado: R${{campeonato.ch_acumulado}}  Palpite: R${{campeonato.ch_dpalpite}}</p>
                       <ng:switch on="{{campeonato.ch_ativo}} == 0">
@@ -124,6 +127,9 @@
           <div ng-switch-when="3">
               <ion-list>
                   <ion-item ng-repeat="campeonato in campeonatos" ng-click="palpitarcampeonato(campeonato)">
+                      <ion-avatar item-left>
+                          <img style="width:20px;height:20px" src="http://www.bolaocraquedebola.com.br/{{campeonato.ch_logocampeonato}}">
+                      </ion-avatar>
                       {{campeonato.ch_nome}}
                       <ng:switch on="{{campeonato.ch_ativo}} == 0">
                           <div ng:switch-when="true">

@@ -13,6 +13,9 @@
                 <div class="col" ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
                     <p>Tabela</p>
                 </div>
+                <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
+                    <p>Info</p>
+                </div>
             </div>
         </div>
 
@@ -89,19 +92,42 @@
                                   <div class="col">Grupo: {{team.tm_grupo}}</div>
                               </div>
                               <div ng-repeat="t in team.grupo" href="#/app/detail/" ng-click="jogos_do_time(t,bolao.championship.ch_id)">
-                                  <div class="row main_row" style="height:30px !important">
-                                      <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{t.tm_logo}}" /></div>
-                                      <div class="col col-40">{{t.tm_name}}</div>
-                                      <div class="col col-20">{{t.tm_played}}</div>
-                                      <div class="col col-20">{{t.tm_points}}</div>
+                                      <div class="row main_row" style="height:30px !important">
+                                          <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{t.tm_logo}}" /></div>
+                                          <div class="col col-40">{{t.tm_name}}</div>
+                                          <div class="col col-20">{{t.tm_played}}</div>
+                                          <div class="col col-20">{{t.tm_points}}</div>
+                                      </div>
                                   </div>
-                              </div>
-
                           </div>
                       </div>
                  </ng:switch>
                 </div>
-          </div>
+              <div ng-switch-when="3">
+                  <div style="padding-top:10px">
+                      <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
+                          <ion-item style="text-align:center">
+                              <img style="width:200px;height:200px" src="http://www.bolaocraquedebola.com.br/{{bolao.championship.ch_logocampeonato}}" />
+                          </ion-item>
+                          <ion-item class="item-text-wrap" style="text-align:center">
+                              {{bolao.championship.ch_descricao}}
+                              <p>Inicio {{bolao.championship.ch_data_inicio}}</p>
+                          </ion-item>
+                          <ion-item style="text-align:center">
+                              <i class="icon ion-trophy"> {{acumulado}}</i>
+                          </ion-item>
+                          <ion-item>
+                              <i class="icon ion-ios-football"> Palpite jogo: R${{bolao.championship.ch_dpalpite}}</i>
+                          </ion-item>
+                          <ion-item>
+                              <p>R${{bolao.championship.ch_djogo}} para o jogo</p>
+                              <p>R${{bolao.championship.ch_dchamp}} para o campeonato</p>
+                              <p>R${{bolao.championship.ch_drodada}} para a rodada</p>
+                          </ion-item>
+                      </div>
+                  </div>
+              </div>
+              </div>
           </div>
 </ion-content>
 </ion-view>

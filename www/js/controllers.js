@@ -32,6 +32,19 @@
     this.apos;
 })
 
+.factory('sessionService',['$http',function($http){
+return {
+   set:function(key,value){
+      return localStorage.setItem(key,JSON.stringify(value));
+   },
+   get:function(key){
+     return JSON.parse(localStorage.getItem(key));
+   },
+   destroy:function(key){
+     return localStorage.removeItem(key);
+   },
+ };
+}])
 
 .factory('urlService', function () {
     //return "http://localhost/penca/public/";
@@ -71,10 +84,7 @@
 .service('bolaoServiceConstructor', function (dataService, dataEncerrado, resultadoFinalService) {
     this.bolao = function (bolao) {
 
-        console.log(bolao);
-
         for (var i = 0; i < bolao.rodada.length; i = i + 1) {
-            console.log(bolao.rodada[i].mt_date);
             bolao.rodada[i].mt_date_show = bolao.rodada[i].mt_date;
             var date = new Date(bolao.rodada[i].mt_date);
             var no_encerrado = dataEncerrado.no_encerrado(bolao.rodada[i]);
@@ -288,8 +298,8 @@
     };
 })
 
-.controller("MenuCtrl", ['$scope', '$http', '$state', '$rootScope', 'usuarioService', 
-    function ($scope, $http, $state, $rootScope, usuarioService) {
+.controller("MenuCtrl", ['$scope', '$http', '$state', '$rootScope', 'usuarioService', 'sessionService',
+    function ($scope, $http, $state, $rootScope, usuarioService, sessionService) {
         $scope.cash = usuarioService.dinheiro;
         $scope.usuario = usuarioService.usuario;
 
@@ -299,12 +309,13 @@
 
         $scope.logout = function () {
             usuarioService.guardar("", "", "");
+            sessionService.set("usuario", null);
             $state.go("login");
         }
 }])
 
-.controller('PalpitesCtrl', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService',
-        function($scope, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService) {
+.controller('PalpitesCtrl', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
+        function($scope, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
 
             //$ionicLoading.show();
 
@@ -706,12 +717,20 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     }])
 
-.controller('LoginCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, usuarioService, urlService) {
-    $scope.login = function () {
+.controller('LoginCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, usuarioService, urlService, sessionService) {
+
+    console.log(sessionService.get("usuario"));
+
+    $scope.loguearse = function () {
+        $scope.logon($scope.login.usuario, $scope.login.senha);
+    }
+
+    $scope.logon = function (usuario, senha) {
         $ionicLoading.show();
-        $http.post(urlService + 'mobile/cellogin/?', { us: $scope.login.usuario, pass: $scope.login.senha })
+
+        
+        $http.post(urlService + 'mobile/cellogin/?', { us: usuario, pass: senha })
             .success(function (data) {
-                console.log("data");
                 console.log(data);
                 if (!data) {
                     $ionicLoading.hide();
@@ -720,11 +739,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                         template: 'Nome de usuario e/ou senha incorretos.'
                     });
                 } else {
-                    console.log(data);
-                    console.log($scope.login.usuario);
-                    console.log($scope.login.senha);
                     $scope.time = data;
                     usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
+                    sessionService.set("usuario", usuarioService);
                     $scope.cash = data.us_cash;
                     
                     $ionicLoading.hide();
@@ -991,17 +1008,14 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 })
 
 .controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, palpitadosService, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite, rankingService) {
-    console.log(bolaoService.bolao);
+    console.log($scope.bolao);
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
 
+    $scope.acumulado = "Bolão acumulado: R$" + $scope.bolao.championship.ch_acumulado; 
+
     $scope.apagar = function (rs_id, ch_id, rd_id, mt_id) {
         $scope.data = {};
-
-        console.log(rs_id);
-        console.log(ch_id);
-        console.log(rd_id);
-        console.log(mt_id);
 
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
@@ -1041,7 +1055,6 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                 bolaoService.bolao = data;
                 $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
                 $scope.ch_nome = $scope.bolao.ch_nome;
-                console.log($scope);
                 $ionicLoading.hide();
             });
     }
@@ -1064,7 +1077,6 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                 jogostimeService.jogostime = data;
                 $ionicLoading.hide();
                 $state.go("app.jogostime");
-                //console.log(data);
             });
     }
 
@@ -1075,7 +1087,6 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $ionicLoading.show();
         $http.post(urlService + 'mobile/cellpalpites', { match: mt_id, champ: ch_id })
             .success(function (data) {
-                console.log(data);
                 palpitadosService.palpitados = data;
                 $ionicLoading.hide();
                 $state.go("app.palpitados");
@@ -1083,10 +1094,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 
     $scope.ranking_rodada = function (ch_id, rd_id, ch_name) {
-        console.log(ch_id + " - " + ch_name);
         $http.post(urlService + 'mobile/cellrankinground?', { champ: ch_id, round: rd_id })
             .success(function (data) {
-                console.log(data);
                 if (data.length > 0) {
                     rankingService.rankings = data;
                     rankingService.rankings.ch_name = ch_name;
@@ -1308,11 +1317,13 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $http.post(urlService + 'mobile/cellpalpitesusuario?', {user : usuarioService.id})
         .success(function (data) {
             $scope.resultados = data;
+            $scope.resultados.porcentajeacertos = ($scope.resultados.acertos * 100) / $scope.resultados.palpitados;
+
             $ionicLoading.hide();
         });
 
     $scope.trocarsenha = function (u) {
-        console.log(u.newpass);
+        $ionicLoading.show();
         if (!angular.equals(u.atualsenha, usuarioService.senha)) {
             $scope.error = "Senha incorreta"
         }
@@ -1322,8 +1333,57 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         else if (!angular.equals(u.newpass, u.confirmpass)) {
             $scope.error = "Nova senha e confirmação são diferentes"
         } else {
-            $scope.error = "Certo"
+            $http.post(urlService + 'mobile/celleditsenha?', { userId: usuarioService.id, novasenha: u.newpass })
+                .success(function (data) {
+                    if (data == 200) {
+                        $scope.error = "";
+                        alert("Senha trocada com éxito");
+                    } else {
+                        $scope.error = "Erro: Tente novamente o envie um email a contato";
+                    }
+                });
         }
+        $ionicLoading.hide();
+    }
+})
+
+
+.controller("InicioCtrl", function ($scope, $http, $ionicLoading, $state, urlService, usuarioService, sessionService) {
+
+    $ionicLoading.show();
+
+
+    $scope.logon = function (usuario, senha) {
+
+
+        $http.post(urlService + 'mobile/cellogin/?', { us: usuario, pass: senha })
+            .success(function (data) {
+                console.log(data);
+                if (!data) {
+                    $ionicLoading.hide();
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'Erro!',
+                        template: 'Nome de usuario e/ou senha incorretos.'
+                    });
+                } else {
+                    $scope.time = data;
+                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
+                    sessionService.set("usuario", usuarioService);
+                    $scope.cash = data.us_cash;
+
+                    $ionicLoading.hide();
+                    $state.go('app.list');
+                }
+            });
 
     }
+
+    var usuario = sessionService.get("usuario");
+    if (usuario != null) {
+        $scope.logon(usuario.usuario, usuario.senha);
+    } else {
+        $ionicLoading.hide();
+        $state.go("login");
+    }
+
 })
