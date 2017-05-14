@@ -170,7 +170,7 @@ return {
                 var dia = $filter('date')(date, 'EEE');
                 var numDia = $filter('date')(date, 'dd');
                 var mes = $filter('date')(date, 'MMM');
-                var hora = $filter('date')(date, 'hh:mm');
+                var hora = $filter('date')(date, 'HH:mm');
 
                 if (angular.equals(dia, "Mon")) {
                     dataFinal = "Seg.";
@@ -298,8 +298,8 @@ return {
     };
 })
 
-.controller("MenuCtrl", ['$scope', '$http', '$state', '$rootScope', 'usuarioService', 'sessionService',
-    function ($scope, $http, $state, $rootScope, usuarioService, sessionService) {
+.controller("MenuCtrl", ['$scope', '$http', '$state', '$rootScope', '$ionicHistory', 'usuarioService', 'sessionService',
+    function ($scope, $http, $state, $rootScope, $ionicHistory, usuarioService, sessionService) {
         $scope.cash = usuarioService.dinheiro;
         $scope.usuario = usuarioService.usuario;
 
@@ -310,6 +310,9 @@ return {
         $scope.logout = function () {
             usuarioService.guardar("", "", "");
             sessionService.set("usuario", null);
+            $scope.cash = 0.00;
+            $ionicHistory.clearCache();
+            $ionicHistory.clearHistory();
             $state.go("login");
         }
 }])
@@ -505,7 +508,7 @@ return {
 
         if (typeof user.usuario == "undefined") {
             certo = false;
-            mensaje = "Nome do usuario nao pode ser vazio.";
+            mensaje = "Nome do usuario não pode ter espaços em branco nem caracteres especiais.";
             $ionicLoading.hide();
         }
         if (typeof user.senha == "undefined") {
@@ -717,7 +720,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     }])
 
-.controller('LoginCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, usuarioService, urlService, sessionService) {
+.controller('LoginCtrl', function ($scope, $http, $state, $ionicLoading, $rootScope, $ionicPopup, usuarioService, urlService, sessionService) {
 
     console.log(sessionService.get("usuario"));
 
@@ -743,7 +746,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
                     sessionService.set("usuario", usuarioService);
                     $scope.cash = data.us_cash;
-                    
+                    $rootScope.$emit('atualizar_cash', $scope.cash);
                     $ionicLoading.hide();
                     $state.go('app.list');
                 }
@@ -964,6 +967,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.rankings = rankingService.rankings;
     $scope.ch_nome = nome_champ;
 
+    $scope.verusuario = function (userid, username) {
+
+        $state.go('app.perfilusuario', {
+            userid: userid,
+            username:username
+        });
+
+    };
+
 })
 
 .controller('VerCampeonatosParaRankingCtrl', function ($scope, $state, $http, $ionicPopup, urlService, rankingService) {
@@ -1172,6 +1184,13 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $scope.rd_round = rd_round;
     }
 
+    $scope.verusuario = function (usuario,us_username) {
+
+        $state.go('app.perfilusuario', {
+            userid: usuario, username: us_username
+        });
+
+    };
 })
 
 .controller("TransacoesCtrl", function ($scope, $state, $http, $ionicLoading, campeonatosService, usuarioService, urlService, transacoesService) {
@@ -1387,3 +1406,20 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 
 })
+
+.controller("PerfilUsuarioCtrl", function ($scope, $state, $http, $ionicLoading, urlService, usuarioService, sessionService) {
+
+    $ionicLoading.show();
+
+    $http.post(urlService + 'mobile/cellpalpitesusuario/?', { user: $state.params.userid })
+           .success(function (data) {
+               $ionicLoading.hide();
+               console.log($state);
+               $scope.resultados = data;
+               $scope.username = $state.params.username;
+           });
+
+   
+
+})
+

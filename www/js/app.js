@@ -318,6 +318,15 @@ $rootScope.active_icon=function(type){
     }
 })
 
+        .state('app.perfilusuario', {
+            url: "/perfilusuario/:userid/:username",
+            views: {
+                'menuContent': {
+                    templateUrl: "templates/perfilusuario.html"
+                }
+            }
+        })
+
 .state('app.palpitados', {
     url: "/palpitados",
     views: {

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="bolao.craque.bola3" version="0.0.18" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" defaultLocale="es-ES" android-versionCode="27">
-  <name>Bolão Palpites de Futebol</name>
+<widget id="io.cordova.myappeabb85" version="0.0.23" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" defaultLocale="es-ES" android-versionCode="32">
+  <name>Bolão Craque de Bola</name>
   <description>
   </description>
   <author email="vscordovatools@microsoft.com" href="http://taco.visualstudio.com">Martin Dymenstein</author>

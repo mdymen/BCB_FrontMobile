@@ -1,26 +1,20 @@
 ﻿  <ion-content class="login_page">
       <div class="row main_row" style="height:90px; text-align:center">
           <div class="col col-100">
-              <img width="120px" src="http://www.bolaocraquedebola.com.br/assets/img/iconelogo2.png" />
+              <img width="70px" src="http://www.bolaocraquedebola.com.br/assets/img/iconelogo.png" />
+              <div style="font-size:18px"><b>Bolão Craque de Bola</b></div>
           </div>
           </div>
-      <div class="row main_row" style="height:70px; text-align:center">
-          <div class="col col-100">
-              <div class="" style="padding-top:60px;font-size:20px;color:white; font-family: Arial">
-                  Bolão Palpites de Futebol
-              </div>
-          </div>
-      </div>
           <div ng-controller="LoginCtrl" style="padding-top:100px;" >
               <form class="log_form">
                   <div class="list list-inset">
                       <label class="item item-input">
-                          <i class="icon ion-android-person  placeholder-icon"></i>
-                          <input ng-model="login.usuario" type="text" placeholder="Usuario">
+                          <i class="icon ion-android-person  placeholder-icon" style="color:black !important"></i>
+                          <input ng-model="login.usuario" type="text" style="color:black !important">
                       </label>
                       <label class="item item-input">
-                          <i class="icon ion-unlocked placeholder-icon"></i>
-                          <input ng-model="login.senha" type="password" placeholder="Senha">
+                          <i class="icon ion-unlocked placeholder-icon" style="color:black !important"></i>
+                          <input ng-model="login.senha" type="password" style="color:black !important">
                       </label>
 
 
@@ -32,10 +26,12 @@
                       <a href="#/register" class="button button-block main_btn">
                           Cadastre-se
                       </a>
+                      <div class="col col-100">
+                          <button class="button for_btn" style="font-weight:bold;color:blue !important" ng-click="forget()">
+                              Esqueceu a senha ?
+                          </button>
+                      </div>
 
-                      <button class="button for_btn" ng-click="forget()">
-                          Esqueceu a senha ?
-                      </button>
                       <!--<a href="#/app/list" class="button button-icon skip_btn">
                         Skip
                     </a>-->

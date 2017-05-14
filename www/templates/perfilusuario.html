@@ -1,0 +1,37 @@
+<ion-view view-title="Perfil do Usuario" cache-view="false" ng-controller="PerfilUsuarioCtrl">
+  
+    <div class="bar bar-subheader sub_head">
+        <div class="row">
+          <div class="col"  ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
+            <p>{{username}}</p>
+          </div>
+        </div>
+    </div>
+  <ion-content class="register_page">
+      <div ng-switch on="activitytab">
+
+          <div ng-switch-when="1">
+              <ion-list>
+                  <div style="padding-top:40px">
+                      <ion-item>
+                          <i class="ion-ribbon-a" item-left></i>
+                          Pontos: {{resultados.pontos}}
+                      </ion-item>
+                      <ion-item>
+                          <i class="ion-ios-football" item-left></i>
+                          Palpitados: {{resultados.palpitados}}
+                      </ion-item>
+                      <ion-item>
+                          <i class="ion-cash" item-left></i>
+                          Palpites acertados: {{resultados.acertos}} - {{((resultados.acertos * 100)/resultados.palpitados) | number: 2}}%
+                      </ion-item>
+                      <ion-item>
+                          <i class="ion-sad-outline" item-left></i>
+                          Palpites errados: {{resultados.erros}} - {{((resultados.erros * 100)/resultados.palpitados) | number: 2}}%
+                      </ion-item>
+                  </div>
+              </ion-list>
+          </div>
+      </div>
+</ion-content>
+</ion-view>

@@ -10,7 +10,7 @@
     <ion-content class="has-subheader activity_page">
         <div class="people_follow">
             <ion-list>
-                <ion-item ng-repeat="ranking in rankings" style="border-style:none !important">
+                <ion-item ng-repeat="ranking in rankings" ng-click="verusuario(ranking.us_id, ranking.us_username)" style="border-style:none !important">
                     <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
                         <div class="col">
                             <div class="col-demo"><b>{{ranking.i}}</b></div>
