@@ -10,9 +10,16 @@
   <ion-content class="register_page">
       <div ng-switch on="activitytab">
 
-          <div ng-switch-when="1">
+          <div ng-switch-when="1" style="padding-top:50px">
+
+              <div class="col col-100" style="color:blue; text-align:center; font-size:16px">
+                  {{grito}}
+              </div>
+
+              
+
               <ion-list>
-                  <div style="padding-top:40px">
+                  <div >
                       <ion-item>
                           <i class="ion-ribbon-a" item-left></i>
                           Pontos: {{resultados.pontos}}

@@ -235,12 +235,14 @@ return {
     var senha;
     var dinheiro;
     var id;
+    var grito;
 
-    this.guardar = function (us, pass, din, id) {
+    this.guardar = function (us, pass, din, id, grito) {
         this.usuario = us;
         this.senha = pass;
         this.dinheiro = din;
         this.id = id;
+        this.grito = grito;
     }
 
     this.getUsuario = function () {
@@ -308,7 +310,7 @@ return {
         });
 
         $scope.logout = function () {
-            usuarioService.guardar("", "", "");
+            usuarioService.guardar("", "", "","");
             sessionService.set("usuario", null);
             $scope.cash = 0.00;
             $ionicHistory.clearCache();
@@ -505,7 +507,7 @@ return {
         $ionicLoading.show();
         var certo = true;
         var mensaje = "";
-
+        console.log(user);
         if (typeof user.usuario == "undefined") {
             certo = false;
             mensaje = "Nome do usuario não pode ter espaços em branco nem caracteres especiais.";
@@ -518,18 +520,18 @@ return {
         }
         if (typeof user.email == "undefined") {
             certo = false;
-            mensaje = "Email nao pode ser vazio.";
+            mensaje = "Email não pode ser vazio.";
             $ionicLoading.hide();
         }
         if (user.niver == null) {
             certo = false;
-            mensaje = "Aniversario nao pode ser vazio.";
+            mensaje = "Aniversario não pode ser vazio.";
             $ionicLoading.hide();
         }
 
         if (certo) {
             mensaje = "";
-            $http.post(urlService + 'mobile/celcadastro/?', { username: user.usuario, password: user.senha, email: user.email, niver: user.niver })
+            $http.post(urlService + 'mobile/celcadastro/?', { username: user.usuario, password: user.senha, email: user.email, niver: user.niver, grito: user.grito })
                 .success(function (data) {
                     console.log(data);
                     if (data == 200) {
@@ -546,7 +548,7 @@ return {
                                     });
                                 } else {
                                     $scope.time = data;
-                                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
+                                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito);
                                     $scope.cash = data.us_cash;
 
                                     $ionicLoading.hide();
@@ -743,7 +745,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     });
                 } else {
                     $scope.time = data;
-                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
+                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito);
                     sessionService.set("usuario", usuarioService);
                     $scope.cash = data.us_cash;
                     $rootScope.$emit('atualizar_cash', $scope.cash);
@@ -1184,10 +1186,10 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $scope.rd_round = rd_round;
     }
 
-    $scope.verusuario = function (usuario,us_username) {
+    $scope.verusuario = function (usuario,us_username, grito) {
 
         $state.go('app.perfilusuario', {
-            userid: usuario, username: us_username
+            userid: usuario, username: us_username, grito: grito
         });
 
     };
@@ -1332,6 +1334,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     $ionicLoading.show();
     $scope.user = usuarioService.usuario;
+    $scope.grito = usuarioService.grito;
+    console.log("s");
+    console.log(usuarioService);
     $scope.cash = usuarioService.dinheiro;
     $http.post(urlService + 'mobile/cellpalpitesusuario?', {user : usuarioService.id})
         .success(function (data) {
@@ -1364,6 +1369,19 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         }
         $ionicLoading.hide();
     }
+
+    $scope.trocargrito = function (us_grito) {
+        $http.post(urlService + 'mobile/celleditgrito?', { userId: usuarioService.id, grito: us_grito })
+            .success(function (data) {
+                console.log(data);
+                if (data == 200) {
+                    $scope.error = "";
+                    alert("Grito de Guerra trocado com éxito");
+                } else {
+                    $scope.error = "Erro: Tente novamente o envie um email a contato";
+                }
+            });
+    }
 })
 
 
@@ -1386,7 +1404,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     });
                 } else {
                     $scope.time = data;
-                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id);
+                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito);
                     sessionService.set("usuario", usuarioService);
                     $scope.cash = data.us_cash;
 
@@ -1417,6 +1435,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                console.log($state);
                $scope.resultados = data;
                $scope.username = $state.params.username;
+               $scope.grito = $state.params.grito;
            });
 
    

@@ -319,7 +319,7 @@ $rootScope.active_icon=function(type){
 })
 
         .state('app.perfilusuario', {
-            url: "/perfilusuario/:userid/:username",
+            url: "/perfilusuario/:userid/:username/:grito",
             views: {
                 'menuContent': {
                     templateUrl: "templates/perfilusuario.html"
