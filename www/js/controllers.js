@@ -784,7 +784,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-.controller('JogoCtrl', function ($scope, $http, $stateParams, $state, $rootScope, $ionicHistory, $ionicLoading, $ionicPopup, dataService, rankingService, urlService, usuarioService, bolaoService, rodadaService, jogostimeService, palpitadosService) {
+.controller('JogoCtrl', function ($scope, $http, $stateParams, $ionicModal, $state, $rootScope, $ionicHistory, $ionicLoading, $ionicPopup, dataService, rankingService, urlService, usuarioService, bolaoService, rodadaService, jogostimeService, palpitadosService) {
     $ionicLoading.show();
 
     $scope.t1nome = $stateParams.t1nome;
@@ -823,6 +823,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.realizar_palpite = function (rs_res1, rs_res2, mt_id, mt_idround, ch_id) {
         if (isFinite(rs_res1) && rs_res1 != null
             && isFinite(rs_res2) && rs_res2 != null) {
+
+            $scope.rs_res1 = rs_res1;
+            $scope.rs_res2 = rs_res2;
 
             $ionicLoading.show();
             $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
@@ -955,6 +958,55 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     });
                 }
             });
+    }
+
+    $scope.show = false;
+
+    $scope.showShare = function () {
+
+        if (!$scope.show) {
+            $scope.show = true;
+        } else {
+            $scope.show = false;
+        }
+        
+        console.log("a");
+    }
+
+    $scope.whatsapp = function () {
+        var data = $scope.mt_date + " " + $scope.ch_nome;        
+        var msg = "Vamos palpitar " + $scope.t1nome + " x " + $scope.t2nome + ", " + data + " em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        if (isFinite($scope.rs_res1) && $scope.rs_res1 != null
+            && isFinite($scope.rs_res2) && $scope.rs_res2 != null) {
+            msg = "Eu fiz meu palpite: " + $scope.t1nome + " " + $scope.rs_res1 + " x " + $scope.rs_res2 + " " + $scope.t2nome + ", " + data + ", faça o seu em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        }
+        
+        window.plugins.socialsharing.shareViaWhatsApp(msg, null /* img */, null /* url */, function () { console.log('share ok') }, function (errormsg) { alert(errormsg) });
+    }
+
+    $scope.facebook = function () {
+        console.log("http://www.bolaocraquedebola.com.br/" + $scope.ch_logocampeonato);
+        window.plugins.socialsharing.shareViaFacebook('Message via Facebook', "http://www.bolaocraquedebola.com.br/"+$scope.campeonato.ch_logocampeonato, null /* url */, function () { console.log('share ok') }, function (errormsg) { alert(errormsg) });
+    }
+
+    $scope.twitter = function () {
+        var data = $scope.mt_date + " " + $scope.ch_nome;
+        var msg = "Vamos palpitar " + $scope.t1nome + " x " + $scope.t2nome + ", " + data + " em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        if (isFinite($scope.rs_res1) && $scope.rs_res1 != null
+            && isFinite($scope.rs_res2) && $scope.rs_res2 != null) {
+            msg = "Eu fiz meu palpite: " + $scope.t1nome + " " + $scope.rs_res1 + " x " + $scope.rs_res2 + " " + $scope.t2nome + ", " + data + ", faça o seu em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        }
+        window.plugins.socialsharing.shareViaTwitter(msg, null /* img */, 'http://www.x-services.nl');
+    }
+
+    $scope.instagram = function () {
+        var data = $scope.mt_date + " " + $scope.ch_nome;
+        var msg = "Vamos palpitar " + $scope.t1nome + " x " + $scope.t2nome + ", " + data + " em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        if (isFinite($scope.rs_res1) && $scope.rs_res1 != null
+            && isFinite($scope.rs_res2) && $scope.rs_res2 != null) {
+            msg = "Eu fiz meu palpite: " + $scope.t1nome + " " + $scope.rs_res1 + " x " + $scope.rs_res2 + " " + $scope.t2nome + ", " + data + ", faça o seu em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        }
+        window.plugins.socialsharing.shareViaInstagram(msg, "http://www.bolaocraquedebola.com.br/" + $scope.campeonato.ch_logocampeonato);
     }
 })
 

@@ -1,28 +1,19 @@
-<ion-view view-title="Contact us">
-  <ion-content class="contact_us">
-  <form class="reg_form">
-    <p>Contact us if you need any help, We will be happy to assist you in any way and help 
-    you get started with your mobile app!</p>
-      
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">Edit Contact</h1>
+    </ion-header-bar>
+    <ion-content>
         <div class="list">
             <label class="item item-input">
-                 <input type="text" placeholder="username">
+                <span class="input-label">Name</span>
+                <input type="text" ng-model="contact.name">
             </label>
             <label class="item item-input">
-                 <input type="email" placeholder="e-mail">
+                <span class="input-label">Info</span>
+                <input type="text" ng-model="contact.info">
             </label>
-            <label class="item item-input">
-                 <input type="password" placeholder="password">
-            </label>
-            <label class="item item-input txt_area">
-                <textarea placeholder="Message" rows="3"></textarea>
-            </label>
-            
-            <a href="#" class="button button-block main_btn">
-            Send
-            </a>
-      
-         </div>   
-  </form>
-  </ion-content>
-</ion-view  >
+        </div>
+
+        <button class="button button-full button-energized" ng-click="closeModal()">Done</button>
+    </ion-content>
+    <ion-modal-view>

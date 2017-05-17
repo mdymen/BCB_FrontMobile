@@ -11,13 +11,33 @@
             <div class="col" href="#/app/detail/" ng-click="ranking_rodada(ch_id, mt_idround, ch_nome)" >
                 <i class="ion-ribbon-b"></i>
             </div>
+            <div class="col" href="#/app/detail/" ng-click="showShare()">
+                <i class="ion-android-share-alt"></i>
+            </div>            
             <!--<div class="col" ng-click="active_icon('share')">
                 <i class="ion-android-share-alt"></i>
             </div>-->
         </div>
     </div>
     <!--style="background: url('../img/soccer.jpg') no-repeat center;"-->
-    <ion-content class="detail_page padding has-subheader" >  
+    <ion-content class="detail_page padding has-subheader">
+        
+        <div class="row main_row" style="height:50px !important" ng-show="show">
+            <div class="col col-30"></div>
+            <div class="col col-15" ng-click="whatsapp()">
+                <img src="http://www.bolaocraquedebola.com.br//assets/img/whatsapp.png" height="35px" />
+            </div>
+            <div class="col col-15" ng-click="facebook()">
+                <img src="http://www.bolaocraquedebola.com.br//assets/img/face1.png" height="32px" />
+            </div>
+            <div class="col col-15" ng-click="twitter()">
+                <img src="http://www.bolaocraquedebola.com.br//assets/img/twitter.png" height="28px" />
+            </div>
+            <div class="col col-15" ng-click="instagram()">
+                <img src="http://www.bolaocraquedebola.com.br//assets/img/instragram.png" height="28px" />
+            </div>
+        </div>
+          
         <div class="det_cont" style="background-color:rgba(250,250,250,0.58);">
             <div ng-model="mt_id" style="display:none">
                 {{mt_id}}
