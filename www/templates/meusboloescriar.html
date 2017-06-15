@@ -1,0 +1,51 @@
+<ion-view view-title="Palpitar" ng-controller="MeusBoloesCriarCtrl">
+
+    <div class="bar bar-subheader sub_head">
+        <div class="row">
+            <div class="col" href="#/app/detail/">
+                <i class="ion-plus-circled"></i>
+            </div>
+            <div class="col" href="#/app/detail/" >
+                <i class="ion-ios-football"></i>
+            </div>
+            <div class="col" href="#/app/detail/" >
+                <i class=""></i>
+            </div>            
+
+        </div>
+    </div>
+    <!--style="background: url('../img/soccer.jpg') no-repeat center;"-->
+    <ion-content class="register_page padding has-subheader">
+        
+
+        <div style="">
+
+            <div class="row">
+                <div class="col col-100">
+                    <div class="col-demo" style="text-align:center;color:red">{{error}}</div>
+                </div>
+            </div>
+
+            <form class="reg_form log_form" ng-submit="criarbolao(penca)" style="margin-top:50px">
+                <div class="list">
+                    <label class="item item-input">
+                        <input type="text" ng-model="penca.nome" placeholder="Nome da Penca" required>
+                    </label>
+                    <label class="item item-input">
+                        <input type="number" ng-model="penca.valor" placeholder="Valor ingresso">
+                    </label>
+                    <div style="text-align:center;width:100%"><select ng-model="penca.champ" ng-options="campeonato.ch_nome for campeonato in campeonatos"></select></div>
+                    
+                        <ion-checkbox ng-model="penca.privado" style="border-width: 0px; margin-top:10px; padding-left: 0px">Privado?</ion-checkbox>
+
+
+                        <div style="padding-top:15px">
+                            <input type="submit" name="submit" class="button button-block" id="submit" value="Criar" />
+                        </div>
+
+</div>
+            </form>
+        </div>
+
+</ion-content>
+</ion-view>

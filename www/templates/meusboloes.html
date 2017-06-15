@@ -1,0 +1,95 @@
+<ion-view view-title="{{titulo}}" ng-controller="MeusBoloesCtrl">
+
+
+    <div class="bar bar-subheader sub_head">
+        <div style="text-align:center;width:100%">
+            <div class="row">
+                <div class="col" ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
+                    <p>{{meusboloes}}</p>
+                </div>
+                <div class="col" ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
+                    <p>{{disponiveis}}</p>
+                </div>
+                <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
+                    <p>Criar</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <ion-content class="has-subheader activity_page">
+        <div ng-switch on="activitytab">
+            <div>
+
+                <!--ng-click="setPalpite(palpite)"-->
+
+                <div style="height:120px" ng-switch-when="1"  href="#/app/detail/">
+                    <a class="activity_list">
+                        <ion-list>
+                            <ion-item ng-repeat="penca in pencas" ng-click="bolao(penca.pn_id, penca.ch_id)">
+                                <ion-avatar item-left>
+                                    <img style="width:20px;height:20px" src="http://www.bolaocraquedebola.com.br/{{penca.ch_logocampeonato}}">
+                                </ion-avatar>
+                                {{penca.pn_name}}
+                                <p style="padding:0px !important; margin:0px !important">{{penca.ch_nome}}</p>
+                                <p style="padding:0px !important; margin:0px !important">Ingresso: R${{penca.pn_value}}  Acumulado: R${{penca.pn_valueaccumulated}}</p>
+                                <p style="padding:0px !important; margin:0px !important">Participantes: {{penca.users}}</p>
+                            </ion-item>
+                        </ion-list>
+                        </a>
+                    </div>
+
+                <div style="height:120px" ng-switch-when="2" href="#/app/detail/">
+                    <a class="activity_list">
+                        <ion-list>
+                            <ion-item ng-repeat="penca in pencasdisponiveis" ng-click="bolao(penca.pn_id, penca.ch_id, penca)">
+                                <ion-avatar item-left>
+                                    <img style="width:20px;height:20px" src="http://www.bolaocraquedebola.com.br/{{penca.ch_logocampeonato}}">
+                                </ion-avatar>
+                                {{penca.pn_name}}
+                                <p style="padding:0px !important; margin:0px !important">{{penca.ch_nome}}</p>
+                                <p style="padding:0px !important; margin:0px !important">Ingresso: R${{penca.pn_value}}  Acumulado: R${{penca.pn_valueaccumulated}}</p>
+                                <p style="padding:0px !important; margin:0px !important">Participantes: {{penca.users}}</p>
+                            </ion-item>
+                        </ion-list>
+                    </a>
+                </div>
+
+
+                <div ng-switch-when="3">
+                    <div class="register_page padding has-subheader" style="background:white">
+                        <form class="reg_form log_form" ng-submit="criarbolao(penca)" style="margin-top:50px">
+                            <div class="list">
+                                <div class="row">
+                                    <div class="col col-100">
+                                        <div class="col-demo" style="text-align:center;color:red">{{error}}</div>
+                                    </div>
+                                </div>
+
+                                <label class="item item-input">
+                                    <input type="text" ng-model="penca.nome" placeholder="Nome da Penca" required>
+                                </label>
+                                <label class="item item-input">
+                                    <input type="number" ng-model="penca.valor" placeholder="Valor ingresso">
+                                </label>
+                                <div style="text-align:center;width:100%"><select ng-model="penca.champ" ng-options="campeonato.ch_nome for campeonato in campeonatos"></select></div>
+
+                                <ion-checkbox ng-model="penca.privado" style="border-width: 0px; margin-top:10px; padding-left: 0px">Privado?</ion-checkbox>
+
+                                <div style="padding-top:15px">
+                                    <input type="submit" name="submit" class="button button-block" id="submit" value="Criar" />
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </ion-content>
+
+</ion-view>
+
+
+

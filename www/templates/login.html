@@ -1,45 +1,45 @@
-﻿  <ion-content class="login_page">
-      <div class="row main_row" style="height:90px; text-align:center">
-          <div class="col col-100">
-              <img width="70px" src="http://www.bolaocraquedebola.com.br/assets/img/iconelogo.png" />
-              <div style="font-size:18px"><b>Bolão Craque de Bola</b></div>
-          </div>
-          </div>
-          <div ng-controller="LoginCtrl" style="padding-top:100px;" >
+﻿<ion-content class="login_page">
+    <div class="row main_row" style="height:90px; text-align:center">
+        <div class="col col-100">
+            <img width="70px" src="http://www.bolaocraquedebola.com.br/assets/img/iconelogo.png" />
+            <div style="font-size:18px"><b>Bolão Craque de Bola</b></div>
+        </div>
+    </div>
+    <div ng-controller="LoginCtrl" style="padding-top:100px;">
 
-              <!--<button onclick="window.plugins.socialsharing.shareViaWhatsApp('Message via WhatsApp', null /* img */, null /* url */, function() {console.log('share ok')}, function(errormsg){alert(errormsg)})">msg via WhatsApp (with errcallback)</button>-->
+        <!--<button onclick="window.plugins.socialsharing.shareViaWhatsApp('Message via WhatsApp', null /* img */, null /* url */, function() {console.log('share ok')}, function(errormsg){alert(errormsg)})">msg via WhatsApp (with errcallback)</button>-->
 
-              <form class="log_form">
-                  <div class="list list-inset">
-                      <label class="item item-input">
-                          <i class="icon ion-android-person  placeholder-icon" style="color:black !important"></i>
-                          <input ng-model="login.usuario" type="text" style="color:black !important">
-                      </label>
-                      <label class="item item-input">
-                          <i class="icon ion-unlocked placeholder-icon" style="color:black !important"></i>
-                          <input ng-model="login.senha" type="password" style="color:black !important">
-                      </label>
+        <form class="log_form">
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <i class="icon ion-android-person  placeholder-icon" style="color:black !important"></i>
+                    <input ng-model="login.usuario" type="text" style="color:black !important">
+                </label>
+                <label class="item item-input">
+                    <i class="icon ion-unlocked placeholder-icon" style="color:black !important"></i>
+                    <input ng-model="login.senha" type="password" style="color:black !important">
+                </label>
 
 
-                      <!--<a href="#/app/list" class="button button-block">
-                        Get Started
-                    </a>-->
-                      <input type="submit" class="button button-block" value="Login" ng-click="loguearse()" />
+                <!--<a href="#/app/list" class="button button-block">
+                    Get Started
+                </a>-->
+                <input type="submit" class="button button-block" value="Login" ng-click="loguearse()" />
 
-                      <a href="#/register" class="button button-block main_btn">
-                          Cadastre-se
-                      </a>
-                      <div class="col col-100">
-                          <button class="button for_btn" style="font-weight:bold;color:blue !important" ng-click="forget()">
-                              Esqueceu a senha ?
-                          </button>
-                      </div>
+                <a href="#/register" class="button button-block main_btn">
+                    Cadastre-se
+                </a>
+                <div class="col col-100">
+                    <button class="button for_btn" style="font-weight:bold;color:blue !important" ng-click="forget()">
+                        Esqueceu a senha ?
+                    </button>
+                </div>
 
-                      <!--<a href="#/app/list" class="button button-icon skip_btn">
-                        Skip
-                    </a>-->
-                  </div>
-              </form>
-          </div>
+                <!--<a href="#/app/list" class="button button-icon skip_btn">
+                    Skip
+                </a>-->
+            </div>
+        </form>
+    </div>
 </ion-content>
 

@@ -4,7 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+// 09876angular.module('starter', ['ngCordova'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
+
 
 .run(function($ionicPlatform,$rootScope,$location,$ionicModal,$ionicPopup) {
   $ionicPlatform.ready(function() {
@@ -158,6 +160,41 @@ $rootScope.active_icon=function(type){
         templateUrl: "templates/profile.html"
       }
     }
+  })
+  .state('app.meusboloes', {
+      url: "/meusboloes",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/meusboloes.html"
+          }
+      }
+  })
+
+  .state('app.entrarbolao', {
+      url: "/detail/:idpenca",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/entrarbolao.html"
+          }
+      }
+  })
+
+  .state('app.meusboloescriar', {
+      url: "/meusboloescriar",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/meusboloescriar.html"
+          }
+      }
+  })
+
+  .state('app.bolao', {
+      url: "/bolao",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/bolao.html"
+          }
+      }
   })
 
   .state('app.browse', {

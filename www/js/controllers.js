@@ -20,6 +20,10 @@
     this.palpitados;
 })
 
+.service('infopencaService', function () {
+    this.infopenca;
+})
+
 .service('campeonatosService', function () {
     this.campeonatos;
 })
@@ -321,66 +325,6 @@ return {
 
 .controller('PalpitesCtrl', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
         function($scope, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
-
-            //$ionicLoading.show();
-
-    //        $http.post(urlService + 'mobile/celproximojogos/?', {us_id : usuarioService.id})
-    //         .success(function (data) {
-
-    //    $scope.palpites = data;
-    //    $scope.limit = 0;
-
-    //    console.log(data);
-
-    //    $scope.alert = function (palpite) {
-    //        console.log(palpite);
-    //    }
-
-    //    for (var i = 0; i < $scope.palpites.length; i = i + 1) {
-
-    //        var dateDoJogo = dataService.data_format($scope.palpites[i].mt_date);
-
-    //        var dataJogo = new Date($scope.palpites[i].mt_date);
-    //        var dataAgora = new Date();
-
-    //        var dataFinal = "";
-    //        var date = new Date($scope.palpites[i].mt_date);
-    //        var numDia = $filter('date')(date, 'dd');
-    //        var mes = $filter('date')(date, 'MMM');
-
-    //        var date1 = new Date();
-    //        var numDiaHoje = $filter('date')(date1, 'dd');
-    //        var mesHoje = $filter('date')(date1, 'MMM');
-
-
-    //        var estado = "";
-    //        var badget = "";
-    //        var no_encerrado = true;
-    //        if (numDia == numDiaHoje && mes == mesHoje) {
-    //            estado = "Hoje";
-    //            badget = "balanced";
-    //        }
-
-    //        if (dataJogo < dataAgora) {
-    //            estado = "Encerrado";
-    //            badget = "assertive";
-    //            no_encerrado = false;
-    //        }
-
-    //        var palpitado = "";
-    //        if ($scope.palpites[i].rs_res1 != null
-    //            && $scope.palpites[i].rs_res2 != null) {
-    //            palpitado = "Palpitado";
-    //        }
-
-    //        $scope.palpites[i].mt_date = dateDoJogo;
-    //        $scope.palpites[i].estado = estado;
-    //        $scope.palpites[i].badget = badget;
-    //        $scope.palpites[i].no_encerrado = no_encerrado;
-    //        $scope.palpites[i].palpitado = palpitado;
-    //    }
-    //    $ionicLoading.hide();
-    //});
 
             $http.get(urlService + 'mobile/cellgetcampeonatosabertos/?')
         .success(function (data) {
@@ -916,7 +860,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                         $ionicloading.hide();
                         var alertpopup = $ionicpopup.alert({
                             title: 'erro!',
-                            template: 'dinheiro insuficente.'
+                            template: 'Dinheiro insuficente.'
                         });
                     }
 
@@ -1489,8 +1433,328 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                $scope.username = $state.params.username;
                $scope.grito = $state.params.grito;
            });
+})
 
-   
+.controller("MeusBoloesCtrl", function ($scope, $state, $http, $ionicLoading, urlService, infopencaService, usuarioService, sessionService, bolaoService) {
+
+    $ionicLoading.show();
+
+    $scope.titulo = "Bolões";
+    $scope.meusboloes = "Meus Bolões";
+    $scope.disponiveis = "Disponíveis";
+
+    $http.post(urlService + 'mobile/getpencasdisponiveis?')
+        .success(function (data) {
+            $scope.pencasdisponiveis = data;
+            console.log(data);
+    });
+
+    $http.post(urlService + 'mobile/meusboloes/?', { userid: usuarioService.id })
+           .success(function (data) {
+               $scope.pencas = data;
+               $ionicLoading.hide();
+               //console.log(data);
+           });
+
+    $scope.criarbolao = function () {
+        $state.go("app.meusboloescriar");
+    }
+
+    $scope.bolao = function (idpenca, idchamp, penca) {
+        $ionicLoading.show();
+        $http.post(urlService + '/mobile/cellbolaopenca', { champ: idchamp, id: usuarioService.id, idpenca: idpenca })
+            .success(function (data) {
+                if (data != 300) {
+                    console.log(data);
+                    bolaoService.bolao = data;
+                    //console.log(bolaoService.bolao);
+                    $ionicLoading.hide();
+                    $state.go("app.bolao");
+                } else {
+                    infopencaService.infopenca = penca;
+                    $state.go("app.entrarbolao", { idpenca: idpenca });
+
+                }                
+            });
+
+    }
+
+    $ionicLoading.show();
+
+    $http.post(urlService + 'mobile/cellgetcampeonatos?')
+        .success(function (data) {
+            $scope.emandamento = [];
+            $scope.encerrados = [];
+            for (var i = 0; i < data.length; i = i + 1) {
+                if (data[i].ch_ativo == 1) {
+                    $scope.emandamento.push(data[i]);
+                } else {
+                    $scope.encerrados.push(data[i]);
+                }
+            }
+            $scope.campeonatos = $scope.emandamento;
+            $ionicLoading.hide();
+
+        });
+
+    $scope.criarbolao = function (penca) {
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/criarbolao?', {
+            iduser: usuarioService.id, nome: penca.nome, valor: penca.valor,
+            privado: penca.privado, idchamp: penca.champ.ch_id
+        })
+            .success(function (data) {
+                if (angular.equals(data, 200)) {
+                    $http.post(urlService + 'mobile/meusboloes/?', { userid: usuarioService.id })
+                       .success(function (data) {
+                           $scope.pencas = data;
+                           $ionicLoading.hide();
+                           //console.log(data);
+                       });
+                    $scope.activitytab = 1;
+                }
+                console.log(data);
+            });
+    }
 
 })
+
+.controller("BolaoCtrl", function ($scope, $state, $http, $ionicLoading, urlService, usuarioService, sessionService, bolaoService, bolaoServiceConstructor) {
+
+    $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
+    $scope.ch_nome = $scope.bolao.ch_nome;
+
+    console.log("test");
+    console.log($scope);
+
+    $scope.criarbolao = function () {
+        $state.go("app.meusboloescriar")
+    }
+
+    $scope.verbolao = function () {
+        $state.go("app.bolao");
+    }
+
+    $scope.trocarrodada = function (rodada) {
+        $ionicLoading.show();
+        $http.post(urlService + '/mobile/cellbolao', { champ: rodada.rd_idchampionship, id: usuarioService.id, rodada: rodada.rd_id })
+            .success(function (data) {
+                bolaoService.bolao = data;
+                $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
+                $scope.ch_nome = $scope.bolao.ch_nome;
+                $ionicLoading.hide();
+            });
+    }
+
+})
+
+
+.controller("MeusBoloesCriarCtrl", function ($scope, $state, $http, $ionicLoading, urlService, usuarioService, sessionService) {
+
+    $ionicLoading.show();
+
+    $http.post(urlService + 'mobile/cellgetcampeonatos?')
+        .success(function (data) {
+            $scope.emandamento = [];
+            $scope.encerrados = [];
+            for (var i = 0; i < data.length; i = i + 1) {
+                if (data[i].ch_ativo == 1) {
+                    $scope.emandamento.push(data[i]);
+                } else {
+                    $scope.encerrados.push(data[i]);
+                }
+            }
+            $scope.campeonatos = $scope.emandamento;
+            $ionicLoading.hide();
+
+        });
+
+    $scope.criarbolao = function (penca) {
+
+        $http.post(urlService + 'mobile/criarbolao?', {
+            iduser: usuarioService.id, nome: penca.nome, valor: penca.valor,
+       privado : penca.privado, idchamp : penca.champ.ch_id })
+            .success(function (data) {
+                console.log(data);
+            });
+    }
+
+})
+
+
+.controller("MeusBoloesCriarCtrl", function ($scope, $state, $http, $ionicLoading, urlService, usuarioService, sessionService) {
+
+    $ionicLoading.show();
+
+    $http.post(urlService + 'mobile/cellgetcampeonatos?')
+        .success(function (data) {
+            $scope.emandamento = [];
+            $scope.encerrados = [];
+            for (var i = 0; i < data.length; i = i + 1) {
+                if (data[i].ch_ativo == 1) {
+                    $scope.emandamento.push(data[i]);
+                } else {
+                    $scope.encerrados.push(data[i]);
+                }
+            }
+            $scope.campeonatos = $scope.emandamento;
+            $ionicLoading.hide();
+
+        });
+
+    $scope.criarbolao = function (penca) {
+
+        $http.post(urlService + 'mobile/criarbolao?', {
+            iduser: usuarioService.id, nome: penca.nome, valor: penca.valor,
+            privado: penca.privado, idchamp: penca.champ.ch_id
+        })
+            .success(function (data) {
+                console.log(data);
+            });
+    }
+
+}).controller("ParticiparCtrl", function ($scope, $ionicPopup, $state, $stateParams, $http, $ionicLoading, infopencaService, urlService, usuarioService, sessionService) {
+    console.log(infopencaService.infopenca);
+    console.log($stateParams.idpenca);
+
+    $scope.info = infopencaService.infopenca;
+
+    $ionicLoading.hide();
+
+    $scope.participar = function () {
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/cellverificardinheiroecadastrar?', { idpenca: $scope.info.pn_id, iduser: usuarioService.id, custo : $scope.info.pn_value }).
+            success(function (data) {
+                console.log(data);
+                $state.go("app.meusboloes");
+                //if (parseFloat(data) >= $scope.info.pn_value) {
+                //    console.log(true);
+                //} else {
+                //    var alertpopup = $ionicPopup.alert({
+                //        title: 'erro!',
+                //        template: 'Dinheiro insuficente.'
+                //    });
+                //}
+                //console.log(data);
+                $ionicLoading.hide();
+            });
+    }
+
+})
+
+//.controller("CameraCtrl", function ($scope, $cordovaCamera, $ionicLoading/*, $localstorages*/) {
+
+//    $scope.data = { "ImageURI": "Select Image" };
+//    $scope.takePicture = function () {
+//        var options = {
+//            quality: 50,
+//            destinationType: Camera.DestinationType.FILE_URL,
+//            sourceType: Camera.PictureSourceType.CAMERA
+//        };
+//        $cordovaCamera.getPicture(options).then(
+//          function (imageData) {
+//              $scope.picData = imageData;
+//              $scope.ftLoad = true;
+//             // $localstorage.set('fotoUp', imageData);
+//              $ionicLoading.show({ template: 'Foto acquisita...', duration: 500 });
+//          },
+//          function (err) {
+//              $ionicLoading.show({ template: 'Errore di caricamento...', duration: 500 });
+//          })
+//    }
+
+//    $scope.selectPicture = function () {
+//        var options = {
+//            quality: 50,
+//            destinationType: Camera.DestinationType.FILE_URI,
+//            sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+//        };
+
+//        console.log(options);
+
+//        $cordovaCamera.getPicture(options).then(
+//          function (imageURI) {
+//              window.resolveLocalFileSystemURL(imageURI, function (fileEntry) {
+//                  $scope.picData = fileEntry.nativeURL;
+                  
+//                  $scope.ftLoad = true;
+//                  var image = document.getElementById('myImage');
+//                  image.src = fileEntry.nativeURL;
+//              });
+
+//              console.log(imageURI);
+//              $ionicLoading.show({ template: 'Foto acquisita...', duration: 500 });
+//          },
+//          function (err) {
+//              $ionicLoading.show({ template: 'Errore di caricamento...', duration: 500 });
+//          })
+//    };
+
+//    $scope.uploadPicture = function () {
+//        $ionicLoading.show({ template: 'Sto inviando la foto...' });
+//        var fileURL = $scope.picData;
+//        var options = new FileUploadOptions();
+//        options.fileKey = "file";
+//        options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+//        options.mimeType = "image/jpeg";
+//        options.chunkedMode = true;
+
+//        var params = {};
+//        params.value1 = "someparams";
+//        params.value2 = "otherparams";
+
+//        options.params = params;
+
+//        var ft = new FileTransfer();
+//        ft.upload(fileURL, encodeURI("http://www.bolaocraquedebola.com.br/public/mobile/upload"), viewUploadedPictures, function (error) {
+//            $ionicLoading.show({ template: 'Errore di connessione...' });
+//            $ionicLoading.hide();
+//        }, options);
+//    }
+
+
+//    var viewUploadedPictures = function () {
+//        $ionicLoading.show({ template: 'Sto cercando le tue foto...' });
+//        server = "http://www.yourdomain.com/upload.php";
+//        if (server) {
+//            var xmlhttp = new XMLHttpRequest();
+//            xmlhttp.onReadyStateChange = function () {
+//                if (xmlhttp.readyState === 4) {
+//                    if (xmlhttp.status === 200) {
+//                        document.getElementById('server_images').innerHTML = xmlhttp.responseText;
+//                    }
+//                    else {
+//                        $ionicLoading.show({ template: 'Errore durante il caricamento...', duration: 1000 });
+//                        return false;
+//                    }
+//                }
+//            };
+//            xmlhttp.open("GET", server, true);
+//            xmlhttp.send()
+//        };
+//        $ionicLoading.hide();
+//    }
+
+//    $scope.viewPictures = function () {
+//        $ionicLoading.show({ template: 'Sto cercando le tue foto...' });
+//        server = "http://www.yourdomain.com/upload.php";
+//        if (server) {
+//            var xmlhttp = new XMLHttpRequest();
+//            xmlhttp.onreadystatechange = function () {
+//                if (xmlhttp.readyState === 4) {
+//                    if (xmlhttp.status === 200) {
+//                        document.getElementById('server_images').innerHTML = xmlhttp.responseText;
+//                    }
+//                    else {
+//                        $ionicLoading.show({ template: 'Errore durante il caricamento...', duration: 1000 });
+//                        return false;
+//                    }
+//                }
+//            };
+//            xmlhttp.open("GET", server, true);
+//            xmlhttp.send()
+//        };
+//        $ionicLoading.hide();
+//    }
+//});
 
