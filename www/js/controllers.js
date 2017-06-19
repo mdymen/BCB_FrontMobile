@@ -745,6 +745,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.rs_res1 = parseInt($stateParams.rs_res1);
     $scope.rs_res2 = parseInt($stateParams.rs_res2);
     $scope.mt_acumulado = $stateParams.mt_acumulado;
+    $scope.penca = $stateParams.pn_id;
 
     $http.post(urlService + 'mobile/cellgetcampeonato/?', { rd_id: $scope.mt_idround, mt_id : $scope.mt_id })
         .success(function (data) {
@@ -765,6 +766,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 
     $scope.realizar_palpite = function (rs_res1, rs_res2, mt_id, mt_idround, ch_id) {
+        console.log($scope.penca);
         if (isFinite(rs_res1) && rs_res1 != null
             && isFinite(rs_res2) && rs_res2 != null) {
 
@@ -772,7 +774,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             $scope.rs_res2 = rs_res2;
 
             $ionicLoading.show();
-            $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id  })
+            $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id : usuarioService.id, pn_id : $scope.penca  })
                 .success(function (data) {
                     console.log(data);
                     if (angular.equals(data.sucesso, 200)) {
@@ -805,7 +807,10 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
                         $ionicLoading.hide();
                         $ionicHistory.goBack();
-                        $rootScope.$emit('atualizar_cash', data.total_usuario);
+
+                        if (angular.equals("", $scope.penca)) {
+                           $rootScope.$emit('atualizar_cash', data.total_usuario);
+                        }
                     }
                     if (angular.equals(data.sucesso, 402)) {
 
@@ -1439,11 +1444,12 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     $ionicLoading.show();
 
+    $scope.criarbolao = "Criar Bolão";
     $scope.titulo = "Bolões";
     $scope.meusboloes = "Meus Bolões";
     $scope.disponiveis = "Disponíveis";
 
-    $http.post(urlService + 'mobile/getpencasdisponiveis?')
+    $http.post(urlService + 'mobile/getpencasdisponiveis?', { iduser: usuarioService.id })
         .success(function (data) {
             $scope.pencasdisponiveis = data;
             console.log(data);
@@ -1453,7 +1459,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
            .success(function (data) {
                $scope.pencas = data;
                $ionicLoading.hide();
-               //console.log(data);
+               console.log(data);
            });
 
     $scope.criarbolao = function () {
@@ -1464,14 +1470,14 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $ionicLoading.show();
         $http.post(urlService + '/mobile/cellbolaopenca', { champ: idchamp, id: usuarioService.id, idpenca: idpenca })
             .success(function (data) {
+                infopencaService.infopenca = penca;
                 if (data != 300) {
                     console.log(data);
                     bolaoService.bolao = data;
                     //console.log(bolaoService.bolao);
                     $ionicLoading.hide();
                     $state.go("app.bolao");
-                } else {
-                    infopencaService.infopenca = penca;
+                } else {                    
                     $state.go("app.entrarbolao", { idpenca: idpenca });
 
                 }                
@@ -1519,14 +1525,14 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-.controller("BolaoCtrl", function ($scope, $state, $http, $ionicLoading, urlService, usuarioService, sessionService, bolaoService, bolaoServiceConstructor) {
+.controller("BolaoCtrl", function ($scope, $state, $http, $ionicLoading, infopencaService, $ionicHistory, urlService, usuarioService, sessionService, bolaoService, bolaoServiceConstructor) {
 
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
-
-    console.log("test");
-    console.log($scope);
-
+    $scope.penca_nome = infopencaService.infopenca.pn_name;
+    $scope.penca = infopencaService.infopenca.pn_id;    
+    $scope.usuarios = $scope.bolao.usuarios_penca;
+    
     $scope.criarbolao = function () {
         $state.go("app.meusboloescriar")
     }
@@ -1543,6 +1549,27 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                 $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
                 $scope.ch_nome = $scope.bolao.ch_nome;
                 $ionicLoading.hide();
+            });
+    }
+
+    $scope.editarpalpite = function (p) {
+        $state.go('app.detail', {
+            mt_id: p.mt_id, tm1_logo: p.tm1_logo, tm2_logo: p.tm2_logo, t1nome: p.t1nome, t2nome: p.t2nome,
+            ch_id: p.ch_id, ch_nome: p.ch_nome, mt_acumulado: p.mt_acumulado, mt_date: p.mt_date,
+            mt_idround: p.mt_idround, mt_idteam1: p.mt_idteam1, mt_idteam2: p.mt_idteam2, mt_round: p.mt_round,
+            rd_round: p.rd_round, no_encerrado: p.no_encerrado, rs_res1: p.rs_res1, rs_res2: p.rs_res2, pn_id: $scope.penca
+        });
+    }
+
+    $scope.sair = function () {
+        $ionicLoading.show();
+        $http.post(urlService + '/mobile/cellsairbolao', { iduser : usuarioService.id, idpenca : $scope.penca  })
+            .success(function (data) {
+                console.log(data);
+                if (angular.equals(data, "200")) {
+                    $ionicLoading.hide();
+                    $ionicHistory.goBack();
+                }
             });
     }
 
@@ -1581,39 +1608,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-
-.controller("MeusBoloesCriarCtrl", function ($scope, $state, $http, $ionicLoading, urlService, usuarioService, sessionService) {
-
-    $ionicLoading.show();
-
-    $http.post(urlService + 'mobile/cellgetcampeonatos?')
-        .success(function (data) {
-            $scope.emandamento = [];
-            $scope.encerrados = [];
-            for (var i = 0; i < data.length; i = i + 1) {
-                if (data[i].ch_ativo == 1) {
-                    $scope.emandamento.push(data[i]);
-                } else {
-                    $scope.encerrados.push(data[i]);
-                }
-            }
-            $scope.campeonatos = $scope.emandamento;
-            $ionicLoading.hide();
-
-        });
-
-    $scope.criarbolao = function (penca) {
-
-        $http.post(urlService + 'mobile/criarbolao?', {
-            iduser: usuarioService.id, nome: penca.nome, valor: penca.valor,
-            privado: penca.privado, idchamp: penca.champ.ch_id
-        })
-            .success(function (data) {
-                console.log(data);
-            });
-    }
-
-}).controller("ParticiparCtrl", function ($scope, $ionicPopup, $state, $stateParams, $http, $ionicLoading, infopencaService, urlService, usuarioService, sessionService) {
+.controller("ParticiparCtrl", function ($scope, $ionicPopup, $rootScope, $state, $stateParams, $http, $ionicLoading, infopencaService, urlService, usuarioService, sessionService) {
     console.log(infopencaService.infopenca);
     console.log($stateParams.idpenca);
 
@@ -1626,7 +1621,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $http.post(urlService + 'mobile/cellverificardinheiroecadastrar?', { idpenca: $scope.info.pn_id, iduser: usuarioService.id, custo : $scope.info.pn_value }).
             success(function (data) {
                 console.log(data);
-                $state.go("app.meusboloes");
+               // $state.go("app.meusboloes");
+                //$rootScope.$emit('atualizar_cash', data);
                 //if (parseFloat(data) >= $scope.info.pn_value) {
                 //    console.log(true);
                 //} else {

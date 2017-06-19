@@ -1,4 +1,4 @@
-<ion-view view-title="Palpitar" ng-controller="BolaoCtrl">
+<ion-view view-title="{{penca_nome}}" ng-controller="BolaoCtrl">
 
     <div class="bar bar-subheader sub_head" style="height:85px">
         <div style="text-align:center;width:100%">
@@ -27,7 +27,7 @@
 
                 <!--ng-click="setPalpite(palpite)"-->
 
-                <div style="height:120px" ng-switch-when="1" ng-repeat="palpite in bolao.rodada" href="#/app/detail/">
+                <div style="height:120px" ng-switch-when="1" ng-repeat="palpite in bolao.rodada" ng-click="editarpalpite(palpite)" href="#/app/detail/">
                     <a class="activity_list">
                         <div class="row main_row" style="height:30px !important">
                             <div class="col col-20">
@@ -68,60 +68,32 @@
                     </a>
                 </div>
                 <div ng-switch-when="2">
-                    <ng:switch on="{{bolao.tem_grupo}} == false">
-                        <div ng:switch-when="true">
-                            <div style="height:32px" ng-repeat="team in bolao.teams" href="#/app/detail/" ng-click="jogos_do_time(team,bolao.championship.ch_id)">
-                                <a class="activity_list">
-
-                                    <div class="row main_row" style="height:30px !important">
-                                        <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{team.tm_logo}}" /></div>
-                                        <div class="col col-40">{{team.tm_name}}</div>
-                                        <div class="col col-20">{{team.tm_played}}</div>
-                                        <div class="col col-20">{{team.tm_points}}</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </ng:switch>
-
-                    <ng:switch on="{{bolao.tem_grupo}}">
-                        <div ng:switch-when="true" style="padding-top:15px">
-                            <div ng-repeat="team in bolao.teams">
-                                <div class="row main_row" style="height:30px !important">
-                                    <div class="col">Grupo: {{team.tm_grupo}}</div>
+                    <ion-list>
+                        <ion-item ng-repeat="usuario in usuarios"  style="border-style:none !important">
+                            <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
+                                <div class="col">
+                                    <div class="col-demo"><b></b></div>
                                 </div>
-                                <div ng-repeat="t in team.grupo" href="#/app/detail/" ng-click="jogos_do_time(t,bolao.championship.ch_id)">
-                                    <div class="row main_row" style="height:30px !important">
-                                        <div class="col col-20" style="margin-top:-5px"><img width="20" height="20" src="http://www.bolaocraquedebola.com.br{{t.tm_logo}}" /></div>
-                                        <div class="col col-40">{{t.tm_name}}</div>
-                                        <div class="col col-20">{{t.tm_played}}</div>
-                                        <div class="col col-20">{{t.tm_points}}</div>
+                                <div class="col">
+                                    <div style="width:30px;height:30px">
+                                        <div class="col-demo"><img width="30" height="30" src="http://www.bolaocraquedebola.com.br/assets/img/usuarios/user2.png" /></div>
                                     </div>
                                 </div>
+                                <div class="col col-75">
+                                    <div class="col-demo">{{usuario.us_username}}</div>
+                                </div>
+                                <div class="col">
+                                    <div class="col-demo">{{usuario.up_puntagem}}</div>
+                                </div>
                             </div>
-                        </div>
-                    </ng:switch>
+                        </ion-item>
+                    </ion-list>
                 </div>
                 <div ng-switch-when="3">
                     <div style="padding-top:10px">
                         <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
-                            <ion-item style="text-align:center">
-                                <img style="width:200px;height:200px" src="http://www.bolaocraquedebola.com.br/{{bolao.championship.ch_logocampeonato}}" />
-                            </ion-item>
-                            <ion-item class="item-text-wrap" style="text-align:center">
-                                {{bolao.championship.ch_descricao}}
-                                <p>Inicio {{bolao.championship.ch_data_inicio}}</p>
-                            </ion-item>
-                            <ion-item style="text-align:center">
-                                <i class="icon ion-trophy"> {{acumulado}}</i>
-                            </ion-item>
                             <ion-item>
-                                <i class="icon ion-ios-football"> Palpite jogo: R${{bolao.championship.ch_dpalpite}}</i>
-                            </ion-item>
-                            <ion-item>
-                                <p>R${{bolao.championship.ch_djogo}} para o jogo</p>
-                                <p>R${{bolao.championship.ch_dchamp}} para o campeonato</p>
-                                <p>R${{bolao.championship.ch_drodada}} para a rodada</p>
+                                <input type="submit" style="margin-top:-10px" href="#" class="button button-block main_btn" value="Sair" ng-click="sair()" />
                             </ion-item>
                         </div>
                     </div>

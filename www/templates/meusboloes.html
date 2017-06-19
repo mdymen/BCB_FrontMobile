@@ -1,6 +1,5 @@
 <ion-view view-title="{{titulo}}" ng-controller="MeusBoloesCtrl">
 
-
     <div class="bar bar-subheader sub_head">
         <div style="text-align:center;width:100%">
             <div class="row">
@@ -26,7 +25,7 @@
                 <div style="height:120px" ng-switch-when="1"  href="#/app/detail/">
                     <a class="activity_list">
                         <ion-list>
-                            <ion-item ng-repeat="penca in pencas" ng-click="bolao(penca.pn_id, penca.ch_id)">
+                            <ion-item ng-repeat="penca in pencas" ng-click="bolao(penca.pn_id, penca.ch_id, penca)">
                                 <ion-avatar item-left>
                                     <img style="width:20px;height:20px" src="http://www.bolaocraquedebola.com.br/{{penca.ch_logocampeonato}}">
                                 </ion-avatar>
@@ -58,14 +57,15 @@
 
                 <div ng-switch-when="3">
                     <div class="register_page padding has-subheader" style="background:white">
-                        <form class="reg_form log_form" ng-submit="criarbolao(penca)" style="margin-top:50px">
+                        <form class="reg_form log_form" ng-submit="criarbolao(penca)" style="margin-top:20px">
                             <div class="list">
+                                <h2>{{criarbolao}}</h2>
                                 <div class="row">
                                     <div class="col col-100">
                                         <div class="col-demo" style="text-align:center;color:red">{{error}}</div>
                                     </div>
                                 </div>
-
+                                
                                 <label class="item item-input">
                                     <input type="text" ng-model="penca.nome" placeholder="Nome da Penca" required>
                                 </label>
