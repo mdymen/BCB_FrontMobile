@@ -16,6 +16,14 @@
     this.jogostime;
 })
 
+.service('meusBoloesService', function () {
+    this.meusboloes;
+})
+
+.service('pencasDisponiveisService', function () {
+    this.pencas;
+})
+
 .service('palpitadosService', function () {
     this.palpitados;
 })
@@ -1440,7 +1448,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
            });
 })
 
-.controller("MeusBoloesCtrl", function ($scope, $state, $http, $ionicLoading, urlService, infopencaService, usuarioService, sessionService, bolaoService) {
+.controller("MeusBoloesCtrl", function ($scope, $state, $http, $ionicLoading, urlService, meusBoloesService, pencasDisponiveisService, infopencaService, usuarioService, sessionService, bolaoService) {
 
     $ionicLoading.show();
 
@@ -1449,18 +1457,32 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.meusboloes = "Meus Bolões";
     $scope.disponiveis = "Disponíveis";
 
+    if (!angular.isUndefined(pencasDisponiveisService.pencas)
+        && !angular.isUndefined(meusBoloesService.meusboloes)) {
+        $scope.pencasdisponiveis = pencasDisponiveisService.pencas;
+        $scope.pencas = meusBoloesService.meusboloes;
+    } else {
+
     $http.post(urlService + 'mobile/getpencasdisponiveis?', { iduser: usuarioService.id })
         .success(function (data) {
-            $scope.pencasdisponiveis = data;
+            pencasDisponiveisService.pencas = data;
+            $scope.pencasdisponiveis = pencasDisponiveisService.pencas;
             console.log(data);
     });
 
     $http.post(urlService + 'mobile/meusboloes/?', { userid: usuarioService.id })
            .success(function (data) {
-               $scope.pencas = data;
+               meusBoloesService.meusboloes = data;
+               if (data == false) {
+                   meusBoloesService.meusboloes = [];
+               }
+               
+               $scope.pencas = meusBoloesService.meusboloes;
+
                $ionicLoading.hide();
                console.log(data);
            });
+    }
 
     $scope.criarbolao = function () {
         $state.go("app.meusboloescriar");
@@ -1525,7 +1547,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-.controller("BolaoCtrl", function ($scope, $state, $http, $ionicLoading, infopencaService, $ionicHistory, urlService, usuarioService, sessionService, bolaoService, bolaoServiceConstructor) {
+.controller("BolaoCtrl", function ($scope, $state, $http, $ionicLoading, infopencaService, $ionicHistory, meusBoloesService, pencasDisponiveisService, urlService, usuarioService, sessionService, bolaoService, bolaoServiceConstructor) {
 
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
@@ -1563,14 +1585,27 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     $scope.sair = function () {
         $ionicLoading.show();
-        $http.post(urlService + '/mobile/cellsairbolao', { iduser : usuarioService.id, idpenca : $scope.penca  })
+        console.log($scope.penca);
+        $http.post(urlService + '/mobile/cellsairbolao', { iduser: usuarioService.id, idpenca: $scope.penca })
             .success(function (data) {
                 console.log(data);
-                if (angular.equals(data, "200")) {
+                if (data.result == 200) {
+
+                    meusBoloesService.meusboloes.length = 0;
+                    pencasDisponiveisService.length = 0;
+
+                    for (var i = 0; i < data.boloes.length; i = i + 1) {
+                        meusBoloesService.meusboloes.push(data.boloes[i]);
+                    }
+
+                    for (var i = 0; i < data.pencas_disponiveis.length; i = i + 1) {
+                        pencasDisponiveisService.pencas.push(data.pencas_disponiveis[i]);
+                    }
+
                     $ionicLoading.hide();
                     $ionicHistory.goBack();
                 }
-            });
+       });
     }
 
 })
@@ -1608,7 +1643,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
-.controller("ParticiparCtrl", function ($scope, $ionicPopup, $rootScope, $state, $stateParams, $http, $ionicLoading, infopencaService, urlService, usuarioService, sessionService) {
+.controller("ParticiparCtrl", function ($scope, $ionicPopup, $rootScope, $state, $stateParams, $http, $ionicHistory, $ionicLoading, meusBoloesService, pencasDisponiveisService, infopencaService, urlService, usuarioService, sessionService) {
     console.log(infopencaService.infopenca);
     console.log($stateParams.idpenca);
 
@@ -1620,19 +1655,30 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $ionicLoading.show();
         $http.post(urlService + 'mobile/cellverificardinheiroecadastrar?', { idpenca: $scope.info.pn_id, iduser: usuarioService.id, custo : $scope.info.pn_value }).
             success(function (data) {
-                console.log(data);
-               // $state.go("app.meusboloes");
-                //$rootScope.$emit('atualizar_cash', data);
-                //if (parseFloat(data) >= $scope.info.pn_value) {
-                //    console.log(true);
-                //} else {
-                //    var alertpopup = $ionicPopup.alert({
-                //        title: 'erro!',
-                //        template: 'Dinheiro insuficente.'
-                //    });
-                //}
-                //console.log(data);
+                if (data != false) {
+                    console.log(meusBoloesService.meusboloes);
+                    pencasDisponiveisService.pencas.length = 0;
+                    meusBoloesService.meusboloes.length = 0;
+
+                    for (var i = 0; i < data.boloes.length; i = i + 1) {
+                        meusBoloesService.meusboloes.push(data.boloes[i]);
+                    }
+
+                    for (var i = 0; i < data.pencas_disponiveis.length; i = i + 1) {
+                        pencasDisponiveisService.pencas.push(data.pencas_disponiveis[i]);
+                    }
+
+                    var cash = data.cash;
+                    $rootScope.$emit('atualizar_cash', data);
+                } else {
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'erro!',
+                        template: 'Dinheiro insuficente.'
+                    });
+                }
+
                 $ionicLoading.hide();
+                $ionicHistory.goBack();
             });
     }
 

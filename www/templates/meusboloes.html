@@ -23,7 +23,7 @@
                 <!--ng-click="setPalpite(palpite)"-->
 
                 <div style="height:120px" ng-switch-when="1"  href="#/app/detail/">
-                    <a class="activity_list">
+                    <a class="activity_list" style="padding: 0 !important">
                         <ion-list>
                             <ion-item ng-repeat="penca in pencas" ng-click="bolao(penca.pn_id, penca.ch_id, penca)">
                                 <ion-avatar item-left>
@@ -39,7 +39,7 @@
                     </div>
 
                 <div style="height:120px" ng-switch-when="2" href="#/app/detail/">
-                    <a class="activity_list">
+                    <a class="activity_list" style="padding: 0 !important">
                         <ion-list>
                             <ion-item ng-repeat="penca in pencasdisponiveis" ng-click="bolao(penca.pn_id, penca.ch_id, penca)">
                                 <ion-avatar item-left>

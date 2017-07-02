@@ -49,11 +49,11 @@
                         </div>
                         <div class="row" style="font-size:18px;background-color: rgb(2, 110, 211);padding: 0px 0px 0px 0px">
                             <div class="col col-20" style="text-align:center">
-                                <ng:switch on="{{palpite.pode_apagar}}">
+                                <!--<ng:switch on="{{palpite.pode_apagar}}">
                                     <div ng:switch-when="true">
                                         <i ng-click="apagar(palpite.rs_id, palpite.ch_id, palpite.rd_id, palpite.mt_id)" class="ion-trash-b" style="color:#fff"></i>
                                     </div>
-                                </ng:switch>
+                                </ng:switch>-->
 
                                 <ng:switch on="{{palpite.no_encerrado}} == false">
                                     <div ng:switch-when="true">
@@ -67,7 +67,7 @@
                         </div>
                     </a>
                 </div>
-                <div ng-switch-when="2">
+                <div ng-switch-when="2" sstyle="padding-top:20px">
                     <ion-list>
                         <ion-item ng-repeat="usuario in usuarios"  style="border-style:none !important">
                             <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
