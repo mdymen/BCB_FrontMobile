@@ -10,7 +10,7 @@
                     <p>{{disponiveis}}</p>
                 </div>
                 <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
-                    <p>Criar</p>
+                    <p>{{titulocriarbolao}}</p>
                 </div>
             </div>
         </div>
@@ -57,16 +57,17 @@
 
                 <div ng-switch-when="3">
                     <div class="register_page padding has-subheader" style="background:white">
-                        <form class="reg_form log_form" ng-submit="criarbolao(penca)" style="margin-top:20px">
+                        <form class="reg_form log_form" ng-submit="criarbolao(penca)">
                             <div class="list">
-                                <h2>{{criarbolao}}</h2>
+                                <span style="font-size:16px">{{titulocriarbolao}}</span>
                                 <div class="row">
                                     <div class="col col-100">
                                         <div class="col-demo" style="text-align:center;color:red">{{error}}</div>
                                     </div>
                                 </div>
-                                
+
                                 <label class="item item-input">
+                                    <span style="color:red">*</span>
                                     <input type="text" ng-model="penca.nome" placeholder="Nome da Penca" required>
                                 </label>
                                 <label class="item item-input">
@@ -74,14 +75,38 @@
                                 </label>
                                 <div style="text-align:center;width:100%"><select ng-model="penca.champ" ng-options="campeonato.ch_nome for campeonato in campeonatos"></select></div>
 
-                                <ion-checkbox ng-model="penca.privado" style="border-width: 0px; margin-top:10px; padding-left: 0px">Privado?</ion-checkbox>
-
-                                <div style="padding-top:15px">
-                                    <input type="submit" name="submit" class="button button-block" id="submit" value="Criar" />
+                                <div style="padding-top : 30px">
+                                    {{premiacao}}
                                 </div>
 
-                            </div>
-                        </form>
+                                    <div style="padding-top : 10px">
+
+                                        <label class="item item-input">
+                                            <input type="number" ng-model="penca.primerlugar" placeholder="% primer lugar" required>
+                                        </label>
+
+                                        <label class="item item-input">
+                                            <input type="number" ng-model="penca.segundolugar" placeholder="% segundo lugar" required>
+                                        </label>
+
+                                        <label class="item item-input">
+                                            <input type="number" ng-model="penca.tercerlugar" placeholder="% tercer lugar" required>
+                                        </label>
+
+                                        <div class="row">
+                                            <div class="col col-100">
+                                                Soma porcentagem: {{parseInt(penca.primerlugar) + parseInt(penca.segundolugar) + parseInt(penca.tercerlugar)}}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <ion-checkbox ng-model="penca.privado" style="border-width: 0px; margin-top:10px; padding-left: 0px">Privado?</ion-checkbox>
+
+                                        <div style="padding-top:15px">
+                                            <input type="submit" name="submit" class="button button-block" id="submit" value="Criar" />
+                                        </div>
+
+                                    </div>
+                            </form>
                     </div>
                 </div>
 
