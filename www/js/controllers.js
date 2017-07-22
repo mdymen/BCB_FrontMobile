@@ -1254,7 +1254,27 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 })
 
-.controller("CaixaCtrl", function($scope, $http, $window, $location, urlService) {
+.controller("CaixaCtrl", function($scope, $http, $window, $location, urlService, usuarioService) {
+
+    $scope.transacoesseguras = "Transações seguras via Pag-Seguro";
+
+    var text = "";
+    var text2 = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 15; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+        text2 += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    $scope.token = text;
+
+    $scope.open = function () {
+        window.open('http://www.bolaocraquedebola.com.br/public/index/tokepagamento/?token=' + text + "-" + usuarioService.id + "-" + text2, '_system', 'location=yes');
+    }
+
+   
+
     $scope.opcion = function (op) {
 
         $location.path('http://www.bolaocraquedebola.com.br');
@@ -1468,11 +1488,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         .success(function (data) {
             pencasDisponiveisService.pencas = data;
             $scope.pencasdisponiveis = pencasDisponiveisService.pencas;
+            console.log("getpencasdisponiveis");
             console.log(data);
     });
+    
+
 
     $http.post(urlService + 'mobile/meusboloes/?', { userid: usuarioService.id })
            .success(function (data) {
+               console.log(data);
                meusBoloesService.meusboloes = data;
                if (data == false) {
                    meusBoloesService.meusboloes = [];
@@ -1481,6 +1505,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                $scope.pencas = meusBoloesService.meusboloes;
 
                $ionicLoading.hide();
+               console.log("meusboloes");
                console.log(data);
            });
     }
@@ -1604,7 +1629,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.penca_nome = infopencaService.infopenca.pn_name;
     $scope.penca = infopencaService.infopenca.pn_id;    
     $scope.usuarios = $scope.bolao.usuarios_penca;
-    $scope.opcoes = "Opções";
+    $scope.opcoes = "Informação";
+    $scope.info = infopencaService.infopenca;
     
     $scope.criarbolao = function () {
         $state.go("app.meusboloescriar")

@@ -1,91 +1,56 @@
 <ion-view view-title="Caixa" cache-view="false" ng-controller="CaixaCtrl">
   
-    <div class="bar bar-subheader sub_head">
-        Será necessario ingresar ao website.
-        http://www.bolaocraquedebola.com.br
+    <div class="bar bar-subheader sub_head" style="text-align:center">
+        <div class="row" style="text-align:center">
+            <div style="text-align:center;width:100%">
+                {{transacoesseguras}}
+            </div>
+        </div>
     </div>
-  <ion-content class="has-subheader activity_page">
 
+  <ion-content class="has-subheader activity_page">
+      <ion-item>
+          <div class="list" style="margin-top:10px">
+              <input type="submit" style="margin-top:-10px" href="#" class="button button-block main_btn" value="Adicionar Saldo" ng-click="open()" />
+          </div>
+      </ion-item>
         <div>
             <div style="height:125px">
                 <a class="activity_list">
 
-                    <div style="margin-top:-10px;color:white">
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;font-size:17px">Plano Básico</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Custo: R$ 10.80</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Crédito: R$ 10.00</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important;align-content:center">
 
-                        </div>
+                    <ion-item>
+                        <ion-avatar item-left>
+                            <i class=""></i>
+                        </ion-avatar>
+                        Plano Básico
+                        <p>Custo: R$ 10.80  Crédito: R$ 10.00</p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-avatar item-left>
+                            <i class="icon ion-ios-football"></i>
+                        </ion-avatar>
+                        Plano Standar
+                        <p style="margin: 0px 0px 0px 0px !important">Custo: R$ 21.20  Crédito: R$ 20.00</p>
+                        <p style="margin: 0px 0px 0px 0px !important">Bonus: R$ 10.00 </p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-avatar item-left>
+                            <i class="ion-ribbon-b"></i>
+                        </ion-avatar>
+                        Plano Premium
+                        <p style="margin: 0px 0px 0px 0px !important">Custo: R$ 52.40  Crédito: R$ 50.00</p>
+                        <p>Bonus: R$ 20.00 </p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-avatar item-left>
+                            <i class="ion-trophy"></i>
+                        </ion-avatar>
+                        Plano Profissional
+                        <p style="margin: 0px 0px 0px 0px !important">Custo: R$ 104.40  Crédito: R$ 100.00</p>
+                        <p>Bonus: R$ 30.00 </p>
+                    </ion-item>
 
-                    </div> 
-
-                    <div class="" style="height:10px !important">
-                        <div class="col" style="text-align:center;"></div>
-                    </div> 
-                    
-                    <div style="color:white">
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;font-size:17px">Plano Standar</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Custo: R$ 21.20</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Crédito: R$ 20.00</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important;align-content:center">
-
-                        </div>
-                    </div>
-
-                    <div class="" style="height:10px !important">
-                        <div class="col" style="text-align:center;"></div>
-                    </div> 
-                    
-                    <div style="color:white">
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;font-size:17px">Plano Premium</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Custo: R$ 52.40</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Crédito: R$ 50.00</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">1 palpite de brinde</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important;align-content:center">
-                        </div>
-                    </div>
-
-                    <div class="" style="height:10px !important">
-                        <div class="col" style="text-align:center;"></div>
-                    </div> 
-                    
-                    <div style="color:white">
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;font-size:17px">Plano Profissional</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Custo: R$ 104.40</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">Crédito: R$ 100.00</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important">
-                            <div class="col" style="text-align:center;">3 palpites de brinde</div>
-                        </div>
-                        <div class="row main_row" style="height:30px !important;background:grey !important;align-content:center">
-                        </div>
-                    </div>
                 </a>
             </div>
         </div>   

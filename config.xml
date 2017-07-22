@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="io.cordova.myappeabb85" version="0.0.38" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" defaultLocale="es-ES" android-versionCode="47">
+<widget id="io.cordova.myappeabb85" version="0.0.43" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" defaultLocale="es-ES" android-versionCode="52">
   <name>Bolão Craque de Bola</name>
   <description>
   </description>
@@ -89,4 +89,5 @@
   <plugin name="cordova-plugin-nativestorage" version="2.2.2" src="https://github.com/TheCocoaProject/cordova-plugin-nativestorage.git" />
   <plugin name="cordova-plugin-compat" version="1.1.0" />
   <plugin name="cordova-plugin-file" version="4.3.3" />
+  <plugin name="cordova-plugin-inappbrowser" version="1.7.2-dev" src="https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git" />
 </widget>

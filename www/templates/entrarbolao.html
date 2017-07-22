@@ -24,6 +24,11 @@
                 <ion-item style="text-align:center">
                     Acumulado: R$ {{info.pn_valueaccumulated}}
                 </ion-item>
+                <ion-item style="text-align:center">
+                    <p>Ganhador: {{info.pn_primerlugar}}% - R$ {{(info.pn_valueaccumulated*info.pn_primerlugar)/100 | number:0}}</p>
+                    <p>2do Lugar: {{info.pn_segundolugar}}% - R$ {{(info.pn_valueaccumulated*info.pn_segundolugar)/100 | number:0}}</p>
+                    <p>3er Lugar: {{info.pn_tercerlugar}}% - R$ {{(info.pn_valueaccumulated*info.pn_tercerlugar)/100 | number:0}}</p>
+                </ion-item>
             </div>
         </div>
     </ion-content>
