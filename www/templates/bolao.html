@@ -16,6 +16,9 @@
                 <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
                     <p>{{opcoes}}</p>
                 </div>
+                <div class="col" ng-click="activitytab=4" ng-class="{'color_border':activitytab==4}">
+                    <p>Compartilhar</p>
+                </div>
             </div>
         </div>
 
@@ -67,7 +70,7 @@
                         </div>
                     </a>
                 </div>
-                <div ng-switch-when="2" sstyle="padding-top:20px">
+                <div ng-switch-when="2" style="padding-top:20px">
                     <ion-list>
                         <ion-item ng-repeat="usuario in usuarios"  style="border-style:none !important">
                             <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
@@ -115,6 +118,24 @@
                             </ion-item>
                         </div>
                     </div>
+                </div>
+                <div ng-switch-when="4" style="padding-top:20px">
+                    <ion-list style="padding-top:30px">
+                        <ion-item style="border-style:none !important">
+                            <div class="col col-15" ng-click="whatsapp()">
+                                <img src="http://www.bolaocraquedebola.com.br//assets/img/whatsapp.png" height="35px" />
+                            </div>
+                        </ion-item>
+                        <ion-item style="border-style:none !important">
+                            <label class="item item-input">
+                                <input type="text" ng-model="email" ng-value="email" placeholder="{{emailplaceholder}}" required>
+                            </label>
+                            <label class="">
+                                <input type="email" style="margin-top:10px" href="#" class="button button-block main_btn" value="Compartilhar" ng-click="compartilhar(email)" />
+                            </label>
+                              
+                        </ion-item>
+                    </ion-list>
                 </div>
             </div>
         </div>

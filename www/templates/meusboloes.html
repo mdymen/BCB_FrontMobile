@@ -57,7 +57,7 @@
 
                 <div ng-switch-when="3">
                     <div class="register_page padding has-subheader" style="background:white">
-                        <form class="reg_form log_form" ng-submit="criarbolao(penca)">
+                        <form class="reg_form log_form css-form" ng-submit="criarbolao(penca)" novalidate>
                             <div class="list">
                                 <span style="font-size:16px">{{titulocriarbolao}}</span>
                                 <div class="row">
@@ -67,13 +67,12 @@
                                 </div>
 
                                 <label class="item item-input">
-                                    <span style="color:red">*</span>
                                     <input type="text" ng-model="penca.nome" placeholder="Nome da Penca" required>
                                 </label>
                                 <label class="item item-input">
-                                    <input type="number" ng-model="penca.valor" placeholder="Valor ingresso">
+                                    <input type="number" ng-model="penca.valor" placeholder="Valor ingresso (pode ser 0)" required >
                                 </label>
-                                <div style="text-align:center;width:100%"><select ng-model="penca.champ" ng-options="campeonato.ch_nome for campeonato in campeonatos"></select></div>
+                                <div style="text-align:center;width:100%"><select required ng-model="penca.champ" ng-options="campeonato.ch_nome for campeonato in campeonatos"></select></div>
 
                                 <div style="padding-top : 30px">
                                     {{premiacao}}
@@ -117,4 +116,12 @@
 </ion-view>
 
 
+<style type="text/css">
+    .css-form input.ng-invalid.ng-touched {
+        background-color: #FA787E;
+    }
 
+    .css-form input.ng-valid.ng-touched {
+        background-color: #78FA89;
+    }
+</style>

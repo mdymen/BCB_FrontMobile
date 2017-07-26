@@ -1631,7 +1631,27 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.usuarios = $scope.bolao.usuarios_penca;
     $scope.opcoes = "Informação";
     $scope.info = infopencaService.infopenca;
+    $scope.emailplaceholder = "E-mail para compartilhar o bolão";
     
+    console.log($scope);
+
+    $scope.compartilhar = function (email) {
+
+        $ionicLoading.show();
+        $http.post(urlService + '/mobile/cellcompartilharbolao', {
+            email: email,
+            nomepenca: $scope.penca_nome,
+            idpenca: $scope.penca,
+            nomeusuarioemisor: usuarioService.usuario,
+            nomecampeonato: $scope.bolao.championship.ch_nome            
+        })
+            .success(function (data) {
+                console.log(data);
+                $ionicLoading.hide();
+            });
+
+    }
+
     $scope.criarbolao = function () {
         $state.go("app.meusboloescriar")
     }
@@ -1715,7 +1735,33 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     }
 
+    $scope.whatsapp = function () {
 
+        var longUrl = "http://www.bolaocraquedebola.com.br/public/penca/convite/?idpenca=" + $scope.info.pn_id;
+        var url = "";
+
+        $http.post('https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBxHbn3Y8XdBQqk7j-ZPzJRdrnG_fmpZ-o',
+            { longUrl: longUrl }).
+            success(function (data, status, headers, config) {
+                url = data.id;
+                var msg = "Ola!, este é um convite para você participar do bolão " + $scope.info.pn_name + " do " + $scope.info.ch_nome + ": " + url;
+                console.log(msg);
+                window.plugins.socialsharing.shareViaWhatsApp(msg, null /* img */, null /* url */, function () { console.log('share ok') }, function (errormsg) { alert(errormsg) });
+
+        }).
+        error(function (data, status, headers, config) {
+
+        });
+        /*
+        var data = $scope.mt_date + " " + $scope.ch_nome;
+        var msg = "Vamos palpitar " + $scope.t1nome + " x " + $scope.t2nome + ", " + data + " em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        if (isFinite($scope.rs_res1) && $scope.rs_res1 != null
+            && isFinite($scope.rs_res2) && $scope.rs_res2 != null) {
+            msg = "Eu fiz meu palpite: " + $scope.t1nome + " " + $scope.rs_res1 + " x " + $scope.rs_res2 + " " + $scope.t2nome + ", " + data + ", faça o seu em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
+        }*/
+
+
+    }
 })
 
 
