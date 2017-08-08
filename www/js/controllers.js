@@ -331,8 +331,30 @@ return {
         }
 }])
 
-.controller('PalpitesCtrl', ['$scope', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
-        function($scope, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
+.controller('PalpitesCtrl', ['$scope','$sce', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
+        function($scope,$sce, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
+
+
+            $http.get("http://esportes.r7.com/futebol/feed.xml",
+                    {
+                        transformResponse: function (cnv) {
+                            var x2js = new X2JS();
+                            var aftCnv = x2js.xml_str2json(cnv);
+                            return aftCnv;
+                        }
+                    })
+            .success(function (response) {
+                $scope.noticias = response.feed.entry;
+                console.log($scope.noticias);
+
+                for (var i = 0; i < $scope.noticias.length; i = i + 1) {
+                    $scope.noticias[i].published = dataService.data_format($scope.noticias[i].published);
+                    $scope.noticias[i].completa = false;
+                    $scope.noticias[i].noticia = $sce.trustAsHtml($scope.noticias[i].content.__text);
+                }
+
+                //dataService.data_format(date);
+            });
 
             $http.get(urlService + 'mobile/cellgetcampeonatosabertos/?')
         .success(function (data) {
@@ -340,6 +362,21 @@ return {
             campeonatosService.campeonatos = data;
             console.log($scope.campeonatos);
         });
+
+            $scope.linknoticia = function (url) {
+                console.log(url);
+                $ionicLoading.show();
+                window.open(url);
+                $ionicLoading.hide();
+            }
+
+            $scope.verocultarnoticia = function (idnoticia) {
+                for (var i = 0; i < $scope.noticias.length; i = i + 1) {
+                    if (angular.equals(idnoticia, $scope.noticias[i].id)) {
+                        $scope.noticias[i].completa = !$scope.noticias[i].completa;
+                    }
+                }
+            }
 
 
         $scope.doRefresh = function () {
@@ -540,6 +577,13 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
         $scope.ch_nome = $scope.r.ch_nome;
         console.log($scope);
 
+        if ($scope.palpites.length == 0) {
+            var alertpopup = $ionicPopup.alert({
+                title: 'Aviso!',
+                template: 'Ainda você não palpitou nesta rodada.'
+            });
+        }
+
         $scope.selecionarRodada = function () {
             alert($scope.selectedItem.id);
         }
@@ -583,7 +627,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     if ($scope.palpites.length == 0) {
                         var alertpopup = $ionicPopup.alert({
                             title: 'Aviso!',
-                            template: 'Nao existem palpites para esta rodada.'
+                            template: 'Ainda você não palpitou nesta rodada.'
                         });
                     }
             });
@@ -1132,6 +1176,14 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             });
     }
 
+    $scope.verusuario = function (usuario, us_username, grito) {
+        console.log(grito + "ssss");
+        $state.go('app.perfilusuario', {
+            userid: usuario, username: us_username, grito: grito
+        });
+
+    };
+
 })
 
 .controller('JogosTimeCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, rankingService, palpitadosService, jogostimeService, bolaoServiceConstructor, urlService, usuarioService, dataService, dataEncerrado, jogosTimeConstructor) {
@@ -1458,6 +1510,8 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
     $ionicLoading.show();
 
+    console.log($state);
+
     $http.post(urlService + 'mobile/cellpalpitesusuario/?', { user: $state.params.userid })
            .success(function (data) {
                $ionicLoading.hide();
@@ -1468,7 +1522,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
            });
 })
 
-.controller("MeusBoloesCtrl", function ($scope, $state, $http, $ionicLoading, urlService, meusBoloesService, pencasDisponiveisService, infopencaService, usuarioService, sessionService, bolaoService) {
+.controller("MeusBoloesCtrl", function ($scope, $state, $http, $ionicLoading, $ionicModal, urlService, meusBoloesService, pencasDisponiveisService, infopencaService, usuarioService, sessionService, bolaoService) {
 
     $ionicLoading.show();
 
@@ -1513,6 +1567,64 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     //$scope.criarbolao = function () {
     //    $state.go("app.meusboloescriar");
     //}
+
+    $scope.infobolao = function () {
+        $ionicModal.fromTemplateUrl('templates/explicacaobolao.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+        });
+        $scope.openModal = function () {
+            $scope.modal.show();
+        };
+        $scope.closeModal = function () {
+            $scope.modal.hide();
+        };
+        // Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function () {
+            // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function () {
+            // Execute action
+        });
+
+    }
+
+    $scope.infoporcentagens = function () {
+        $ionicModal.fromTemplateUrl('templates/explicacaoporcentagembolao.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+        });
+        $scope.openModal = function () {
+            $scope.modal.show();
+        };
+        $scope.closeModal = function () {
+            $scope.modal.hide();
+        };
+        // Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function () {
+            // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function () {
+            // Execute action
+        });
+        
+    }
 
     $scope.bolao = function (idpenca, idchamp, penca) {
         $ionicLoading.show();
@@ -1622,6 +1734,15 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 
 })
 
+
+
+
+.controller("TestCtrl", function ($scope, $state, $http, $ionicLoading, urlService, meusBoloesService, pencasDisponiveisService, infopencaService, usuarioService, sessionService, bolaoService) {
+
+  
+
+})
+
 .controller("BolaoCtrl", function ($scope, $state, $http, $ionicLoading, $ionicPopup, infopencaService, $ionicHistory, meusBoloesService, pencasDisponiveisService, urlService, usuarioService, sessionService, bolaoService, bolaoServiceConstructor) {
 
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
@@ -1633,7 +1754,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     $scope.info = infopencaService.infopenca;
     $scope.emailplaceholder = "E-mail para compartilhar o bolão";
     
-    console.log($scope);
+    console.log($scope.bolao);
 
     $scope.compartilhar = function (email) {
 
@@ -1651,6 +1772,14 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             });
 
     }
+
+    $scope.verusuario = function (usuario, us_username, grito) {
+
+        $state.go('app.perfilusuario', {
+            userid: usuario, username: us_username, grito: grito
+        });
+
+    };
 
     $scope.criarbolao = function () {
         $state.go("app.meusboloescriar")

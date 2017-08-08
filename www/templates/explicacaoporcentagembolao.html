@@ -1,0 +1,45 @@
+﻿<ion-view view-title="Caixa" cache-view="false" ng-controller="CaixaCtrl">
+
+
+        <ion-nav-bar class="bar-stable" align-title="left">
+            <ion-nav-buttons side="right">
+                <div class="" style="text-align:right; width: 100%; margin-top:10px !important; margin-right:10px">
+                    <i class="ion-close-round" style="color:#fff !important; font-size:25px; margin-top:-20px !important" ng-click="closeModal()"></i>
+                </div>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+
+
+    <div class="bar bar-subheader sub_head" style="text-align:center">
+        <div class="" style="font-size:18px;text-align:center; width: 100%; margin-top:10px !important; margin-right:10px">
+            Informação
+        </div>
+    </div>
+
+    <ion-content class="has-subheader activity_page">
+        <div>
+            <div style="height:125px">
+                <a class="activity_list">
+                    Preencha com a porcentagem desejada para o ganhador do bolão:
+                    Exemplo: se você colocar 50% para o ganhador, a  pessoa que acumular 
+                    mais pontos ao finalizar o bolão receberá 50% do dinheiro.
+                    <br /><br />
+                    Você deve preencher os três campos que corresponderão ao vencedor, 
+                    o segundo e o terceiro lugar, totalizando 100%.
+                    <br /><br />
+                    Se você preferir que o bolão não tenha custo, basta preencher com o valor 0.
+                    <br /><br />
+                    Lembrando que o criador do bolão ficará com 10% do valor acumulado.
+                    <br /><br />
+                    Exemplo: no caso de R$ 1.000 reais acumulados, o vencedor ficará com 50%, 
+                    o segundo lugar com 30% e o terceiro lugar com 20%. Ou seja, neste caso, 
+                    o criador do bolão levará R$ 100 reais, o ganhador R$ 450, 
+                    o segundo lugar R$ 270 e o terceiro R$ 180!.
+                    <br /><br />
+                    <span style="font-size:9px">Menos o 10% que fica com Bolão Craque de Bola </span>
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

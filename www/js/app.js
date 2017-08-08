@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 // 09876angular.module('starter', ['ngCordova'])
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers','ngSanitize'])
 
 
 .run(function($ionicPlatform,$rootScope,$location,$ionicModal,$ionicPopup) {

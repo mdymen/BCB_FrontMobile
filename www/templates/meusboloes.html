@@ -59,7 +59,7 @@
                     <div class="register_page padding has-subheader" style="background:white">
                         <form class="reg_form log_form css-form" ng-submit="criarbolao(penca)" novalidate>
                             <div class="list">
-                                <span style="font-size:16px">{{titulocriarbolao}}</span>
+                                <span style="font-size:16px">{{titulocriarbolao}}</span><span ng-click="infobolao()"><i style="font-size:17px" class="ion-help-circled"></i></span>
                                 <div class="row">
                                     <div class="col col-100">
                                         <div class="col-demo" style="text-align:center;color:red">{{error}}</div>
@@ -75,13 +75,13 @@
                                 <div style="text-align:center;width:100%"><select required ng-model="penca.champ" ng-options="campeonato.ch_nome for campeonato in campeonatos"></select></div>
 
                                 <div style="padding-top : 30px">
-                                    {{premiacao}}
+                                    {{premiacao}} <span ng-click="infoporcentagens()"><i style="font-size:17px" class="ion-help-circled"></i></span>
                                 </div>
 
                                     <div style="padding-top : 10px">
 
                                         <label class="item item-input">
-                                            <input type="number" ng-model="penca.primerlugar" placeholder="% primer lugar" required>
+                                            <input type="number" ng-model="penca.primerlugar" placeholder="% vencedor" required>
                                         </label>
 
                                         <label class="item item-input">
@@ -89,7 +89,7 @@
                                         </label>
 
                                         <label class="item item-input">
-                                            <input type="number" ng-model="penca.tercerlugar" placeholder="% tercer lugar" required>
+                                            <input type="number" ng-model="penca.tercerlugar" placeholder="% terceiro lugar" required>
                                         </label>
 
                                         <div class="row">

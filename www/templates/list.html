@@ -5,12 +5,15 @@
           <div class="col"  ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
             <p>Palpites</p>
           </div>
+            <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
+                <p><i class="ion-trophy"></i></p>
+            </div>
           <div class="col"  ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
-            <p>Meus Palpites</p>
+            <p><i class="ion-ios-football"></i></p>
           </div>
-          <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
-             <p>Campeonatos</p>
-           </div>
+            <div class="col" ng-click="activitytab=4" ng-class="{'color_border':activitytab==4}">
+                <p><i class="ion-paper-airplane"></i></p>
+            </div>
           <!--<div class="col" ng-click="goto('/app/profile')">
             <p>Campeonatos</p>
           </div>-->
@@ -139,6 +142,25 @@
                   </ion-item>
               </ion-list>
           </div>
+          <div ng-switch-when="4">
+              <ion-card-content ng-repeat="noticia in noticias" >
+                  <div ng-click="linknoticia(noticia.link._href)" class="row col col-100" style="background:white;border-width:1px;border-color:#ddd;border-style:solid">
+                      <div class="row">
+                          <span style="color:blue;font-size:12px">{{noticia.published}}</span>
+                      </div>
+                      <div class="row">                          
+                          <p class="parag">{{noticia.title.__text}}</p>
+                      </div>      
+                      <ng:switch on="{{noticia.completa}} == true">
+                          <div ng:switch-when="true">
+                              <div class="row">
+                                  <p class="parag" ng-bind-html="noticia.noticia"></p>
+                              </div>                              
+                          </div>
+                          </ng:switch>
+                    </div>
+              </ion-card-content>
+        </div>
       </div>
    
   </ion-content>

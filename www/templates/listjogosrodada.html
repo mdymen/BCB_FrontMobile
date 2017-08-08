@@ -14,8 +14,12 @@
                     <p>Tabela</p>
                 </div>
                 <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
+                    <p>Ranking</p>
+                </div>
+                <div class="col" ng-click="activitytab=4" ng-class="{'color_border':activitytab==4}">
                     <p>Info</p>
                 </div>
+
             </div>
         </div>
 
@@ -104,6 +108,30 @@
                  </ng:switch>
                 </div>
               <div ng-switch-when="3">
+                  <div style="padding-top:10px">
+                      <ion-list>
+                          <ion-item ng-repeat="ranking in bolao.rankings_champ" ng-click="verusuario(ranking.us_id, ranking.us_username, ranking.us_grito)" style="border-style:none !important">
+                              <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
+                                  <div class="col">
+                                      <div class="col-demo"><b>{{ranking.i}}</b></div>
+                                  </div>
+                                  <div class="col">
+                                      <div style="width:30px;height:30px">
+                                          <div class="col-demo"><img width="30" height="30" src="http://www.bolaocraquedebola.com.br/assets/img/usuarios/user2.png" /></div>
+                                      </div>
+                                  </div>
+                                  <div class="col col-75">
+                                      <div class="col-demo">{{ranking.us_username}}</div>
+                                  </div>
+                                  <div class="col">
+                                      <div class="col-demo">{{ranking.points}}</div>
+                                  </div>
+                              </div>
+                          </ion-item>
+                      </ion-list>
+                  </div>
+              </div>
+              <div ng-switch-when="4">
                   <div style="padding-top:10px">
                       <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
                           <ion-item style="text-align:center">

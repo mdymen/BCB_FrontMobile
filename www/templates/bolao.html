@@ -8,16 +8,16 @@
             </div>
             <div class="row">
                 <div class="col" ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
-                    <p>Jogos</p>
+                    <p><i style="font-size:18px" class="ion-ios-football"></i></p>
                 </div>
                 <div class="col" ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
-                    <p>Participantes</p>
+                    <p><i style="font-size:18px" class="ion-ios-people"></i></p>
                 </div>
                 <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
-                    <p>{{opcoes}}</p>
+                    <p><i style="font-size:18px" class="ion-ios-information-outline"></i></p>
                 </div>
                 <div class="col" ng-click="activitytab=4" ng-class="{'color_border':activitytab==4}">
-                    <p>Compartilhar</p>
+                    <p><i style="font-size:18px" class="ion-android-share-alt"></i></p>   
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                 </div>
                 <div ng-switch-when="2" style="padding-top:20px">
                     <ion-list>
-                        <ion-item ng-repeat="usuario in usuarios"  style="border-style:none !important">
+                        <ion-item ng-repeat="usuario in usuarios"  style="border-style:none !important" ng-click="verusuario(usuario.us_id, usuario.us_username, usuario.us_grito)">
                             <div class="row" style="padding: 0px 0px 0px 0px; height: 40px">
                                 <div class="col">
                                     <div class="col-demo"><b></b></div>
