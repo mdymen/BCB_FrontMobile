@@ -8,16 +8,19 @@
             </div>
             <div class="row">
                 <div class="col" ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
-                    <p>Palpites</p>
+                    <p><i class="ion-ios-football"></i></p>
                 </div>
                 <div class="col" ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
-                    <p>Tabela</p>
+                    <p><i class="ion-ios-list"></i></p>
                 </div>
                 <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
-                    <p>Ranking</p>
+                    <p><i class="ion-trophy"></i></p>
                 </div>
                 <div class="col" ng-click="activitytab=4" ng-class="{'color_border':activitytab==4}">
-                    <p>Info</p>
+                    <p><i class="ion-ios-information-outline"></i></p>
+                </div>
+                <div class="col" ng-click="activitytab=5" ng-class="{'color_border':activitytab==5}">
+                    <p ng-click="pencasdisponiveis()"><i class="ion-ios-play"></i></p>
                 </div>
 
             </div>
@@ -153,6 +156,30 @@
                               <p>R${{bolao.championship.ch_drodada}} para a rodada</p>
                           </ion-item>
                       </div>
+                  </div>
+              </div>
+              <div ng-switch-when="5">
+                  <div style="padding-top:10px">
+                      <div style="margin-top:10px">
+                          <input type="submit" href="#" class="button button-block main_btn" value="{{criarbolao}}" ng-click="criar()" />
+                            <div>
+                                <p>{{sejaoprimeiro}}</p>
+                            </div>
+                      </div>
+
+                      <a class="activity_list" style="padding: 0 !important">
+                          <ion-list>
+                              <ion-item ng-repeat="penca in pencasdisponiveis" ng-click="entrarbolao(penca.pn_id, penca.ch_id, penca)">
+                                  <ion-avatar item-left>
+                                      <img style="width:20px;height:20px" src="http://www.bolaocraquedebola.com.br/{{penca.ch_logocampeonato}}">
+                                  </ion-avatar>
+                                  {{penca.pn_name}}
+                                  <p style="padding:0px !important; margin:0px !important">{{penca.ch_nome}}</p>
+                                  <p style="padding:0px !important; margin:0px !important">Ingresso: R${{penca.pn_value}}  Acumulado: R${{penca.pn_valueaccumulated}}</p>
+                                  <p style="padding:0px !important; margin:0px !important">Participantes: {{penca.users}}</p>
+                              </ion-item>
+                          </ion-list>
+                      </a>
                   </div>
               </div>
               </div>

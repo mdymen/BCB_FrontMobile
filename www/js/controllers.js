@@ -1074,12 +1074,53 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
     }
 })
 
-.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, palpitadosService, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite, rankingService) {
+.controller('ListaJogosRodadaCtrl', function ($scope, $http, $stateParams, $state, $filter, $ionicLoading, $ionicPopup, infopencaService, pencasDisponiveisService, palpitadosService, bolaoService, dataService, bolaoServiceConstructor, urlService, usuarioService, jogostimeService, aposSubmeterPalpite, rankingService) {
     console.log($scope.bolao);
     $scope.bolao = bolaoServiceConstructor.bolao(bolaoService.bolao);
     $scope.ch_nome = $scope.bolao.ch_nome;
 
     $scope.acumulado = "Bolão acumulado: R$" + $scope.bolao.championship.ch_acumulado; 
+
+    $scope.pencasdisponiveis = function () {
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/getpencasdisponiveis?', { iduser: usuarioService.id, campeonato : $scope.bolao.ch_id })
+            .success(function (data) {
+                pencasDisponiveisService.pencas = data;
+                $scope.pencasdisponiveis = pencasDisponiveisService.pencas;
+                console.log("getpencasdisponiveis");
+                console.log(data);
+                $scope.criarbolao = "Criar Bolão";
+                $ionicLoading.hide();
+                if (data.length == 0) {
+                    $scope.sejaoprimeiro = "Seja o primeiro em criar um bolão deste campenato!";
+                } else {
+                    $scope.sejaoprimeiro = "";
+                }
+            });
+    }
+
+    $scope.entrarbolao = function (idpenca, idchamp, penca) {
+        $ionicLoading.show();
+        $http.post(urlService + '/mobile/cellbolaopenca', { champ: idchamp, id: usuarioService.id, idpenca: idpenca })
+            .success(function (data) {
+                infopencaService.infopenca = penca;
+                if (data != 300) {
+                    console.log(data);
+                    bolaoService.bolao = data;
+                    //console.log(bolaoService.bolao);
+                    $ionicLoading.hide();
+                    $state.go("app.bolao");
+                } else {
+                    $state.go("app.entrarbolao", { idpenca: idpenca });
+
+                }
+            });
+
+    }
+
+    $scope.criar = function () {
+        $state.go("app.meusboloes");
+    }
 
     $scope.apagar = function (rs_id, ch_id, rd_id, mt_id) {
         $scope.data = {};
