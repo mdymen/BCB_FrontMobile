@@ -197,6 +197,15 @@ $rootScope.active_icon=function(type){
       }
   })
 
+  .state('app.confirmaremail', {
+      url: "/confirmaremail",
+      views: {
+          'menuContent': {
+              templateUrl: "templates/confirmaremail.html"
+          }
+      }
+  })
+
   .state('app.browse', {
     url: "/browse",
     views: {

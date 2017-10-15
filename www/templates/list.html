@@ -2,7 +2,12 @@
   
     <div class="bar bar-subheader sub_head">
         <div class="row">
-          <div class="col"  ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
+
+            
+            <div class="col" ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
+                <p><i class="ion-flash"></i></p>
+            </div>
+          <div class="col"  ng-click="activitytab=5" ng-class="{'color_border':activitytab==5}">
             <p>Palpites</p>
           </div>
             <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
@@ -24,7 +29,7 @@
     </div>
   <ion-content class="has-subheader activity_page">
       <div ng-switch on="activitytab">
-          <div ng-switch-when="1">
+          <div ng-switch-when="5">
               <ion-list>
                   <ion-item ng-repeat="palpite in palpites" ng-click="setPalpite(palpite)" style="font-size:12px !important;padding: 0px !important">
                       <div class="row main_row" style="height:30px !important">
@@ -161,6 +166,58 @@
                     </div>
               </ion-card-content>
         </div>
+          <div ng-switch-when="1">
+              <div style="text-align:center;width:100%">
+                  <select ng-model="campeonato.palpite" ng-options="campeonato.ch_nome for campeonato in campeonatos" ng-change="trocarcampeonatopalpite(campeonato)"></select>
+              </div>
+              <ion-list>
+                  <ion-item ng-repeat="palpite in rodadacampeonato" ng-click="setPalpite(palpite)" style="font-size:12px !important;padding: 0px !important">
+                      <div class="row main_row" style="height:30px !important">
+                          <div class="col col-20" style="font-size:12px !important; color:green">{{palpite.palpitado}}</div>
+                          <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date}}</b></div>
+                          <div class="col col-20">
+                          </div>
+                      </div>
+                      <div class="row main_row" style="height:30px !important">
+                          <div class="col col-10">
+                            <div class="activ_image" style="float:right;width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
+                                    background-size:100% 100%;">
+                            </div>
+                          </div>
+                          <div class="col col-20">
+
+                          </div>
+                          <div class="col col-20"></div>
+                          <div class="col col-10">
+                              <div class="activ_image" style="width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
+                                    background-size:100% 100%;">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row main_row" style="height:30px !important">
+                          <div class="col col-50">
+                              <span class="badge badge-{{palpite.badget}}" style="font-weight:normal !important">{{palpite.estado}}</span>
+                              <div class="activ_image" style="float:right;width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
+                                    background-size:100% 100%;">
+                              </div>
+                          </div>
+                          <div class="col col-50">
+                              <div class="activ_image" style="width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
+                                    background-size:100% 100%;">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row main_row" style="height:30px !important">
+                          <div class="col col-10">
+                          </div>
+                          <div class="col col-80" style="text-align:center;"><b>{{palpite.t1nome}} vs {{palpite.t2nome}}</b></div>
+                          <div class="col col-10">
+                          </div>
+                      </div>
+
+                  </ion-item>
+              </ion-list>
+          </div>
       </div>
    
   </ion-content>

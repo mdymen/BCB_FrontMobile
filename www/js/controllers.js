@@ -248,13 +248,15 @@ return {
     var dinheiro;
     var id;
     var grito;
+    var emailconfirmado;
 
-    this.guardar = function (us, pass, din, id, grito) {
+    this.guardar = function (us, pass, din, id, grito, emailconfirmado) {
         this.usuario = us;
         this.senha = pass;
         this.dinheiro = din;
         this.id = id;
         this.grito = grito;
+        this.emailconfirmado = emailconfirmado;
     }
 
     this.getUsuario = function () {
@@ -270,6 +272,9 @@ return {
     }
     this.getId = function () {
         return id;
+    }
+    this.getEmailConfirmado = function () {
+        return emailconfirmado;
     }
 })
 
@@ -314,25 +319,58 @@ return {
 
 .controller("MenuCtrl", ['$scope', '$http', '$state', '$rootScope', '$ionicHistory', 'usuarioService', 'sessionService',
     function ($scope, $http, $state, $rootScope, $ionicHistory, usuarioService, sessionService) {
+
+        console.log("MNUUUU");
+        console.log(usuarioService.emailconfirmado);
+
         $scope.cash = usuarioService.dinheiro;
         $scope.usuario = usuarioService.usuario;
+
+        $scope.emailconfirmado = false;
+        if (usuarioService.emailconfirmado == 1) {
+            $scope.emailconfirmado = true;
+        }
+
+        
 
         $rootScope.$on('atualizar_cash', function (event, data) {
             $scope.cash = data;
         });
 
+
+        $rootScope.$on('atualizar_usuario', function (event, data) {
+            console.log("atualizar usuario " + data);
+            $scope.usuario = data;
+        });
+
+        $rootScope.$on('atualizar_emailconfirmado', function (event, data) {
+            $scope.emailconfirmado = false;
+            if (data == 1) {
+                $scope.emailconfirmado = true;
+            }
+            console.log("atualizar emailconfirmado " + $scope.emailconfirmado);
+        });
+
         $scope.logout = function () {
-            usuarioService.guardar("", "", "","");
+            usuarioService.guardar("", "", "","","");
             sessionService.set("usuario", null);
             $scope.cash = 0.00;
             $ionicHistory.clearCache();
-            $ionicHistory.clearHistory();
+            $ionicHistory.clearHistory();           
             $state.go("login");
         }
 }])
 
 .controller('PalpitesCtrl', ['$scope','$sce', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
         function($scope,$sce, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
+
+            $scope.trocarcampeonatopalpite = function (champ) {
+                $http.post(urlService + 'mobile/cellbolao/?', { champ: champ.palpite.ch_id, id: usuarioService.id })
+                    .success(function (data) {
+                        console.log(data);
+                        $scope.rodadacampeonato = data.rodada;
+                    })
+            }
 
 
             $http.get("http://esportes.r7.com/futebol/feed.xml",
@@ -537,11 +575,11 @@ return {
                                     });
                                 } else {
                                     $scope.time = data;
-                                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito);
+                                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito, data.us_emailconfirmado);
                                     $scope.cash = data.us_cash;
 
                                     $ionicLoading.hide();
-                                    $state.go('app.list');
+                                    $state.go('app.confirmaremail');
                                 }
                             });
                     } else {
@@ -740,13 +778,22 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                         template: 'Nome de usuario e/ou senha incorretos.'
                     });
                 } else {
+                    console.log("data");
                     $scope.time = data;
-                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito);
+                    usuarioService.guardar(data.us_username, data.us_password, data.us_cash, data.us_id, data.us_grito, data.us_emailconfirmado);
                     sessionService.set("usuario", usuarioService);
+                    console.log(usuarioService.emailconfirmado);
                     $scope.cash = data.us_cash;
                     $rootScope.$emit('atualizar_cash', $scope.cash);
+                    $rootScope.$emit('atualizar_usuario', data.us_username);
+                    $rootScope.$emit('atualizar_emailconfirmado', data.us_emailconfirmado);
+
                     $ionicLoading.hide();
-                    $state.go('app.list');
+                    if (data.us_emailconfirmado == 0) {
+                        $state.go('app.confirmaremail');
+                    } else {
+                        $state.go('app.list');
+                    }
                 }
          });
 
@@ -914,10 +961,23 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                     }
 
                     if (angular.equals(data.sucesso, 401)) {
-                        $ionicloading.hide();
-                        var alertpopup = $ionicpopup.alert({
+                        $ionicLoading.hide();
+                        var alertpopup = $ionicPopup.alert({
                             title: 'erro!',
-                            template: 'Dinheiro insuficente.'
+                            template: 'Dinheiro insuficente.',
+                            buttons: [
+                        {
+                            text: '<b>OK</b>',
+                            type: 'button-positive',
+                        },
+                        {
+                            text: '<b>Caixa</b>',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                $state.go('app.caixa');
+                            }
+                        }
+                ]
                         });
                     }
 
@@ -1008,6 +1068,37 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             msg = "Eu fiz meu palpite: " + $scope.t1nome + " " + $scope.rs_res1 + " x " + $scope.rs_res2 + " " + $scope.t2nome + ", " + data + ", faça o seu em Bolão Craque de Bola https://goo.gl/8Om5Aj ";
         }
         window.plugins.socialsharing.shareViaInstagram(msg, "http://www.bolaocraquedebola.com.br/" + $scope.campeonato.ch_logocampeonato);
+    }
+
+    $scope.info = "Informação Importante";
+
+    $scope.infoporcentagens = function () {
+        $ionicModal.fromTemplateUrl('templates/explicacaovalores.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+        });
+        $scope.openModal = function () {
+            $scope.modal.show();
+        };
+        $scope.closeModal = function () {
+            $scope.modal.hide();
+        };
+        // Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function () {
+            // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function () {
+            // Execute action
+        });
+
     }
 })
 
@@ -1507,7 +1598,7 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
 })
 
 
-.controller("InicioCtrl", function ($scope, $http, $ionicLoading, $state, urlService, usuarioService, sessionService) {
+.controller("InicioCtrl", function ($scope, $http, $ionicLoading, $ionicPopup, $state, urlService, usuarioService, sessionService) {
 
     $ionicLoading.show();
 
@@ -1703,6 +1794,9 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
             $ionicLoading.hide();
 
         });
+
+    $scope.atencao = "ATENÇÃO:"
+    $scope.porcentagemcriador = "O 10% dos ingressos é para o criador do Bolão";
 
     $scope.criarbolao = function (penca) {
         
@@ -2006,6 +2100,35 @@ function ($scope, $http, $state, $stateParams, $filter, $ionicPopup, $ionicLoadi
                 $ionicHistory.goBack();
             });
     }
+
+})
+
+
+.controller("ConfirmarEmailCtrl", function ($scope, $ionicPopup, $rootScope, $state, $stateParams, $http, $ionicHistory, $ionicLoading, meusBoloesService, pencasDisponiveisService, infopencaService, urlService, usuarioService, sessionService) {
+    
+    $scope.reenviaremail = function () {
+        $ionicLoading.show();
+        $http.post(urlService + 'mobile/reenviaremailcadastro?', { usuario: usuarioService.id }).
+            success(function (data) {
+                console.log(data);
+                $ionicLoading.hide();
+                if (data == 200) {
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'Certo!!',
+                        template: 'Email reenviado con éxito.'
+                    });
+                } else {
+                    var alertpopup = $ionicPopup.alert({
+                        title: 'erro!',
+                        template: 'Aconteceu um erro, reporte em: info@bolaocraquedebola.com.br.'
+                    });
+                }
+
+                $ionicLoading.hide();
+                $ionicHistory.goBack();
+            });
+    }
+
 
 })
 

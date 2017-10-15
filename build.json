@@ -1,7 +1,7 @@
 {
  "android": {
      "release": {
-         "keystore":"C:\\Users\\Martin Dymenstein\\Documents\\penca\\m5.keystore",
+         "keystore":"C:\\Users\\Martin\\Documents\\GitHub\\ionic-typescript-tabs6\\my-release-key.keystore",
          "storePassword":"3345531",
          "alias":"mdymen",
          "password":"3345531",

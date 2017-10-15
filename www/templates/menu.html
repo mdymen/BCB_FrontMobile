@@ -41,32 +41,36 @@
           <i class="ion-power"></i>
         </span>
     </ion-header-bar>
-    <ion-content class="menu_app">
-      <ion-list>
-        <ion-item menu-close href="#/app/list">
-          Home
-        </ion-item>
-          <ion-item menu-close href="#/app/meusboloes">
-              Bolões
-          </ion-item>
-          <ion-item menu-close href="#/app/campeonatos">
-              Campeonatos
-          </ion-item>
-            <ion-item menu-close href="#/app/meuperfil">
-              Meu Perfil
-          </ion-item>
-          <ion-item menu-close href="#/app/caixa">
-              Caixa
-          </ion-item>
-          <ion-item menu-close href="#/app/vercampeonatospararanking">
-              Ranking
-          </ion-item>
-        <ion-item menu-close href="#/app/transacoes">
-         Transações
-        <!-- <span class="badge">3</span>-->
-        </ion-item>
-       
-      </ion-list>
-    </ion-content>
+      <ion-content class="menu_app">
+          <ng:switch on="true">
+              <div ng:switch-when="true">
+                  <ion-list>
+                      <ion-item menu-close href="#/app/list">
+                          Home
+                      </ion-item>
+                      <ion-item menu-close href="#/app/meusboloes">
+                          Bolões
+                      </ion-item>
+                      <ion-item menu-close href="#/app/campeonatos">
+                          Campeonatos
+                      </ion-item>
+                      <ion-item menu-close href="#/app/meuperfil">
+                          Meu Perfil
+                      </ion-item>
+                      <ion-item menu-close href="#/app/caixa">
+                          Caixa
+                      </ion-item>
+                      <ion-item menu-close href="#/app/vercampeonatospararanking">
+                          Ranking
+                      </ion-item>
+                      <ion-item menu-close href="#/app/transacoes">
+                          Transações
+                          <!-- <span class="badge">3</span>-->
+                      </ion-item>
+
+                  </ion-list>
+                  </div>
+              </ng:switch>
+      </ion-content>
   </ion-side-menu>
 </ion-side-menus>

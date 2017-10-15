@@ -5,15 +5,18 @@
             <!--<div class="col" ng-click="active_icon('fav')" ng-class="{'animated zoomIn color_btn':coloractive_fav}">
                 <i class="ion-bookmark"></i>
             </div>-->
+            <div class="col" href="#/app/detail/" ng-click="infoporcentagens()">
+                <i style="font-size:17px" class="ion-help-circled"></i>
+            </div>     
+            <div class="col" href="#/app/detail/" ng-click="showShare()">
+                <i class="ion-android-share-alt"></i>
+            </div> 
             <div class="col" href="#/app/detail/" ng-click="ranking_campeonato(ch_id)">
                 <i class="ion-trophy"></i>
             </div>
             <div class="col" href="#/app/detail/" ng-click="ranking_rodada(ch_id, mt_idround, ch_nome)" >
                 <i class="ion-ribbon-b"></i>
-            </div>
-            <div class="col" href="#/app/detail/" ng-click="showShare()">
-                <i class="ion-android-share-alt"></i>
-            </div>            
+            </div>       
             <!--<div class="col" ng-click="active_icon('share')">
                 <i class="ion-android-share-alt"></i>
             </div>-->
@@ -102,6 +105,10 @@
         </div>      
 
         <div style="background-color:rgba(250,250,250,0.70); padding: 15px 15px 15px 15px; font-size:15px;margin-top:10px">
+            <ion-item>
+                <span ng-click="infoporcentagens()"><i style="font-size:17px" class="ion-help-circled"> {{info}} </i></span>
+            </ion-item>
+
             <ion-item>
                 <i class="icon ion-ios-football"> Palpite jogo: R$ {{campeonato.ch_dpalpite}}</i>
                 <p>Acumulado: R$ {{mt_acumulado}}</p>

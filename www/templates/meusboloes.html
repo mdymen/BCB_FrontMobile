@@ -59,7 +59,8 @@
                     <div class="register_page padding has-subheader" style="background:white">
                         <form class="reg_form log_form css-form" ng-submit="criarbolao(penca)" novalidate>
                             <div class="list">
-                                <span style="font-size:16px">{{titulocriarbolao}}</span><span ng-click="infobolao()"><i style="font-size:17px" class="ion-help-circled"></i></span>
+                                <span style="color:green">{{atencao}} <br /> {{porcentagemcriador}}</span><br /><br />
+                                <span style="font-size:16px">{{titulocriarbolao}}</span> <span ng-click="infobolao()"> <i style="font-size:17px" class="ion-help-circled"></i></span>
                                 <div class="row">
                                     <div class="col col-100">
                                         <div class="col-demo" style="text-align:center;color:red">{{error}}</div>
@@ -67,7 +68,7 @@
                                 </div>
 
                                 <label class="item item-input">
-                                    <input type="text" ng-model="penca.nome" placeholder="Nome da Penca" required>
+                                    <input type="text" ng-model="penca.nome" placeholder="Nome" required>
                                 </label>
                                 <label class="item item-input">
                                     <input type="number" ng-model="penca.valor" placeholder="Valor ingresso (pode ser 0)" required >

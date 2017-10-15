@@ -1,0 +1,22 @@
+<ion-view view-title="Palpites" cache-view="false" ng-controller="ConfirmarEmailCtrl">
+  
+    <div class="bar bar-subheader sub_head">
+        <div class="row">
+          <div class="col"  ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
+            <p>Confirme seu Email</p>
+          </div>        
+        </div>
+    </div>
+  <ion-content class="has-subheader activity_page">
+      <div ng-switch on="activitytab">
+          <div ng-switch-when="1">
+              <ion-list>
+                  <ion-item>
+                      <input type="submit" style="margin-top:-10px" href="#" class="button button-block main_btn" value="Re-enviar Email" ng-click="reenviaremail()" />
+                  </ion-item>
+              </ion-list>
+           </div>
+      </div>
+   
+  </ion-content>
+</ion-view>
