@@ -170,8 +170,11 @@
               <div style="text-align:center;width:100%">
                   <select ng-model="campeonato.palpite" ng-options="campeonato.ch_nome for campeonato in campeonatos" ng-change="trocarcampeonatopalpite(campeonato)"></select>
               </div>
+              <div style="text-align:center;width:100%">
+                  <select ng-model="ronda" ng-options="ronda.rd_round for ronda in rondas" ng-change="trocarcampeonatopalpitecomrodada(ronda.rd_id)"></select>
+              </div>
               <ion-list>
-                  <ion-item ng-repeat="palpite in rodadacampeonato" ng-click="setPalpite(palpite)" style="font-size:12px !important;padding: 0px !important">
+                  <ion-item ng-repeat="palpite in rodadacampeonato" style="font-size:12px !important;padding: 0px !important">
                       <div class="row main_row" style="height:30px !important">
                           <div class="col col-20" style="font-size:12px !important; color:green">{{palpite.palpitado}}</div>
                           <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date}}</b></div>
@@ -179,34 +182,27 @@
                           </div>
                       </div>
                       <div class="row main_row" style="height:30px !important">
-                          <div class="col col-10">
-                            <div class="activ_image" style="float:right;width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
+                          <div class="col col-25">
+                              <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
+                                  <input type="number" ng-value="palpite.rs_res1" placeholder="" name="palpite.rs_res1" ng-model="palpite.rs_res1">
+                              </label>
+                          </div>
+                          <div class="col col-25">
+                              <div class="activ_image" style="float:right;width:50%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
                                     background-size:100% 100%;">
+                              </div>
                             </div>
+                            <div class="col col-25">
+                                <div class="activ_image" style=";width:60%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
+                                background-size:100% 100%;">
+                                </div>
+                            </div>
+                          <div class="col col-25">
+                              <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
+                                  <input type="number" ng-value="palpite.rs_res2" placeholder="" name="palpite.rs_res2" ng-model="palpite.rs_res2">
+                              </label>
                           </div>
-                          <div class="col col-20">
-
-                          </div>
-                          <div class="col col-20"></div>
-                          <div class="col col-10">
-                              <div class="activ_image" style="width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
-                                    background-size:100% 100%;">
-                              </div>
-                          </div>
-                      </div>
-                      <div class="row main_row" style="height:30px !important">
-                          <div class="col col-50">
-                              <span class="badge badge-{{palpite.badget}}" style="font-weight:normal !important">{{palpite.estado}}</span>
-                              <div class="activ_image" style="float:right;width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
-                                    background-size:100% 100%;">
-                              </div>
-                          </div>
-                          <div class="col col-50">
-                              <div class="activ_image" style="width:20%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
-                                    background-size:100% 100%;">
-                              </div>
-                          </div>
-                      </div>
+                        </div>
                       <div class="row main_row" style="height:30px !important">
                           <div class="col col-10">
                           </div>
@@ -217,7 +213,11 @@
 
                   </ion-item>
               </ion-list>
-          </div>
+              <div style="padding-top:20px" ng-show="flashinicio">
+                          <input type="submit" style="margin-top:-10px" href="#" class="button button-block main_btn" value="Palpitar" ng-click="realizar_palpites()" />
+
+              </div>
+              </div>
       </div>
    
   </ion-content>

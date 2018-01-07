@@ -364,11 +364,106 @@ return {
 .controller('PalpitesCtrl', ['$scope','$sce', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
         function($scope,$sce, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
 
+            $scope.flashinicio = false;
+
+            $scope.realizar_palpites = function () {
+
+                for (var i = 0; i < $scope.rodadacampeonato.length; i = i + 1) {
+                    
+                    var rs_res1 = $scope.rodadacampeonato[i].rs_res1;
+                    var rs_res2 = $scope.rodadacampeonato[i].rs_res2;
+                    var mt_id = $scope.rodadacampeonato[i].mt_id
+                    var mt_idround = $scope.rodadacampeonato[i].mt_idround;
+                    var ch_id = $scope.rodadacampeonato[i].ch_id;
+
+                    console.log($scope.rodadacampeonato[i]);
+
+                    if (rs_res1 > 0 && rs_res2 > 0) {                    
+                        $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id: usuarioService.id})
+                            .success(function (data) {
+                                console.log(data);
+                         });
+                    }
+
+                }
+            }
+
+            $scope.trocarcampeonatopalpitecomrodada = function (idrodada) {
+                if (!angular.isUndefined(idrodada) && !angular.equals(idrodada, $scope.n_rodada)) {
+                    $ionicLoading.show();
+                    alert($scope.rodadacampeonato[0].ch_id);
+                    $http.post(urlService + 'mobile/cellbolao/?', { champ: $scope.rodadacampeonato[0].ch_id, id: usuarioService.id, rodada: idrodada })
+                        .success(function (data) {
+                            $scope.flashinicio = true;
+                            $scope.rodadacampeonato = data.rodada;
+                            $scope.rondas = data.rondas;
+
+
+                            for (var i = 0; i < data.rondas.length; i = i + 1) {
+                                if (angular.equals(data.rondas[i].rd_id, data.n_rodada)) {
+                                    $scope.ronda = data.rondas[i];
+                                    $scope.n_rodada = data.n_rodada;
+                                }
+                            }
+
+                            for (var i = 0; i < $scope.rodadacampeonato.length; i = i + 1) {
+
+                                if (!angular.isUndefined($scope.rodadacampeonato[i].rs_res1)
+                                    && !angular.isUndefined($scope.rodadacampeonato[i].rs_res2)) {
+                                    $scope.rodadacampeonato[i].rs_res1 = parseInt($scope.rodadacampeonato[i].rs_res1);
+                                    $scope.rodadacampeonato[i].rs_res2 = parseInt($scope.rodadacampeonato[i].rs_res2);
+                                }
+
+                                $scope.rodadacampeonato[i].team1 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm1_logo;
+                                $scope.rodadacampeonato[i].team2 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm2_logo;
+                            }
+
+                            $ionicLoading.hide();
+                        })
+                } else {
+
+                    for (var i = 0; i < $scope.rondas.length; i = i + 1) {
+                        console.log($scope.rondas[i]);
+                        if (angular.equals($scope.rondas[i].rd_id, $scope.n_rodada)) {
+                            $scope.ronda = $scope.rondas[i];
+                            $scope.n_rodada = $scope.n_rodada;
+                            console.log($scope.ronda);
+                            console.log($scope.n_rodada);
+                        }
+                    }
+
+                }
+            }
+
             $scope.trocarcampeonatopalpite = function (champ) {
+                $ionicLoading.show();
                 $http.post(urlService + 'mobile/cellbolao/?', { champ: champ.palpite.ch_id, id: usuarioService.id })
                     .success(function (data) {
-                        console.log(data);
+                        $scope.flashinicio = true;
                         $scope.rodadacampeonato = data.rodada;
+                        $scope.rondas = data.rondas;
+                        $scope.idcampeonato = champ.palpite.cd_id;
+
+
+                        for (var i = 0; i < data.rondas.length; i = i + 1) {
+                            if (angular.equals(data.rondas[i].rd_id, data.n_rodada)) {
+                                $scope.ronda = data.rondas[i];
+                                $scope.n_rodada = data.n_rodada;
+                            }
+                        }
+
+                        for (var i = 0; i < $scope.rodadacampeonato.length; i = i + 1) {
+
+                            if (!angular.isUndefined($scope.rodadacampeonato[i].rs_res1)
+                                && !angular.isUndefined($scope.rodadacampeonato[i].rs_res2)) {
+                                $scope.rodadacampeonato[i].rs_res1 = parseInt($scope.rodadacampeonato[i].rs_res1);
+                                $scope.rodadacampeonato[i].rs_res2 = parseInt($scope.rodadacampeonato[i].rs_res2);
+                            }
+
+                            $scope.rodadacampeonato[i].team1 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm1_logo;
+                            $scope.rodadacampeonato[i].team2 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm2_logo;
+                        }
+                        $ionicLoading.hide();
                     })
             }
 
