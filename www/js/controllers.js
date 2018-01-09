@@ -364,10 +364,12 @@ return {
 .controller('PalpitesCtrl', ['$scope','$sce', '$http', '$state', '$filter', '$ionicLoading', 'dataService', 'rodadaService', 'usuarioService', 'urlService', 'bolaoService', 'campeonatosService', 'sessionService',
         function($scope,$sce, $http, $state, $filter, $ionicLoading, dataService, rodadaService, usuarioService, urlService, bolaoService, campeonatosService, sessionService) {
 
-            $scope.flashinicio = false;
+            $scope.flashinicio = false;            
 
             $scope.realizar_palpites = function () {
-
+                $scope.cantidad_palpites = 0;
+                console.log("inicio " + $scope.cantidad_palpites);
+                $ionicLoading.show();
                 for (var i = 0; i < $scope.rodadacampeonato.length; i = i + 1) {
                     
                     var rs_res1 = $scope.rodadacampeonato[i].rs_res1;
@@ -378,10 +380,17 @@ return {
 
                     console.log($scope.rodadacampeonato[i]);
 
-                    if (rs_res1 > 0 && rs_res2 > 0) {                    
+                    if (rs_res1 > 0 && rs_res2 > 0) {
+                        $scope.cantidad_palpites = parseInt($scope.cantidad_palpites) + 1;
+                        console.log("sumando " + $scope.cantidad_palpites);
                         $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id: usuarioService.id})
                             .success(function (data) {
-                                console.log(data);
+                                $scope.cantidad_palpites = parseInt($scope.cantidad_palpites) - 1;
+                                console.log("restando " + $scope.cantidad_palpites);
+                                if ($scope.cantidad_palpites == 0) {
+                                    $ionicLoading.hide();
+                                    console.log($scope.cantidad_palpites);
+                                }
                          });
                     }
 
@@ -391,7 +400,7 @@ return {
             $scope.trocarcampeonatopalpitecomrodada = function (idrodada) {
                 if (!angular.isUndefined(idrodada) && !angular.equals(idrodada, $scope.n_rodada)) {
                     $ionicLoading.show();
-                    alert($scope.rodadacampeonato[0].ch_id);
+
                     $http.post(urlService + 'mobile/cellbolao/?', { champ: $scope.rodadacampeonato[0].ch_id, id: usuarioService.id, rodada: idrodada })
                         .success(function (data) {
                             $scope.flashinicio = true;
@@ -421,9 +430,10 @@ return {
                             $ionicLoading.hide();
                         })
                 } else {
-
                     for (var i = 0; i < $scope.rondas.length; i = i + 1) {
+                        console.log("RONDAS");
                         console.log($scope.rondas[i]);
+
                         if (angular.equals($scope.rondas[i].rd_id, $scope.n_rodada)) {
                             $scope.ronda = $scope.rondas[i];
                             $scope.n_rodada = $scope.n_rodada;
