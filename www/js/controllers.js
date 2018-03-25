@@ -60,7 +60,7 @@ return {
 
 .factory('urlService', function () {
     //return "http://localhost/penca/public/";
-    return "http://www.bolaocraquedebola.com.br/public/";
+    return "http://www.dymenstein.com/public/"; 
 })
 
 .service('jogosTimeConstructor', function(dataService, dataEncerrado, resultadoFinalService) {
@@ -370,33 +370,19 @@ return {
                 $scope.cantidad_palpites = 0;
                 console.log("inicio " + $scope.cantidad_palpites);
                 $ionicLoading.show();
-                for (var i = 0; i < $scope.rodadacampeonato.length; i = i + 1) {
-                    
-                    var rs_res1 = $scope.rodadacampeonato[i].rs_res1;
-                    var rs_res2 = $scope.rodadacampeonato[i].rs_res2;
-                    var mt_id = $scope.rodadacampeonato[i].mt_id
-                    var mt_idround = $scope.rodadacampeonato[i].mt_idround;
-                    var ch_id = $scope.rodadacampeonato[i].ch_id;
 
-                    console.log($scope.rodadacampeonato[i]);
+                $http.post(urlService + 'mobile/palpitarrodadatoda', { palpites: $scope.rodadacampeonato, usuario: usuarioService.id })
+                    .success(function (data) {
+                        console.log(data);
+                        $ionicLoading.hide();
+                    });
 
-                    if (rs_res1 > 0 && rs_res2 > 0) {
-                        $scope.cantidad_palpites = parseInt($scope.cantidad_palpites) + 1;
-                        console.log("sumando " + $scope.cantidad_palpites);
-                        $http.post(urlService + 'mobile/cellsubmeterpalpite/?', { result1: rs_res1, result2: rs_res2, match: mt_id, round: mt_idround, champ: ch_id, us_id: usuarioService.id})
-                            .success(function (data) {
-                                $scope.cantidad_palpites = parseInt($scope.cantidad_palpites) - 1;
-                                console.log("restando " + $scope.cantidad_palpites);
-                                if ($scope.cantidad_palpites == 0) {
-                                    $ionicLoading.hide();
-                                    console.log($scope.cantidad_palpites);
-                                }
-                         });
-                    }
-
-                }
             }
 
+            /**
+            * Cuando cambia de rodada
+            * @param idrodada 
+            */
             $scope.trocarcampeonatopalpitecomrodada = function (idrodada) {
                 if (!angular.isUndefined(idrodada) && !angular.equals(idrodada, $scope.n_rodada)) {
                     $ionicLoading.show();
@@ -408,6 +394,8 @@ return {
                             $scope.rondas = data.rondas;
 
 
+                            console.log(data);
+
                             for (var i = 0; i < data.rondas.length; i = i + 1) {
                                 if (angular.equals(data.rondas[i].rd_id, data.n_rodada)) {
                                     $scope.ronda = data.rondas[i];
@@ -416,6 +404,47 @@ return {
                             }
 
                             for (var i = 0; i < $scope.rodadacampeonato.length; i = i + 1) {
+
+                                var dateDoJogo = dataService.data_format($scope.rodadacampeonato[i].mt_date);
+
+                                var dataJogo = new Date($scope.rodadacampeonato[i].mt_date);
+                                var dataAgora = new Date();
+
+                                var dataFinal = "";
+                                var date = new Date($scope.rodadacampeonato[i].mt_date);
+                                var numDia = $filter('date')(date, 'dd');
+                                var mes = $filter('date')(date, 'MMM');
+
+                                var date1 = new Date();
+                                var numDiaHoje = $filter('date')(date1, 'dd');
+                                var mesHoje = $filter('date')(date1, 'MMM');
+
+
+                                var estado = "";
+                                var badget = "";
+                                var no_encerrado = true;
+                                if (numDia == numDiaHoje && mes == mesHoje) {
+                                    estado = "Hoje";
+                                    badget = "balanced";
+                                }
+
+                                if (dataJogo < dataAgora) {
+                                    estado = "Encerrado";
+                                    badget = "assertive";
+                                    no_encerrado = false;
+                                }
+
+                                var palpitado = "";
+                                if ($scope.rodadacampeonato[i].rs_res1 != null
+                                    && $scope.rodadacampeonato[i].rs_res2 != null) {
+                                    palpitado = "Palpitado";
+                                }                               
+
+                                $scope.rodadacampeonato[i].mt_date = dateDoJogo;
+                                $scope.rodadacampeonato[i].estado = estado;
+                                $scope.rodadacampeonato[i].badget = badget;
+                                $scope.rodadacampeonato[i].no_encerrado = no_encerrado;
+                                $scope.rodadacampeonato[i].palpitado = palpitado;
 
                                 if (!angular.isUndefined($scope.rodadacampeonato[i].rs_res1)
                                     && !angular.isUndefined($scope.rodadacampeonato[i].rs_res2)) {
@@ -427,18 +456,15 @@ return {
                                 $scope.rodadacampeonato[i].team2 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm2_logo;
                             }
 
+                           
+
                             $ionicLoading.hide();
                         })
                 } else {
                     for (var i = 0; i < $scope.rondas.length; i = i + 1) {
-                        console.log("RONDAS");
-                        console.log($scope.rondas[i]);
-
                         if (angular.equals($scope.rondas[i].rd_id, $scope.n_rodada)) {
                             $scope.ronda = $scope.rondas[i];
                             $scope.n_rodada = $scope.n_rodada;
-                            console.log($scope.ronda);
-                            console.log($scope.n_rodada);
                         }
                     }
 
@@ -449,6 +475,7 @@ return {
                 $ionicLoading.show();
                 $http.post(urlService + 'mobile/cellbolao/?', { champ: champ.palpite.ch_id, id: usuarioService.id })
                     .success(function (data) {
+                        console.log(data);
                         $scope.flashinicio = true;
                         $scope.rodadacampeonato = data.rodada;
                         $scope.rondas = data.rondas;
@@ -469,6 +496,50 @@ return {
                                 $scope.rodadacampeonato[i].rs_res1 = parseInt($scope.rodadacampeonato[i].rs_res1);
                                 $scope.rodadacampeonato[i].rs_res2 = parseInt($scope.rodadacampeonato[i].rs_res2);
                             }
+
+                            console.log($scope.rodadacampeonato[i]);
+
+                                var dateDoJogo = dataService.data_format($scope.rodadacampeonato[i].mt_date);
+
+                                var dataJogo = new Date($scope.rodadacampeonato[i].mt_date);
+                                var dataAgora = new Date();
+
+                                var dataFinal = "";
+                                var date = new Date($scope.rodadacampeonato[i].mt_date);
+                                var numDia = $filter('date')(date, 'dd');
+                                var mes = $filter('date')(date, 'MMM');
+
+                                var date1 = new Date();
+                                var numDiaHoje = $filter('date')(date1, 'dd');
+                                var mesHoje = $filter('date')(date1, 'MMM');
+
+
+                                var estado = "";
+                                var badget = "";
+                                var no_encerrado = true;
+                                if (numDia == numDiaHoje && mes == mesHoje) {
+                                    estado = "Hoje";
+                                    badget = "balanced";
+                                }
+
+                                if (dataJogo < dataAgora) {
+                                    estado = "Encerrado";
+                                    badget = "assertive";
+                                    no_encerrado = false;
+                                }
+
+                                var palpitado = "";
+                                if (!Number.isNaN($scope.rodadacampeonato[i].rs_res1)
+                                    && !Number.isNaN($scope.rodadacampeonato[i].rs_res2)) {
+                                    palpitado = "Palpitado";
+                                }
+
+                                $scope.rodadacampeonato[i].mt_date = dateDoJogo;
+                                $scope.rodadacampeonato[i].estado = estado;
+                                $scope.rodadacampeonato[i].badget = badget;
+                                $scope.rodadacampeonato[i].no_encerrado = no_encerrado;
+                                $scope.rodadacampeonato[i].palpitado = palpitado;
+
 
                             $scope.rodadacampeonato[i].team1 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm1_logo;
                             $scope.rodadacampeonato[i].team2 = "http://www.bolaocraquedebola.com.br/" + $scope.rodadacampeonato[i].tm2_logo;

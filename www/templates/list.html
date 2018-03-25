@@ -5,19 +5,14 @@
 
             
             <div class="col" ng-click="activitytab=1" ng-class="{'color_border':activitytab==1}">
-                <p><i class="ion-flash"></i></p>
+                <p>Palpitar</p>
             </div>
-          <div class="col"  ng-click="activitytab=5" ng-class="{'color_border':activitytab==5}">
-            <p>Palpites</p>
-          </div>
-            <div class="col" ng-click="activitytab=3" ng-class="{'color_border':activitytab==3}">
-                <p><i class="ion-trophy"></i></p>
-            </div>
-          <div class="col"  ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
+
+         <!-- <div class="col"  ng-click="activitytab=2" ng-class="{'color_border':activitytab==2}">
             <p><i class="ion-ios-football"></i></p>
-          </div>
+          </div>-->
             <div class="col" ng-click="activitytab=4" ng-class="{'color_border':activitytab==4}">
-                <p><i class="ion-paper-airplane"></i></p>
+                <p>Noticias</p>
             </div>
           <!--<div class="col" ng-click="goto('/app/profile')">
             <p>Campeonatos</p>
@@ -174,8 +169,9 @@
                   Rodada: <select ng-model="ronda" style="font-size: 14px; height: 29px; padding: 5px; width: 168px; background-color: rgb(59, 142, 194); margin-top: 10px; margin-bottom:10px" ng-options="ronda.rd_round for ronda in rondas" ng-change="trocarcampeonatopalpitecomrodada(ronda.rd_id)"></select>
               </div>
               <ion-list>
-                  <ion-item ng-repeat="palpite in rodadacampeonato" style="font-size:12px !important;padding: 0px !important">
-                      <div class="row main_row" style="height:30px !important">
+                  <ion-item ng-repeat="palpite in rodadacampeonato" style="margin: 5px; font-size:12px !important;padding: 0px !important" /*ng-click="setPalpite(palpite)"*/>
+                  
+                   <div class="row main_row" style="height:30px !important">
                           <div class="col col-20" style="font-size:12px !important; color:green">{{palpite.palpitado}}</div>
                           <div class="col col-60" style="text-align:center;"><b style="color:blue">{{palpite.mt_date}}</b></div>
                           <div class="col col-20">
@@ -183,9 +179,19 @@
                       </div>
                       <div class="row main_row" style="height:30px !important">
                           <div class="col col-25">
-                              <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
-                                  <input type="number" ng-value="palpite.rs_res1" placeholder="" name="palpite.rs_res1" ng-model="palpite.rs_res1">
-                              </label>
+                              <ng:switch on="{{palpite.no_encerrado}}">
+                                  <div ng:switch-when="true">
+                                      <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
+                                          <input type="number" ng-value="palpite.rs_res1" placeholder="" name="palpite.rs_res1" ng-model="palpite.rs_res1">
+                                      </label>
+                                  </div>
+                                  <div ng:switch-when="false">
+                                      <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
+                                          <input type="number" ng-value="palpite.rs_res1" disabled="disabled" name="palpite.rs_res1" ng-model="palpite.rs_res1">
+                                      </label>
+                                  </div>
+                              </ng:switch>
+
                           </div>
                           <div class="col col-25">
                               <div class="activ_image" style="float:right;width:50%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm1_logo}})no-repeat;
@@ -193,15 +199,24 @@
                               </div>
                             </div>
                             <div class="col col-25">
-                                <div class="activ_image" style=";width:60%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
+                                <div class="activ_image" style=";width:50%;height:30px;background:url(http://www.bolaocraquedebola.com.br/{{palpite.tm2_logo}})no-repeat;
                                 background-size:100% 100%;">
                                 </div>
                             </div>
                           <div class="col col-25">
-                              <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
-                                  <input type="number" ng-value="palpite.rs_res2" placeholder="" name="palpite.rs_res2" ng-model="palpite.rs_res2">
-                              </label>
-                          </div>
+                              <ng:switch on="{{palpite.no_encerrado}}">
+                                  <div ng:switch-when="true">
+                                      <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
+                                          <input type="number" ng-value="palpite.rs_res2" placeholder="" name="palpite.rs_res2" ng-model="palpite.rs_res2">
+                                      </label>
+                                  </div>
+                                  <div ng:switch-when="false">
+                                      <label class="item item-input" style="margin-bottom:10px;padding-bottom: 0px !important; padding-top:0px !important">
+                                          <input type="number" ng-value="palpite.rs_res2" disabled="disabled" name="palpite.rs_res2" ng-model="palpite.rs_res2">
+                                      </label>
+                                  </div>
+                                </ng:switch>
+                           </div>
                         </div>
                       <div class="row main_row" style="height:30px !important">
                           <div class="col col-10">
@@ -210,7 +225,31 @@
                           <div class="col col-10">
                           </div>
                       </div>
+                      <div class="row main_row" style="height:30px !important; background-color:#3b8ec2">
+                          <div class="col col-30">
+                              <ng:switch on="{{palpite.mt_played}}">
+                                  <div ng:switch-when="1">
+                                      <span class="item-bold text text-ios text-ios-secondary" color="secondary" ion-text="" item-start="">{{palpite.mt_goal1}} - {{palpite.mt_goal2}}</span>
+                                  </div>
+                                  <div ng:switch-when="0">
+                                      <span class="item-bold text text-ios text-ios-secondary" color="secondary" ion-text="" item-start=""></span>
+                                  </div>
+                              </ng:switch>
 
+
+                          </div>
+                          <div class="col col-30" style="text-align:center;"></div>
+                          <div class="col col-30">
+                              <ng:switch on="{{palpite.no_encerrado}}">
+                                  <div ng:switch-when="true">
+                                      <div></div>
+                                  </div>
+                                  <div ng:switch-when="false">
+                                      <div>Encerrado</div>
+                                  </div>
+                              </ng:switch>
+                          </div>
+                      </div>
                   </ion-item>
               </ion-list>
               <div style="padding-top:20px" ng-show="flashinicio">
